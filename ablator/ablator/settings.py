@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+FEATURE_HASH_SALT = 'omsn'
 
 # Application definition
 
