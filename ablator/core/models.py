@@ -19,8 +19,12 @@ class ClientUser(models.Model):
     the user and unchanging.
     """
     name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __repr__(self):
+        return self.name
+
+    def __str__(self):
         return self.name
 
     @classmethod
@@ -43,6 +47,10 @@ class FunctionalityGroup(models.Model):
     incarnations of a functionality.
     """
     name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Functionality(models.Model):
@@ -52,10 +60,18 @@ class Functionality(models.Model):
     Add more then one Functionality to a FunctionalityGroup to A/B test. One will be randomly
     activated depending on its enable_probability.
     """
+    name = models.CharField(max_length=255)
     group = models.ForeignKey(FunctionalityGroup)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
     enable_probability = models.DecimalField(default=Decimal('0'), decimal_places=6, max_digits=7)
     color = models.CharField(max_length=6, default='c0ffee')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{} => {}".format(self.group, self.name)
+
+    class Meta:
+        verbose_name_plural = "Functionalities"
 
 
 class Availability(models.Model):
@@ -64,3 +80,11 @@ class Availability(models.Model):
     """
     user = models.ForeignKey(ClientUser, on_delete=models.CASCADE)
     functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "User {} has functionality {}".format(self.user, self.functionality)
+
+    class Meta:
+        verbose_name_plural = "Availabilities"
+
