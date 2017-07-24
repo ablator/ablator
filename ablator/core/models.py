@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
 
@@ -6,8 +7,9 @@ import hashlib
 HASH_SALT = settings.FEATURE_HASH_SALT
 
 
-class User(models.Model):
-    """Represents a user of the software.
+class ClientUser(models.Model):
+    """
+    A user of the software.
 
     Users are always anonymized and only represented by a hash
     value, so privacy can be guaranteed.
@@ -32,15 +34,33 @@ class User(models.Model):
         return hashlib.sha256(HASH_SALT.encode() + str(hashable_object).encode()).hexdigest()
 
 
-class Functionality(models.Model):
+class FunctionalityGroup(models.Model):
     """
-    behaviour, functionality, program option
+    A behaviour, functionality, or program option to be managed.
+
+    A FunctionalityGroup contains one or more Functionality objects that represent individual
+    variations of one functionality. This is helpful when you want to A/B test multiple
+    incarnations of a functionality.
     """
     name = models.CharField(max_length=255)
-    options = []  # list of strings
+
+
+class Functionality(models.Model):
+    """
+    A specific version of a functionality.
+
+    Add more then one Functionality to a FunctionalityGroup to A/B test. One will be randomly
+    activated depending on its enable_probability.
+    """
+    group = models.ForeignKey(FunctionalityGroup)
+    client_users = models.ManyToManyField(ClientUser, through='Availability')
+    enable_probability = models.DecimalField(default=Decimal('0'), decimal_places=6, max_digits=7)
+    color = models.CharField(max_length=6, default='c0ffee')
 
 
 class Availability(models.Model):
-    user = models.ForeignKey(User)
-    functionality = models.ForeignKey(Functionality)
-    enabled_index = None  # or an integer
+    """
+    A Functionality that is enabled for a specific user.
+    """
+    user = models.ForeignKey(ClientUser, on_delete=models.CASCADE)
+    functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
