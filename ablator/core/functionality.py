@@ -7,7 +7,10 @@ def can_i_use(client_user: ClientUser, functionality_group: FunctionalityGroup) 
     return which(client_user, functionality_group) is not None
 
 
-def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> Optional[Functionality]:
+def which(
+        client_user: ClientUser,
+        functionality_group: FunctionalityGroup
+) -> Optional[Functionality]:
     try:
         return Availability.objects.get(
             functionality__in=functionality_group.functionality_set.all(),

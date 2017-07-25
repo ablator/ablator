@@ -1,10 +1,9 @@
-from django.http.response import Http404
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.functionality import can_i_use, which
-from core.models import ClientUser, Functionality, FunctionalityGroup
+from core.models import ClientUser, FunctionalityGroup
 
 
 class CanIUseView(APIView):

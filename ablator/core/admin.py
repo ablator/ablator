@@ -20,7 +20,14 @@ class FunctionalityGroupAdmin(admin.ModelAdmin):
 
 @admin.register(Functionality)
 class FunctionalityAdmin(admin.ModelAdmin):
-    list_display = ('human_readable_name', 'group', 'name', 'enable_probability', 'color', 'created_at',)
+    list_display = (
+        'human_readable_name',
+        'group',
+        'name',
+        'enable_probability',
+        'color',
+        'created_at',
+    )
 
 
 @admin.register(Availability)
