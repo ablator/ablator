@@ -42,8 +42,8 @@ class App(models.Model):
     """
     A collection of FunctionalityGroups.
     """
-    name = models.CharField(max_length=140)
-    fqdn = models.CharField(max_length=140)
+    name = models.SlugField(max_length=100)
+    human_readable_name = models.CharField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -58,12 +58,13 @@ class FunctionalityGroup(models.Model):
     variations of one functionality. This is helpful when you want to A/B test multiple
     incarnations of a functionality.
     """
-    name = models.CharField(max_length=255)
+    name = models.SlugField(max_length=100)
+    human_readable_name = models.CharField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App)
 
     def __str__(self):
-        return self.name
+        return '{}.{}'.format(self.app, self.name)
 
 
 class Functionality(models.Model):
@@ -73,7 +74,8 @@ class Functionality(models.Model):
     Add more then one Functionality to a FunctionalityGroup to A/B test. One will be randomly
     activated depending on its enable_probability.
     """
-    name = models.CharField(max_length=255)
+    name = models.SlugField(max_length=100)
+    human_readable_name = models.CharField(max_length=140)
     group = models.ForeignKey(FunctionalityGroup)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
     enable_probability = models.DecimalField(default=Decimal('0'), decimal_places=6, max_digits=7)
@@ -81,7 +83,7 @@ class Functionality(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} => {}".format(self.group, self.name)
+        return "{}.{}".format(self.group, self.name)
 
     class Meta:
         verbose_name_plural = "Functionalities"
@@ -96,7 +98,7 @@ class Availability(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "User {} has functionality {}".format(self.user, self.functionality)
+        return "{}.{}".format(self.functionality, self.user)
 
     class Meta:
         verbose_name_plural = "Availabilities"
