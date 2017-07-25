@@ -38,6 +38,18 @@ class ClientUser(models.Model):
         return hashlib.sha256(HASH_SALT.encode() + str(hashable_object).encode()).hexdigest()
 
 
+class App(models.Model):
+    """
+    A collection of FunctionalityGroups.
+    """
+    name = models.CharField(max_length=140)
+    fqdn = models.CharField(max_length=140)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
 class FunctionalityGroup(models.Model):
     """
     A behaviour, functionality, or program option to be managed.
@@ -48,6 +60,7 @@ class FunctionalityGroup(models.Model):
     """
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    app = models.ForeignKey(App)
 
     def __str__(self):
         return self.name

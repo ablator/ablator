@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from core.models import ClientUser, FunctionalityGroup, Functionality, Availability
+from .models import ClientUser, FunctionalityGroup, Functionality, Availability, App
+
+
+@admin.register(App)
+class AppAdmin(admin.ModelAdmin):
+    list_display = ('name', 'fqdn', 'created_at',)
 
 
 @admin.register(ClientUser)
