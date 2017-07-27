@@ -49,7 +49,6 @@ class App(models.Model):
     def __str__(self):
         return self.name
 
-
 class FunctionalityGroup(models.Model):
     """
     A behaviour, functionality, or program option to be managed.
@@ -62,6 +61,22 @@ class FunctionalityGroup(models.Model):
     human_readable_name = models.CharField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App)
+
+    RECALL_FEATURE = 'recall_feature'
+    PAUSE_ROLLOUT = 'pause_rollout'
+    DEFINED_BY_RELEASES = 'defined_by_releases'
+    ENABLE_GLOBALLY = 'enable_globally'
+    NEW_USER_BEAHAVIOUR_CHOICES = (
+        (RECALL_FEATURE, 'Recall Feature'),
+        (PAUSE_ROLLOUT, 'Pause Roll Out'),
+        (DEFINED_BY_RELEASES, 'As defined by Releases'),
+        (ENABLE_GLOBALLY, 'Enable Globally')
+    )
+    rollout_strategy = models.CharField(
+        max_length=50,
+        choices=NEW_USER_BEAHAVIOUR_CHOICES,
+        default=DEFINED_BY_RELEASES
+    )
 
     def __str__(self):
         return '{}.{}'.format(self.app, self.name)

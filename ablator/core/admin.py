@@ -16,7 +16,7 @@ class AppAdmin(admin.ModelAdmin):
 
 @admin.register(FunctionalityGroup)
 class FunctionalityGroupAdmin(admin.ModelAdmin):
-    list_display = ('human_readable_name', 'name', 'created_at',)
+    list_display = ('human_readable_name', 'name', 'app', 'created_at', 'rollout_strategy')
 
 
 @admin.register(Functionality)
