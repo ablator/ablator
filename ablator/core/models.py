@@ -49,6 +49,7 @@ class App(models.Model):
     def __str__(self):
         return self.name
 
+
 class FunctionalityGroup(models.Model):
     """
     A behaviour, functionality, or program option to be managed.
@@ -81,6 +82,10 @@ class FunctionalityGroup(models.Model):
     def __str__(self):
         return '{}.{}'.format(self.app, self.name)
 
+    @property
+    def current_release(self) -> 'Release':
+        raise NotImplementedError
+
 
 class Functionality(models.Model):
     """
@@ -102,10 +107,6 @@ class Functionality(models.Model):
     class Meta:
         verbose_name_plural = "Functionalities"
 
-    @property
-    def current_release(self) -> 'Release':
-        raise NotImplementedError
-
 
 class Release(models.Model):
     """
@@ -115,7 +116,7 @@ class Release(models.Model):
     name = models.CharField(max_length=100, blank=True)
     start_at = models.DateTimeField(null=True)
     end_at = models.DateTimeField(null=True)
-    enabled_users = models.IntegerField(default=0)
+    max_enabled_users = models.IntegerField(default=0)
 
     @property
     def is_current(self) -> bool:
