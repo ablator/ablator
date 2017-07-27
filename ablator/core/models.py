@@ -78,7 +78,6 @@ class Functionality(models.Model):
     human_readable_name = models.CharField(max_length=140)
     group = models.ForeignKey(FunctionalityGroup)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
-    enable_probability = models.DecimalField(default=Decimal('0'), decimal_places=6, max_digits=7)
     color = models.CharField(max_length=6, default='c0ffee')
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -88,6 +87,25 @@ class Functionality(models.Model):
     class Meta:
         verbose_name_plural = "Functionalities"
 
+    @property
+    def current_release(self) -> 'Release':
+        raise NotImplementedError
+
+
+class Release(models.Model):
+    """
+    A point in time when a certain number of Availabilities should be switched on.
+    """
+    functionality_group = models.ForeignKey(FunctionalityGroup)
+    name = models.CharField(max_length=100, blank=True)
+    start_at = models.DateTimeField(null=True)
+    end_at = models.DateTimeField(null=True)
+    enabled_users = models.IntegerField(default=0)
+
+    @property
+    def is_current(self) -> bool:
+        raise NotImplementedError
+
 
 class Availability(models.Model):
     """
@@ -95,6 +113,7 @@ class Availability(models.Model):
     """
     user = models.ForeignKey(ClientUser, on_delete=models.CASCADE)
     functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
+    is_enabled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

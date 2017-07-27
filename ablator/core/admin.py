@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from core.models import Release
 from .models import ClientUser, FunctionalityGroup, Functionality, Availability, App
 
 
@@ -24,9 +25,18 @@ class FunctionalityAdmin(admin.ModelAdmin):
         'human_readable_name',
         'group',
         'name',
-        'enable_probability',
         'color',
         'created_at',
+    )
+
+
+@admin.register(Release)
+class ReleaseAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'functionality_group',
+        'start_at',
+        'end_at',
     )
 
 
