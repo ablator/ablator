@@ -1,5 +1,8 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
+
+from datetime import datetime
 
 import hashlib
 
@@ -83,7 +86,13 @@ class FunctionalityGroup(models.Model):
 
     @property
     def current_release(self) -> 'Release':
-        raise NotImplementedError
+        try:
+            return self.release_set.get(
+                start_at__lte=timezone.now(),
+                end_at__gte=timezone.now()
+            )
+        except Release.DoesNotExist:
+            return None
 
 
 class Functionality(models.Model):
@@ -113,13 +122,13 @@ class Release(models.Model):
     """
     functionality_group = models.ForeignKey(FunctionalityGroup)
     name = models.CharField(max_length=100, blank=True)
-    start_at = models.DateTimeField(null=True)
-    end_at = models.DateTimeField(null=True)
+    start_at = models.DateTimeField(default=datetime(1, 1, 1))
+    end_at = models.DateTimeField(default=datetime(5000, 1, 1))
     max_enabled_users = models.IntegerField(default=0)
 
     @property
     def is_current(self) -> bool:
-        raise NotImplementedError
+        return self.start_at < timezone.now() < self.end_at
 
 
 class Availability(models.Model):

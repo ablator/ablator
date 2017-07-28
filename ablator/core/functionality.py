@@ -63,11 +63,19 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
                 availability.save()
             return availability
 
+    # Check if Rollout is paused
+    if functionality_group.rollout_strategy == FunctionalityGroup.PAUSE_ROLLOUT:
+        return None
+
     # Availability does not yet exist. Choose a Functionality at random
+    if not functionality_group.current_release:
+        return None
+
     functionalities = functionality_group.functionality_set.all()
-    availability = Availability()
-    availability.user = client_user
-    availability.functionality = functionalities[random.randint(len(functionalities))]
+    if functionalities:
+        availability = Availability()
+        availability.user = client_user
+        availability.functionality = functionalities[random.randint(0, len(functionalities))-1]
 
     enabled_count = Availability.objects.filter(
         functionality__group=functionality_group,
