@@ -33,6 +33,7 @@ class FunctionalityAdmin(admin.ModelAdmin):
 @admin.register(Release)
 class ReleaseAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'name',
         'functionality_group',
         'start_at',
@@ -42,4 +43,4 @@ class ReleaseAdmin(admin.ModelAdmin):
 
 @admin.register(Availability)
 class AvailabilityAdmin(admin.ModelAdmin):
-    list_display = ('user', 'functionality', 'created_at',)
+    list_display = ('user', 'functionality', 'is_enabled', 'created_at',)
