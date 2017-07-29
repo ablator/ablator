@@ -24,6 +24,6 @@ class Karman:
         response_json = self._request('caniuse', user, functionality_group_id)
         return response_json.get('enabled')
 
-    def which(self, user: str, functionality_group_id: str) -> str:
+    def which(self, user: str, functionality_group_id: str):
         response_json = self._request('which', user, functionality_group_id)
-        return response_json.get('enabled')
+        return response_json.get('functionality'), response_json.get('is_enabled')

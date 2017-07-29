@@ -13,6 +13,11 @@ parser.add_argument("func_group_id", help="The functionality group to query")
 parser.add_argument("--base_url", help="Where is the server?", default="http://localhost:8000/")
 parser.add_argument(
     "-c", "--continuous",
+    help="Request the value again and again", action
+    ="store_true"
+)
+parser.add_argument(
+    "-s", "--slow",
     help="Request the value every second", action
     ="store_true"
 )
@@ -21,19 +26,22 @@ args = parser.parse_args()
 karman = Karman(args.base_url)
 
 
-def which():
+def which(user):
     print("{}: {}".format(
-        args.func_group_id,
-        karman.which(args.user, args.func_group_id)
+        user,
+        karman.which(user, args.func_group_id)
     ))
 
 if args.continuous:
+    count = 0
     while True:
         try:
-            which()
-            sleep(1)
+            which(args.user+str(count))
+            if args.slow:
+                sleep(1)
+            count += 1
         except KeyboardInterrupt:
-            print('Bye')
+            print('\nRequested {} functionalities'.format(count))
             exit(0)
 else:
-    which()
+    which(args.user)
