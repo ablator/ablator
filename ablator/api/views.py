@@ -39,5 +39,9 @@ class WhichView(APIView):
         """
         functionality_group = get_object_or_404(FunctionalityGroup, id=functionality_group_id)
         client_user = ClientUser.user_from_object(client_user_string)
-        functionality = which(client_user, functionality_group)
-        return Response({'which': functionality.__str__() if functionality else None})
+        availability = which(client_user, functionality_group)
+        return Response({
+
+            'functionality': availability.functionality.__str__() if availability else None,
+            'is_enabled': availability.is_enabled if availability else False
+        })

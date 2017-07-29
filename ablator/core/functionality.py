@@ -14,10 +14,12 @@ def can_i_use(client_user: ClientUser, functionality_group: FunctionalityGroup) 
     Use ClientUser.user_from_object to get or create a ClientUser instance from any hashable
     object (usually a string).
     """
-    return which(client_user, functionality_group) is not None
+    functionality = which(client_user, functionality_group)
+    if functionality:
+        return functionality.is_enabled
 
 
-def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> Optional[Functionality]:
+def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> Optional[Availability]:
     """
     Which Functionality of the given FunctionalityGroup is enabled for the user, if any?
 
@@ -34,7 +36,10 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
         return None
 
     if functionality_group.rollout_strategy == FunctionalityGroup.ENABLE_GLOBALLY:
-        return FunctionalityGroup.functionality_set.first()
+        Availability(
+            functionality_group=FunctionalityGroup.functionality_set.first(),
+            is_enabled=True
+        )
 
     # Retrieve Functionality Instance
     try:
@@ -47,7 +52,7 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
 
     # Easiest Case: Already enabled
     if availability and availability.is_enabled:
-        return availability.functionality
+        return availability
 
     # Already Exists, but disabled
     if availability and not availability.is_enabled:
@@ -75,11 +80,16 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
     if functionalities:
         availability = Availability()
         availability.user = client_user
-        availability.functionality = functionalities[random.randint(0, len(functionalities))-1]
+        lf = len(functionalities)
+        func_index = (random.randint(1, lf)-1) if lf > 0 else 0
+        availability.functionality = functionalities[func_index]
 
-    enabled_count = Availability.objects.filter(
-        functionality__group=functionality_group,
-        is_enabled=True
-    ).count()
-    availability.is_enabled = (functionality_group.current_release.max_enabled_users > enabled_count)
-    return availability.functionality
+        enabled_count = Availability.objects.filter(
+            functionality__group=functionality_group,
+            is_enabled=True
+        ).count()
+        availability.is_enabled = (
+            functionality_group.current_release.max_enabled_users > enabled_count
+        )
+        availability.save()
+    return availability
