@@ -80,9 +80,7 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
     if functionalities:
         availability = Availability()
         availability.user = client_user
-        lf = len(functionalities)
-        func_index = (random.randint(1, lf)-1) if lf > 0 else 0
-        availability.functionality = functionalities[func_index]
+        availability.functionality = random.choice(functionalities)
 
         enabled_count = Availability.objects.filter(
             functionality__group=functionality_group,
