@@ -14,20 +14,14 @@ class AppAdmin(admin.ModelAdmin):
     list_display = ('human_readable_name', 'name', 'created_at',)
 
 
+class FunctionalityInline(admin.TabularInline):
+    model = Functionality
+
+
 @admin.register(FunctionalityGroup)
 class FunctionalityGroupAdmin(admin.ModelAdmin):
     list_display = ('human_readable_name', 'name', 'app', 'created_at', 'rollout_strategy')
-
-
-@admin.register(Functionality)
-class FunctionalityAdmin(admin.ModelAdmin):
-    list_display = (
-        'human_readable_name',
-        'group',
-        'name',
-        'color',
-        'created_at',
-    )
+    inlines = [FunctionalityInline]
 
 
 @admin.register(Release)
