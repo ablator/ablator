@@ -6,6 +6,8 @@ from datetime import datetime
 
 import hashlib
 
+from core.tools.name_generator import generate_name
+
 HASH_SALT = settings.FEATURE_HASH_SALT
 
 
@@ -121,7 +123,7 @@ class Release(models.Model):
     A point in time when a certain number of Availabilities should be switched on.
     """
     functionality_group = models.ForeignKey(FunctionalityGroup)
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, default=generate_name)
     start_at = models.DateTimeField(default=datetime(1, 1, 1))
     end_at = models.DateTimeField(default=datetime(5000, 1, 1))
     max_enabled_users = models.IntegerField(default=0)
