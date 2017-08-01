@@ -17,6 +17,14 @@ def can_i_use(client_user: ClientUser, functionality_group: FunctionalityGroup) 
     functionality = which(client_user, functionality_group)
     if functionality:
         return functionality.is_enabled
+    return False
+
+
+def _availability_or_none(availability):
+    if availability:
+        if availability.is_enabled:
+            return availability
+    return None
 
 
 def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> Optional[Availability]:
@@ -29,7 +37,6 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
     Use ClientUser.user_from_object to get or create a ClientUser instance from any hashable
     object (usually a string).
     """
-    # TODO: Split up this function
 
     # Check Roll Out Strategy
     if functionality_group.rollout_strategy == FunctionalityGroup.RECALL_FEATURE:
@@ -66,7 +73,7 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
             if functionality_group.current_release.max_enabled_users > enabled_count:
                 availability.is_enabled = True
                 availability.save()
-            return availability
+            return _availability_or_none(availability)
 
     # Check if Rollout is paused
     if functionality_group.rollout_strategy == FunctionalityGroup.PAUSE_ROLLOUT:
@@ -90,4 +97,4 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
             functionality_group.current_release.max_enabled_users > enabled_count
         )
         availability.save()
-    return availability
+    return _availability_or_none(availability)

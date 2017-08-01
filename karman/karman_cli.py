@@ -26,19 +26,13 @@ args = parser.parse_args()
 karman = Karman(args.base_url)
 
 
-def icon_for_bool(the_bool):
-    true_icon = 'True'
-    false_icon = 'False'
-
-    return true_icon if the_bool else false_icon
-
 if args.continuous:
     count = 0
     while True:
         try:
             username = args.user + str(count)
             availability = karman.which(username, args.func_group_id)
-            print('{}\t{}\t{}'.format(username, availability[0], icon_for_bool(availability[1])))
+            print('{}\t{}'.format(username, availability))
             if args.slow:
                 sleep(1)
             count += 1
@@ -50,6 +44,6 @@ else:
     print('User: {}'.format(args.user))
     print('Functionality Group: {}'.format(args.func_group_id))
     if availability and availability[0]:
-        print('{}: {}'.format(availability[0], icon_for_bool(availability[1])))
+        print('{}: {}'.format(availability))
     else:
         print('No availability for that user')
