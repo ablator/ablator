@@ -18,28 +18,28 @@
     {% for app in apps %}
         <section class="content">
             <h1>{{ app.human_readable_name }}</h1>
-            {% for fc in app.functionalitygroup_set.all %}
-                <h2>{{ fc.human_readable_name }}</h2>
+            {% for functionality in app.functionality_set.all %}
+                <h2>{{ functionality.human_readable_name }}</h2>
 
                 <div class="progress">
-                {% for f in fc.functionality_set.all %}
-                    <div class="progress-bar" style="width: {{ f.width_percent }}%; background-color: #{{ f.color }}">
-                        <span class="">{{ f.human_readable_name }}</span>
+                {% for flavor in functionality.flavor_set.all %}
+                    <div class="progress-bar" style="width: {{ flavor.width_percent }}%; background-color: #{{ flavor.color }}">
+                        <span class="">{{ flavor.human_readable_name }}</span>
                     </div>
                 {% endfor %}
                 </div>
 
-                {% for f in fc.functionality_set.all %}
+                {% for flavor in functionality.flavor_set.all %}
                     <div class="info-box bg-gray">
                         <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
                         <div class="info-box-content">
                         <span class="info-box-text">Enabled Users</span>
-                        <span class="info-box-number">{{ f.number_of_enabled_users }}</span>
+                        <span class="info-box-number">{{ flavor.number_of_enabled_users }}</span>
                         <div class="progress">
-                            <div class="progress-bar" style="width: {{ f.single_width_percent }}%"></div>
+                            <div class="progress-bar" style="width: {{ flavor.single_width_percent }}%"></div>
                         </div>
                         <span class="progress-description">
-                        {{ f.number_of_users }} Users total
+                        {{ flavor.number_of_users }} Users total
                         </span>
                         </div>
                     </div>

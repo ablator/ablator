@@ -109,13 +109,13 @@ class Flavor(models.Model):
     """
     name = models.SlugField(max_length=100)
     human_readable_name = models.CharField(max_length=140)
-    group = models.ForeignKey(Functionality)
+    functionality = models.ForeignKey(Functionality)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
     color = models.CharField(max_length=6, default='c0ffee')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{}.{}".format(self.group, self.name)
+        return "{}.{}".format(self.functionality, self.name)
 
     @property
     def number_of_users(self):
@@ -138,7 +138,7 @@ class Flavor(models.Model):
 
     @property
     def width_percent(self):
-        number_of_f = self.group.functionality_set.count()
+        number_of_f = self.functionality.flavor_set.count()
         return self.single_width_percent / number_of_f
 
 
