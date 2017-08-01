@@ -1,10 +1,10 @@
 import random
 from typing import Optional
 
-from .models import FunctionalityGroup, Functionality, ClientUser, Availability
+from .models import Functionality, Flavor, ClientUser, Availability
 
 
-def can_i_use(client_user: ClientUser, functionality_group: FunctionalityGroup) -> bool:
+def can_i_use(client_user: ClientUser, functionality_group: Functionality) -> bool:
     """
     Is the specified user allowed to use the feature?
 
@@ -27,31 +27,31 @@ def _availability_or_none(availability):
     return None
 
 
-def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> Optional[Availability]:
+def which(client_user: ClientUser, functionality_group: Functionality) -> Optional[Availability]:
     """
-    Which Functionality of the given FunctionalityGroup is enabled for the user, if any?
+    Which Flavor of the given Functionality is enabled for the user, if any?
 
-    Returns a Functionality object that corresponds to the ClientUser's enabled functionality,
-    or `None` if the user does not have any Functionality in the given FunctionalityGroup.
+    Returns a Flavor object that corresponds to the ClientUser's enabled functionality,
+    or `None` if the user does not have any Flavor in the given Functionality.
 
     Use ClientUser.user_from_object to get or create a ClientUser instance from any hashable
     object (usually a string).
     """
 
     # Check Roll Out Strategy
-    if functionality_group.rollout_strategy == FunctionalityGroup.RECALL_FEATURE:
+    if functionality_group.rollout_strategy == Functionality.RECALL_FEATURE:
         return None
 
-    if functionality_group.rollout_strategy == FunctionalityGroup.ENABLE_GLOBALLY:
+    if functionality_group.rollout_strategy == Functionality.ENABLE_GLOBALLY:
         Availability(
-            functionality_group=FunctionalityGroup.functionality_set.first(),
+            functionality_group=Functionality.flavor_set.first(),
             is_enabled=True
         )
 
-    # Retrieve Functionality Instance
+    # Retrieve Flavor Instance
     try:
         availability = Availability.objects.select_related('functionality').get(
-            functionality__in=functionality_group.functionality_set.all(),
+            functionality__in=functionality_group.flavor_set.all(),
             user=client_user
         )
     except Availability.DoesNotExist:
@@ -63,9 +63,9 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
 
     # Already Exists, but disabled
     if availability and not availability.is_enabled:
-        if functionality_group.rollout_strategy == FunctionalityGroup.PAUSE_ROLLOUT:
+        if functionality_group.rollout_strategy == Functionality.PAUSE_ROLLOUT:
             return availability.functionality
-        elif functionality_group.rollout_strategy == FunctionalityGroup.DEFINED_BY_RELEASES:
+        elif functionality_group.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
             enabled_count = Availability.objects.filter(
                 functionality__group=functionality_group,
                 is_enabled=True
@@ -76,14 +76,14 @@ def which(client_user: ClientUser, functionality_group: FunctionalityGroup) -> O
             return _availability_or_none(availability)
 
     # Check if Rollout is paused
-    if functionality_group.rollout_strategy == FunctionalityGroup.PAUSE_ROLLOUT:
+    if functionality_group.rollout_strategy == Functionality.PAUSE_ROLLOUT:
         return None
 
-    # Availability does not yet exist. Choose a Functionality at random
+    # Availability does not yet exist. Choose a Flavor at random
     if not functionality_group.current_release:
         return None
 
-    functionalities = functionality_group.functionality_set.all()
+    functionalities = functionality_group.flavor_set.all()
     if functionalities:
         availability = Availability()
         availability.user = client_user

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from core.models import Release
-from .models import ClientUser, FunctionalityGroup, Functionality, Availability, App
+from .models import ClientUser, Functionality, Flavor, Availability, App
 
 
 @admin.register(ClientUser)
@@ -15,10 +15,10 @@ class AppAdmin(admin.ModelAdmin):
 
 
 class FunctionalityInline(admin.TabularInline):
-    model = Functionality
+    model = Flavor
 
 
-@admin.register(FunctionalityGroup)
+@admin.register(Functionality)
 class FunctionalityGroupAdmin(admin.ModelAdmin):
     list_display = ('human_readable_name', 'name', 'app', 'created_at', 'rollout_strategy')
     inlines = [FunctionalityInline]

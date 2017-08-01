@@ -54,11 +54,11 @@ class App(models.Model):
         return self.name
 
 
-class FunctionalityGroup(models.Model):
+class Functionality(models.Model):
     """
     A behaviour, functionality, or program option to be managed.
 
-    A FunctionalityGroup contains one or more Functionality objects that represent individual
+    A Functionality contains one or more Flavor objects that represent individual
     variations of one functionality. This is helpful when you want to A/B test multiple
     incarnations of a functionality.
     """
@@ -86,6 +86,9 @@ class FunctionalityGroup(models.Model):
     def __str__(self):
         return '{}.{}'.format(self.app, self.name)
 
+    class Meta:
+        verbose_name_plural = "Functionalities"
+
     @property
     def current_release(self) -> 'Release':
         try:
@@ -97,25 +100,22 @@ class FunctionalityGroup(models.Model):
             return None
 
 
-class Functionality(models.Model):
+class Flavor(models.Model):
     """
     A specific version of a functionality.
 
-    Add more then one Functionality to a FunctionalityGroup to A/B test. One will be randomly
+    Add more then one Flavor to a Functionality to A/B test. One will be randomly
     activated depending on its enable_probability.
     """
     name = models.SlugField(max_length=100)
     human_readable_name = models.CharField(max_length=140)
-    group = models.ForeignKey(FunctionalityGroup)
+    group = models.ForeignKey(Functionality)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
     color = models.CharField(max_length=6, default='c0ffee')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{}.{}".format(self.group, self.name)
-
-    class Meta:
-        verbose_name_plural = "Functionalities"
 
     @property
     def number_of_users(self):
@@ -146,7 +146,7 @@ class Release(models.Model):
     """
     A point in time when a certain number of Availabilities should be switched on.
     """
-    functionality_group = models.ForeignKey(FunctionalityGroup)
+    functionality_group = models.ForeignKey(Functionality)
     name = models.CharField(max_length=100, default=generate_name)
     start_at = models.DateTimeField(default=datetime(1, 1, 1))
     end_at = models.DateTimeField(default=datetime(5000, 1, 1))
@@ -159,10 +159,10 @@ class Release(models.Model):
 
 class Availability(models.Model):
     """
-    A Functionality that is enabled for a specific user.
+    A Flavor that is enabled for a specific user.
     """
     user = models.ForeignKey(ClientUser, on_delete=models.CASCADE)
-    functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
+    functionality = models.ForeignKey(Flavor, on_delete=models.CASCADE)
     is_enabled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
