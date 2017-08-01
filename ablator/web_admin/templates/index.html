@@ -1,4 +1,59 @@
 {% extends '_base.html' %}
 {% block body %}
-    <h1>Hello</h1>
+
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Dashboard
+        <small>Overview</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    {% for app in apps %}
+        <section class="content">
+            <h1>{{ app.human_readable_name }}</h1>
+            {% for fc in app.functionalitygroup_set.all %}
+                <h2>{{ fc.human_readable_name }}</h2>
+
+                <div class="progress">
+                {% for f in fc.functionality_set.all %}
+                    <div class="progress-bar" style="width: {{ f.width_percent }}%; background-color: #{{ f.color }}">
+                        <span class="">{{ f.human_readable_name }}</span>
+                    </div>
+                {% endfor %}
+                </div>
+
+                {% for f in fc.functionality_set.all %}
+                    <div class="info-box bg-gray">
+                        <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
+                        <div class="info-box-content">
+                        <span class="info-box-text">Enabled Users</span>
+                        <span class="info-box-number">{{ f.number_of_enabled_users }}</span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ f.single_width_percent }}%"></div>
+                        </div>
+                        <span class="progress-description">
+                        {{ f.number_of_users }} Users total
+                        </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        
+        </section>
+    {% endfor %}
+
+
+
+
+
+
+
+
 {% endblock %}

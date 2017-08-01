@@ -117,6 +117,30 @@ class Functionality(models.Model):
     class Meta:
         verbose_name_plural = "Functionalities"
 
+    @property
+    def number_of_users(self):
+        return self.availability_set.count()
+
+    @property
+    def number_of_enabled_users(self):
+        return self.availability_set.filter(is_enabled=True).count()
+
+    @property
+    def number_of_disabled_users(self):
+        return self.availability_set.filter(is_enabled=False).count()
+
+    @property
+    def single_width_percent(self):
+        try:
+            return float(self.number_of_enabled_users) / self.number_of_users * 100
+        except ZeroDivisionError:
+            return 1 * 100
+
+    @property
+    def width_percent(self):
+        number_of_f = self.group.functionality_set.count()
+        return self.single_width_percent / number_of_f
+
 
 class Release(models.Model):
     """
