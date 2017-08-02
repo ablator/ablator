@@ -6,6 +6,7 @@ from datetime import datetime
 
 import hashlib
 
+from core.colors import random_color
 from core.tools.name_generator import generate_name
 
 HASH_SALT = settings.FEATURE_HASH_SALT
@@ -111,7 +112,7 @@ class Flavor(models.Model):
     human_readable_name = models.CharField(max_length=140)
     functionality = models.ForeignKey(Functionality)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
-    color = models.CharField(max_length=6, default='c0ffee')
+    color = models.CharField(max_length=6, default=random_color)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
