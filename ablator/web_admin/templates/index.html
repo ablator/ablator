@@ -18,7 +18,14 @@
         <section class="content">
             <h1>{{ app.human_readable_name }}</h1>
             {% for functionality in app.functionality_set.all %}
-                <h2>{{ functionality.human_readable_name }}</h2>
+                <h2>{{ functionality.human_readable_name }}
+                    <small>
+                    <span class="label label-success">
+                        {{ functionality.number_of_enabled_users }}</span> of
+                    <span class="label label-default">
+                        {{ functionality.number_of_users }}</span> users enabled
+                        </small>
+                </h2>
 
                 <div class="progress">
                 {% for flavor in functionality.flavor_set.all %}
@@ -39,9 +46,14 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            Enabled Users: {{ flavor.number_of_enabled_users }}<br>
-
-                            {{ flavor.number_of_users }} Users total
+                            Enabled Users:
+                            <span class="label label-success">
+                                {{ flavor.number_of_enabled_users }}</span>
+                                <br>
+                            Total Users:
+                            <span class="label label-default">
+                            {{ flavor.number_of_users }}
+                            </span>
                             <div class="progress">
                             <div class="progress-bar"
                                  style="width: {{ flavor.single_width_percent }}%"></div>

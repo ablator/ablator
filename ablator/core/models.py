@@ -90,6 +90,17 @@ class Functionality(models.Model):
     class Meta:
         verbose_name_plural = "Functionalities"
 
+    def number_of_users(self):
+        return Availability.objects.filter(
+            flavor__functionality=self
+        ).count()
+
+    def number_of_enabled_users(self):
+        return Availability.objects.filter(
+            flavor__functionality=self,
+            is_enabled=True
+        ).count()
+
     @property
     def current_release(self) -> 'Release':
         try:
