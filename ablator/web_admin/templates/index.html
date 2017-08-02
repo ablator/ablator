@@ -6,7 +6,6 @@
     <section class="content-header">
       <h1>
         Dashboard
-        <small>Overview</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -23,24 +22,31 @@
 
                 <div class="progress">
                 {% for flavor in functionality.flavor_set.all %}
-                    <div class="progress-bar" style="width: {{ flavor.width_percent }}%; background-color: #{{ flavor.color }}">
+                    <div class="progress-bar"
+                         style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
                         <span class="">{{ flavor.human_readable_name }}</span>
                     </div>
                 {% endfor %}
                 </div>
 
                 {% for flavor in functionality.flavor_set.all %}
-                    <div class="info-box bg-gray">
-                        <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
-                        <div class="info-box-content">
-                        <span class="info-box-text">Enabled Users</span>
-                        <span class="info-box-number">{{ flavor.number_of_enabled_users }}</span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ flavor.single_width_percent }}%"></div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <span class="label label-default" style="background-color: #{{ flavor.color }}">
+                                    {{ flavor.human_readable_name }}
+                                </span>
+                            </h3>
                         </div>
-                        <span class="progress-description">
-                        {{ flavor.number_of_users }} Users total
-                        </span>
+                        <div class="panel-body">
+                            Enabled Users: {{ flavor.number_of_enabled_users }}<br>
+
+                            {{ flavor.number_of_users }} Users total
+                            <div class="progress">
+                            <div class="progress-bar"
+                                 style="width: {{ flavor.single_width_percent }}%"></div>
+
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
