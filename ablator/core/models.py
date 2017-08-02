@@ -146,7 +146,7 @@ class Release(models.Model):
     """
     A point in time when a certain number of Availabilities should be switched on.
     """
-    functionality_group = models.ForeignKey(Functionality)
+    functionality = models.ForeignKey(Functionality)
     name = models.CharField(max_length=100, default=generate_name)
     start_at = models.DateTimeField(default=datetime(1, 1, 1))
     end_at = models.DateTimeField(default=datetime(5000, 1, 1))
@@ -162,12 +162,12 @@ class Availability(models.Model):
     A Flavor that is enabled for a specific user.
     """
     user = models.ForeignKey(ClientUser, on_delete=models.CASCADE)
-    functionality = models.ForeignKey(Flavor, on_delete=models.CASCADE)
+    flavor = models.ForeignKey(Flavor, on_delete=models.CASCADE)
     is_enabled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{}.{}".format(self.functionality, self.user)
+        return "{}.{}".format(self.flavor, self.user)
 
     class Meta:
         verbose_name_plural = "Availabilities"

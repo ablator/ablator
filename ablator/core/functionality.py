@@ -27,7 +27,7 @@ def _availability_or_none(availability):
     return None
 
 
-def which(client_user: ClientUser, functionality_group: Functionality) -> Optional[Availability]:
+def which(client_user: ClientUser, functionality: Functionality) -> Optional[Availability]:
     """
     Which Flavor of the given Functionality is enabled for the user, if any?
 
@@ -39,19 +39,19 @@ def which(client_user: ClientUser, functionality_group: Functionality) -> Option
     """
 
     # Check Roll Out Strategy
-    if functionality_group.rollout_strategy == Functionality.RECALL_FEATURE:
+    if functionality.rollout_strategy == Functionality.RECALL_FEATURE:
         return None
 
-    if functionality_group.rollout_strategy == Functionality.ENABLE_GLOBALLY:
+    if functionality.rollout_strategy == Functionality.ENABLE_GLOBALLY:
         Availability(
             functionality_group=Functionality.flavor_set.first(),
             is_enabled=True
         )
 
-    # Retrieve Flavor Instance
+    # Retrieve Availability and Flavor Instances
     try:
-        availability = Availability.objects.select_related('functionality').get(
-            functionality__in=functionality_group.flavor_set.all(),
+        availability = Availability.objects.select_related('flavor').get(
+            flavor__in=functionality.flavor_set.all(),
             user=client_user
         )
     except Availability.DoesNotExist:
@@ -63,38 +63,38 @@ def which(client_user: ClientUser, functionality_group: Functionality) -> Option
 
     # Already Exists, but disabled
     if availability and not availability.is_enabled:
-        if functionality_group.rollout_strategy == Functionality.PAUSE_ROLLOUT:
+        if functionality.rollout_strategy == Functionality.PAUSE_ROLLOUT:
             return availability.functionality
-        elif functionality_group.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
+        elif functionality.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
             enabled_count = Availability.objects.filter(
-                functionality__group=functionality_group,
+                functionality__group=functionality,
                 is_enabled=True
             ).count()
-            if functionality_group.current_release.max_enabled_users > enabled_count:
+            if functionality.current_release.max_enabled_users > enabled_count:
                 availability.is_enabled = True
                 availability.save()
             return _availability_or_none(availability)
 
     # Check if Rollout is paused
-    if functionality_group.rollout_strategy == Functionality.PAUSE_ROLLOUT:
+    if functionality.rollout_strategy == Functionality.PAUSE_ROLLOUT:
         return None
 
     # Availability does not yet exist. Choose a Flavor at random
-    if not functionality_group.current_release:
+    if not functionality.current_release:
         return None
 
-    functionalities = functionality_group.flavor_set.all()
-    if functionalities:
+    flavors = functionality.flavor_set.all()
+    if flavors:
         availability = Availability()
         availability.user = client_user
-        availability.functionality = random.choice(functionalities)
+        availability.flavor = random.choice(flavors)
 
         enabled_count = Availability.objects.filter(
-            functionality__group=functionality_group,
+            flavor__functionality=functionality,
             is_enabled=True
         ).count()
         availability.is_enabled = (
-            functionality_group.current_release.max_enabled_users > enabled_count
+            functionality.current_release.max_enabled_users > enabled_count
         )
         availability.save()
     return _availability_or_none(availability)

@@ -41,5 +41,5 @@ class WhichView(APIView):
         client_user = ClientUser.user_from_object(client_user_string)
         availability = which(client_user, functionality_group)
         return Response({
-            'functionality': availability.functionality.__str__() if availability else None,
+            'functionality': availability.flavor.__str__() if availability else None,
         })
