@@ -35,6 +35,7 @@
                     </div>
                 {% endfor %}
                 </div>
+                {% if functionality.flavor_set.count > 1 %}
 
                 {% for flavor in functionality.flavor_set.all %}
                     <div class="panel panel-default">
@@ -62,6 +63,8 @@
                         </div>
                     </div>
                 {% endfor %}
+
+                {% endif %}
             {% endfor %}
         
         </section>
