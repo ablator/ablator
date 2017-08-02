@@ -67,7 +67,7 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
             return availability.functionality
         elif functionality.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
             enabled_count = Availability.objects.filter(
-                functionality__group=functionality,
+                flavor__functionality=functionality,
                 is_enabled=True
             ).count()
             if functionality.current_release.max_enabled_users > enabled_count:
