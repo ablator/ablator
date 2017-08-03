@@ -8,6 +8,7 @@ import hashlib
 
 from core.colors import random_color
 from core.tools.name_generator import generate_name
+import uuid
 
 HASH_SALT = settings.FEATURE_HASH_SALT
 
@@ -23,6 +24,7 @@ class ClientUser(models.Model):
     make sure that the __repr__ method outputs a value that is unique to
     the user and unchanging.
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -47,12 +49,13 @@ class App(models.Model):
     """
     A collection of FunctionalityGroups.
     """
-    name = models.SlugField(max_length=100)
-    human_readable_name = models.CharField(max_length=140)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=140)
+    slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.slug
 
 
 class Functionality(models.Model):
@@ -63,8 +66,9 @@ class Functionality(models.Model):
     variations of one functionality. This is helpful when you want to A/B test multiple
     incarnations of a functionality.
     """
-    name = models.SlugField(max_length=100)
-    human_readable_name = models.CharField(max_length=140)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    slug = models.SlugField(max_length=100)
+    name = models.CharField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App)
 
@@ -85,7 +89,7 @@ class Functionality(models.Model):
     )
 
     def __str__(self):
-        return '{}.{}'.format(self.app, self.name)
+        return '{}.{}'.format(self.app, self.slug)
 
     class Meta:
         verbose_name_plural = "Functionalities"
@@ -119,15 +123,16 @@ class Flavor(models.Model):
     Add more then one Flavor to a Functionality to A/B test. One will be randomly
     activated depending on its enable_probability.
     """
-    name = models.SlugField(max_length=100)
-    human_readable_name = models.CharField(max_length=140)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    slug = models.SlugField(max_length=100)
+    name = models.CharField(max_length=140)
     functionality = models.ForeignKey(Functionality)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
     color = models.CharField(max_length=6, default=random_color)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{}.{}".format(self.functionality, self.name)
+        return "{}.{}".format(self.functionality, self.slug)
 
     @property
     def number_of_users(self):
@@ -158,6 +163,7 @@ class Release(models.Model):
     """
     A point in time when a certain number of Availabilities should be switched on.
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     functionality = models.ForeignKey(Functionality)
     name = models.CharField(max_length=100, default=generate_name)
     start_at = models.DateTimeField(default=datetime(1, 1, 1))
@@ -173,6 +179,7 @@ class Availability(models.Model):
     """
     A Flavor that is enabled for a specific user.
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(ClientUser, on_delete=models.CASCADE)
     flavor = models.ForeignKey(Flavor, on_delete=models.CASCADE)
     is_enabled = models.BooleanField(default=False)

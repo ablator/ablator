@@ -11,17 +11,21 @@ class ClientUserAdmin(admin.ModelAdmin):
 
 @admin.register(App)
 class AppAdmin(admin.ModelAdmin):
-    list_display = ('human_readable_name', 'name', 'created_at',)
+    list_display = ('slug', 'name', 'created_at',)
+    prepopulated_fields = {"slug": ("name",)}
 
 
-class FunctionalityInline(admin.TabularInline):
+class FlavorInline(admin.TabularInline):
     model = Flavor
+    readonly_fields = ('id',)
 
 
 @admin.register(Functionality)
-class FunctionalityGroupAdmin(admin.ModelAdmin):
-    list_display = ('human_readable_name', 'name', 'app', 'created_at', 'rollout_strategy')
-    inlines = [FunctionalityInline]
+class FunctionalityAdmin(admin.ModelAdmin):
+    list_display = ('slug', 'name', 'app', 'created_at', 'rollout_strategy')
+    inlines = [FlavorInline]
+    prepopulated_fields = {"slug": ("name",)}
+    readonly_fields = ('id',)
 
 
 @admin.register(Release)
