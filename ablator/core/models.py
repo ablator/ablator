@@ -67,8 +67,8 @@ class Functionality(models.Model):
     incarnations of a functionality.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    slug = models.SlugField(max_length=100)
     name = models.CharField(max_length=140)
+    slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App)
 
@@ -124,8 +124,8 @@ class Flavor(models.Model):
     activated depending on its enable_probability.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    slug = models.SlugField(max_length=100)
     name = models.CharField(max_length=140)
+    slug = models.SlugField(max_length=100)
     functionality = models.ForeignKey(Functionality)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
     color = models.CharField(max_length=6, default=random_color)
