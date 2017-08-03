@@ -77,9 +77,37 @@ To roll out your new *Functionality*, you need to set a release strategy. Possib
     *Functionality* is enabled. Add one or more *Release* objects to your *Functionality* to
     configure those more fine-grained options.
 
+A *Release*, in ablator terms, is a stretch of time that during which a certain set of rules 
+are defined how many and which users should be allowed to get a *Flavor* switched on for them.
+Right now, *Releases* can define a maximum number of users, which enables you to define slow
+roll out. Ablator will only allow that many users to have the *Functionality* enabled, and will
+randomly distribute them among the available *Flavors*. In the future, it's planned to make 
+*Releases* even more configurable.
 
 Accessing the Ablator API
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When the ablator server is running, it exposes two API endpoints, named ``which`` and 
+``caniuse``. Both take a user-identifier and a functionality id. The identifier can be any
+string that identifies your users between launches of your app, e.g. a user ID, an email 
+address, etc. It will be hashed before being saved to the ablator database. The
+functionality id can be obtained from the admin interface. We don't use functionality
+slugs in the URL to make it harder for people who listen to your app's web traffic to find 
+out which functionalities (that might still be in development even) are theoretically 
+available.
+
+:http://example.com/api/caniuse/<user_string>/<functionality_id>/:
+    This will return a boolean value indicating wether the functionality has any flavors that
+    are enabled for the user. You can use this API endpoint if you expect a functionality
+    which is only switched on or off using ablator.
+
+:http://example.com/api/which/<user_string>/<functionality_id>/:
+    This endpoint will return the full slug of the *Flavor* that is enabled for the user
+    if any, or None otherwise. 
+
+You can also use client libraries instead of accessing the API yourself. The ``karman``
+directory contains an example library for Python projects, and more are planned. 
+
 
 Road Map
 --------
@@ -87,24 +115,53 @@ Road Map
 Client Libraries
 ~~~~~~~~~~~~~~~~
 
-- Python
-- Swift
-- Your favourite language? Open an issue!
+:Python:
+    Already started. See the `karman` directory in this repository.
+
+:Swift:
+    Pending
+
+:Your Favourite Language?:
+    Open an issue and let me know!
 
 Performance
 ~~~~~~~~~~~
 
+A lot can be done here, simply optimizing the number of database calls, as well as moving to 
+caching the results of calculations and request.
+
 Web UI
 ~~~~~~
 
+The web user interface for administrators is planned to reach these milestones:
+
+1. The Web UI should be able to completely replace the admin interface. All actions regarding the 
+   creation of Apps, Functionalities, Flavors, etc should be able to be done via a custom interface.
+2. The Web UI should include helpful methods for releasing *right now* to a certain number of users,
+   or other features to make the life of ablator users more comfortable.
+3. Make the UI more interactive. Automatic reloading of data, separation of presentation and content,
+   general ajaxyness.
+4. Inclusion of various types of graphs (this goes hand in hand with the logging feature below) 
+5. It should be beautiful.
+
 Logging
 ~~~~~~~
+
+There is a lot of live data that we don't want to save into the regular Django Database, but could
+log into either Django's in memory cache, or something like redis. Logged data should include, among
+other things, new users, recurring users, etc. Once the data is logged into temp storage, nice graphs
+can be generated from it and displayed. Or it can be displayed live. 
 
 Dockerization
 ~~~~~~~~~~~~~
 
 More Roll Out Strategies
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+and more configuration options for releases
+
+Distinguish Between App Versions
+
 
 Test Coverage
 ~~~~~~~~~~~~~
