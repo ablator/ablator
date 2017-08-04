@@ -18,12 +18,17 @@ class Karman:
         ))
         request_json = r.json()
         self._log(request_json)
+
+        request_json['karman_elapsed_time'] = r.elapsed.total_seconds()
         return request_json
 
     def can_i_use(self, user: str, functionality_group_id: str) -> bool:
         response_json = self._request('caniuse', user, functionality_group_id)
         return response_json.get('enabled')
 
-    def which(self, user: str, functionality_group_id: str):
+    def which(self, user: str, functionality_group_id: str, return_statistics=False):
         response_json = self._request('which', user, functionality_group_id)
+
+        if return_statistics:
+            return response_json.get('functionality'), response_json.get('karman_elapsed_time')
         return response_json.get('functionality')

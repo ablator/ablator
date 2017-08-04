@@ -28,16 +28,29 @@ karman = Karman(args.base_url)
 
 if args.continuous:
     count = 0
+    enabled_count = 0
+    times = []
     while True:
         try:
             username = args.user + str(count)
-            availability = karman.which(username, args.func_group_id)
-            print('{}\t{}'.format(username, availability))
+            availability, elapsed_time = karman.which(
+                username,
+                args.func_group_id,
+                return_statistics=True
+            )
+            print('{:06.5f} {:>16} {}'.format(elapsed_time, username, availability))
             if args.slow:
                 sleep(1)
+
+            # Statistics
             count += 1
+            times.append(elapsed_time)
+            if availability:
+                enabled_count += 1
         except KeyboardInterrupt:
-            print('\nRequested {} functionalities'.format(count))
+            average_response_time = sum(times) / float(len(times))
+            result_string = '\nRequested {} functionalities, {} enabled. Avg time: {:f} seconds'
+            print(result_string.format(count, enabled_count, average_response_time))
             exit(0)
 else:
     availability = karman.which(args.user, args.func_group_id)
