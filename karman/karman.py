@@ -13,7 +13,7 @@ class Karman:
             print(log_message)
 
     def _request(self, method: str, user: str, functionality_group_id: str) -> dict:
-        r = requests.get('{}api/{}/{}/{}/'.format(
+        r = requests.get('{}api/v1/{}/{}/{}/'.format(
             self.base_url, method, user, functionality_group_id
         ))
         request_json = r.json()

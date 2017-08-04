@@ -97,12 +97,12 @@ slugs in the URL to make it harder for people who listen to your app's web traff
 out which functionalities (that might still be in development even) are theoretically 
 available.
 
-:http://example.com/api/caniuse/<user_string>/<functionality_id>/:
+:http://example.com/api/v1/caniuse/<user_string>/<functionality_id>/:
     This will return a boolean value indicating whether the functionality has any flavors that
     are enabled for the user. You can use this API endpoint if you expect a functionality
     which is only switched on or off using ablator.
 
-:http://example.com/api/which/<user_string>/<functionality_id>/:
+:http://example.com/api/v1/which/<user_string>/<functionality_id>/:
     This endpoint will return the full slug of the *Flavor* that is enabled for the user
     if any, or None otherwise. 
 
