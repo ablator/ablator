@@ -11,7 +11,7 @@ def mocked_which(*args, **kwargs):
 
 class CanIUse(TestCase):
     @mock.patch('core.functionality.which', return_value=None)
-    def test_can_i_use_none(self, which):
+    def test_none(self, which):
         self.assertFalse(
             can_i_use(
                 ClientUser.user_from_object('test'),
@@ -20,7 +20,7 @@ class CanIUse(TestCase):
         )
 
     @mock.patch('core.functionality.which', return_value=Availability(is_enabled=False))
-    def test_can_i_use_not_enabled(self, which):
+    def test_not_enabled(self, which):
         self.assertFalse(
             can_i_use(
                 ClientUser.user_from_object('test'),
@@ -29,7 +29,7 @@ class CanIUse(TestCase):
         )
 
     @mock.patch('core.functionality.which', return_value=Availability(is_enabled=True))
-    def test_can_i_use_enabled_enabled(self, which):
+    def test_enabled(self, which):
         self.assertTrue(
             can_i_use(
                 ClientUser.user_from_object('test'),
