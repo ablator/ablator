@@ -21,6 +21,28 @@ def can_i_use(client_user: ClientUser, functionality: Functionality) -> bool:
     return False
 
 
+class WhichContext:
+    client_user: ClientUser
+    functionality: Functionality
+
+
+class NoAvailability(Exception):
+    pass
+
+
+def check_roll_out_recall(context: WhichContext):
+    if context.functionality.rollout_strategy == Functionality.RECALL_FEATURE:
+        raise NoAvailability
+
+
+def check_roll_out_enable_globally(context: WhichContext) -> Optional[Availability]:
+    if context.functionality.rollout_strategy == Functionality.ENABLE_GLOBALLY:
+        return Availability(
+            flavor=context.functionality.flavor_set.first(),
+            is_enabled=True
+        )
+
+
 def which(client_user: ClientUser, functionality: Functionality) -> Optional[Availability]:
     """
     Which Flavor of the given Functionality is enabled for the user, if any?
@@ -31,16 +53,31 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
     Use ClientUser.user_from_object to get or create a ClientUser instance from any hashable
     object (usually a string).
     """
+    context = WhichContext()
+    context.client_user = client_user
+    context.functionality = functionality
 
-    # Check Roll Out Strategy
-    if functionality.rollout_strategy == Functionality.RECALL_FEATURE:
-        return None
+    checking_pipeline = [
+        check_roll_out_recall,
+        check_roll_out_enable_globally,
+    ]
 
-    if functionality.rollout_strategy == Functionality.ENABLE_GLOBALLY:
-        Availability(
-            functionality_group=Functionality.flavor_set.first(),
-            is_enabled=True
-        )
+    # Go through each function in the checking pipeline. If it yields an Availability, we're done
+    # and can return it. Otherwise, continue until we hit the end, or catch a NoAvailability
+    # exception.
+    # Splitting the methods up like this helps with testing, caching, and gaining an overview over
+    # what actually happens. Hopefully.
+    for func in checking_pipeline:
+        try:
+            availability = func(context)
+            if availability:
+                return availability
+        except NoAvailability:
+            return None
+    return None
+
+
+
 
     # Retrieve Availability and Flavor Instances
     try:
