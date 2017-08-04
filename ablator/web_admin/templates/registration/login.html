@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+{% block body %}
+    <div class="container">
+        <h1>Ablator Login</h1><br>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Login</button>
+        </form>
+
+        {% if register_allowed %}
+            <div class="login-help">
+                <a href="#">Register</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

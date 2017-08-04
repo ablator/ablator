@@ -1,0 +1,84 @@
+{% extends '_base.html' %}
+{% block body %}
+
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Dashboard
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    {% for app in apps %}
+        <section class="content">
+            <h1>{{ app.name }}</h1>
+            {% for functionality in app.functionality_set.all %}
+                <h2>{{ functionality.name }}
+                    <small>
+                    <span class="label label-success">
+                        {{ functionality.number_of_enabled_users }}</span> of
+                    <span class="label label-default">
+                        {{ functionality.number_of_users }}</span> users enabled
+                        </small>
+                </h2>
+
+                <div class="progress">
+                {% for flavor in functionality.flavor_set.all %}
+                    <div class="progress-bar"
+                         style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                        <span class="">{{ flavor.name }}</span>
+                    </div>
+                {% endfor %}
+                </div>
+                {% if functionality.flavor_set.count > 1 %}
+
+                {% for flavor in functionality.flavor_set.all %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <span class="label label-default" style="background-color: #{{ flavor.color }}">
+                                    {{ flavor.name }}
+                                </span>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            Enabled Users:
+                            <span class="label label-success">
+                                {{ flavor.number_of_enabled_users }}</span>
+                                <br>
+                            Total Users:
+                            <span class="label label-default">
+                            {{ flavor.number_of_users }}
+                            </span>
+                            <div class="progress">
+                            <div class="progress-bar"
+                                 style="width: {{ flavor.single_width_percent }}%"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% endif %}
+            {% endfor %}
+        
+        </section>
+        {% empty %}
+        <section class="content">
+        No apps yet. Add some via the admin.
+        </section>
+    {% endfor %}
+
+
+
+
+
+
+
+
+{% endblock %}
