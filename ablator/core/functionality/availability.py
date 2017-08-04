@@ -1,4 +1,4 @@
-from random import random
+import random
 from typing import Optional
 
 from core.models import Availability, Functionality
@@ -25,23 +25,28 @@ def check_for_existing_enabled_availability(context: 'WhichContext') -> Optional
     return _availability_or_none(context.availability)
 
 
-def enable_existing_availability_depending_on_user_count(context: 'WhichContext') -> Optional['Availability']:
+def get_enabled_count(context: 'WhichContext'):
+    context.enabled_count = Availability.objects.filter(
+        flavor__functionality=context.functionality,
+        is_enabled=True
+    ).count()
+
+
+def enable_or_create_availability_by_user_count(context: 'WhichContext') -> Optional['Availability']:
     """
     Availability already exists, but is disabled, so enable if there are still user slots left in
     max_enabled_users
     """
-    if context.availability.is_enabled:
-        return context.availability
-
     if context.functionality.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
-        enabled_count = Availability.objects.filter(
-            flavor__functionality=context.functionality,
-            is_enabled=True
-        ).count()
-        if context.functionality.current_release.max_enabled_users > enabled_count:
+        if context.functionality.current_release.max_enabled_users > context.enabled_count:
+            if not context.availability:
+                create_new_availability_with_random_flavor(context)
+
             context.availability.is_enabled = True
             context.availability.save()
-        return _availability_or_none(context.availability)
+            return _availability_or_none(context.availability)
+        from ..functionality import NoAvailability
+        raise NoAvailability
 
 
 def assert_existence_of_flavors(context: 'WhichContext'):
@@ -57,3 +62,4 @@ def create_new_availability_with_random_flavor(context: 'WhichContext'):
     availability.user = context.client_user
     availability.flavor = random.choice(context.available_flavors)
     availability.save()
+    context.availability = availability

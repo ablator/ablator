@@ -11,6 +11,7 @@ class WhichContext:
     functionality: Functionality
     availability: Availability
     available_flavors: List[Flavor]
+    enabled_count: int
 
 
 class NoAvailability(Exception):
@@ -60,11 +61,8 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
         assert_roll_out_is_not_paused,
         assert_existence_of_release,
         assert_existence_of_flavors,
-        enable_existing_availability_depending_on_user_count,
-
-        # Check if a new Availability should be created
-        create_new_availability_with_random_flavor,
-        enable_existing_availability_depending_on_user_count,
+        get_enabled_count,
+        enable_or_create_availability_by_user_count,
     ]
 
     # Go through each function in the pipeline. If it yields an Availability, we're done
