@@ -42,3 +42,4 @@ class ReleaseAdmin(admin.ModelAdmin):
 @admin.register(Availability)
 class AvailabilityAdmin(admin.ModelAdmin):
     list_display = ('user', 'flavor', 'is_enabled', 'created_at',)
+    readonly_fields = ('user', 'flavor', 'created_at')
