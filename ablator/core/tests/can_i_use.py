@@ -1,13 +1,9 @@
-from django.test import TestCase
 from unittest import mock
 
-from core.functionality import _availability_or_none
-from core.models import ClientUser, Functionality, Flavor, Availability
-from .functionality import can_i_use, which
+from django.test import TestCase
 
-
-def mocked_which(*args, **kwargs):
-    return None
+from core.functionality import can_i_use
+from core.models import ClientUser, Functionality, Availability
 
 
 class CanIUse(TestCase):
@@ -37,15 +33,3 @@ class CanIUse(TestCase):
                 functionality=Functionality()
             )
         )
-
-
-class AvailabilityOrNone(TestCase):
-    def test_none(self):
-        self.assertIsNone(_availability_or_none(None))
-
-    def test_not_enabled(self):
-        self.assertIsNone(_availability_or_none(Availability(is_enabled=False)))
-
-    def test_enabled(self):
-        availability = Availability(is_enabled=True)
-        self.assertEqual(_availability_or_none(availability), availability)

@@ -1,7 +1,8 @@
 import random
 from typing import Optional
 
-from .models import Functionality, Flavor, ClientUser, Availability
+from .availability_or_none import _availability_or_none
+from ..models import Functionality, ClientUser, Availability
 
 
 def can_i_use(client_user: ClientUser, functionality: Functionality) -> bool:
@@ -18,13 +19,6 @@ def can_i_use(client_user: ClientUser, functionality: Functionality) -> bool:
     if functionality:
         return functionality.is_enabled
     return False
-
-
-def _availability_or_none(availability):
-    if availability:
-        if availability.is_enabled:
-            return availability
-    return None
 
 
 def which(client_user: ClientUser, functionality: Functionality) -> Optional[Availability]:
