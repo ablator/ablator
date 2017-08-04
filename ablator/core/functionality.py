@@ -4,7 +4,7 @@ from typing import Optional
 from .models import Functionality, Flavor, ClientUser, Availability
 
 
-def can_i_use(client_user: ClientUser, functionality_group: Functionality) -> bool:
+def can_i_use(client_user: ClientUser, functionality: Functionality) -> bool:
     """
     Is the specified user allowed to use the feature?
 
@@ -14,7 +14,7 @@ def can_i_use(client_user: ClientUser, functionality_group: Functionality) -> bo
     Use ClientUser.user_from_object to get or create a ClientUser instance from any hashable
     object (usually a string).
     """
-    functionality = which(client_user, functionality_group)
+    functionality = which(client_user, functionality)
     if functionality:
         return functionality.is_enabled
     return False
