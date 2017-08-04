@@ -18,6 +18,11 @@
 <div class="container">
 {% block body %}
 {% endblock %}
+
+{% if user.is_authenticated %}
+    <a href="{% url 'logout' %}">Logout</a>
+{% endif %}
+
 </div>
 
 </body>
