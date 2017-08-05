@@ -1,4 +1,8 @@
 {% extends '_base.html' %}
+{% block back %}
+    <a href="{% url 'app' functionality.app.id %}">&larr; Back to {{ functionality.app.name }}</a>
+{% endblock %}
+
 {% block body %}
     <h2>{{ functionality.name }}
             <small>

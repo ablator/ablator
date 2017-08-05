@@ -1,4 +1,8 @@
 {% extends '_base.html' %}
+{% block back %}
+    <a href="{% url 'home' %}">&larr; Back to Overview</a>
+{% endblock %}
+
 {% block body %}
     <h1>{{ app.name }}</h1>
     {% for functionality in app.functionality_set.all %}

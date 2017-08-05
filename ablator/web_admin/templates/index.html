@@ -6,7 +6,7 @@
         <section class="content">
             <h1><a href="{% url 'app' app.id %}">{{ app.name }}</a></h1>
             {% for functionality in app.functionality_set.all %}
-                <h2>{{ functionality.name }}
+                <h2><a href="{% url 'functionality' functionality.id %}">{{ functionality.name }}</a>
                     <small>
                     <span class="label label-success">
                         {{ functionality.number_of_enabled_users }}</span> of
