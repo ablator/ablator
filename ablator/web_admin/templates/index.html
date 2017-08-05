@@ -4,7 +4,7 @@
     <!-- Main content -->
     {% for app in apps %}
         <section class="content">
-            <h1>{{ app.name }}</h1>
+            <h1><a href="{% url 'app' app.id %}">{{ app.name }}</a></h1>
             {% for functionality in app.functionality_set.all %}
                 <h2>{{ functionality.name }}
                     <small>
@@ -23,36 +23,6 @@
                     </div>
                 {% endfor %}
                 </div>
-                {% if functionality.flavor_set.count > 1 %}
-
-                {% for flavor in functionality.flavor_set.all %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="label label-default" style="background-color: #{{ flavor.color }}">
-                                    {{ flavor.name }}
-                                </span>
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            Enabled Users:
-                            <span class="label label-success">
-                                {{ flavor.number_of_enabled_users }}</span>
-                                <br>
-                            Total Users:
-                            <span class="label label-default">
-                            {{ flavor.number_of_users }}
-                            </span>
-                            <div class="progress">
-                            <div class="progress-bar"
-                                 style="width: {{ flavor.single_width_percent }}%"></div>
-
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-
-                {% endif %}
             {% endfor %}
         
         </section>

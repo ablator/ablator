@@ -1,0 +1,24 @@
+{% extends '_base.html' %}
+{% block body %}
+    <h1>{{ app.name }}</h1>
+    {% for functionality in app.functionality_set.all %}
+        <h2><a href="{% url 'functionality' functionality.id %}">{{ functionality.name }}</a>
+            <small>
+                    <span class="label label-success">
+                        {{ functionality.number_of_enabled_users }}</span> of
+                <span class="label label-default">
+                        {{ functionality.number_of_users }}</span> users enabled
+            </small>
+        </h2>
+
+        <div class="progress">
+            {% for flavor in functionality.flavor_set.all %}
+                <div class="progress-bar"
+                     style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                    <span class="">{{ flavor.name }}</span>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% endfor %}
+{% endblock %}
