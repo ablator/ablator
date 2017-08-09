@@ -11,7 +11,7 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['apps'] = App.objects.all()
+        context_data['apps'] = App.objects.filter(company=self.request.user.ablatoruser.company)
         return context_data
 
 
@@ -20,7 +20,7 @@ class AppView(TemplateView):
 
     def get_context_data(self, app_id, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['app'] = App.objects.get(id=app_id)
+        context_data['app'] = App.objects.filter(company=self.request.user.ablatoruser.company).get(id=app_id)
         return context_data
 
 
@@ -29,5 +29,5 @@ class FunctionalityView(TemplateView):
 
     def get_context_data(self, functionality_id, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['functionality'] = Functionality.objects.get(id=functionality_id)
+        context_data['functionality'] = Functionality.objects.filter(app__company=self.request.user.ablatoruser.company).get(id=functionality_id)
         return context_data

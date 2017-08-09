@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'web_admin',
+    'user_management',
 ]
 
 MIDDLEWARE = [

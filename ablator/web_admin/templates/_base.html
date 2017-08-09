@@ -49,7 +49,7 @@
                         Signed in as
                         <a href="#" class="navbar-link">
                             <strong>{{ request.user }}</strong>
-                        </a> -
+                        </a> of <strong>{{ request.user.ablatoruser.company }}</strong>-
                         <a href="{% url 'logout' %}" class="navbar-link">Sign Out</a>
                     </p>
                 </div><!--/.nav-collapse -->

@@ -10,6 +10,8 @@ from core.colors import random_color
 from core.tools.name_generator import generate_name
 import uuid
 
+from user_management.models import Company
+
 HASH_SALT = settings.FEATURE_HASH_SALT
 
 
@@ -53,9 +55,10 @@ class App(models.Model):
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    company = models.ForeignKey(Company)
 
     def __str__(self):
-        return self.slug
+        return '{}.{}'.format(self.company, self.slug)
 
 
 class Functionality(models.Model):
