@@ -6,14 +6,7 @@
         <section class="content">
             <h1><a href="{% url 'app' app.id %}">{{ app.name }}</a></h1>
             {% for functionality in app.functionality_set.all %}
-                <h2><a href="{% url 'functionality' functionality.id %}">{{ functionality.name }}</a>
-                    <small>
-                    <span class="label label-success">
-                        {{ functionality.number_of_enabled_users }}</span> of
-                    <span class="label label-default">
-                        {{ functionality.number_of_users }}</span> users enabled
-                        </small>
-                </h2>
+                {% include '_includes/functionality_enabled_users.html' %}
 
                 <div class="progress">
                 {% for flavor in functionality.flavor_set.all %}

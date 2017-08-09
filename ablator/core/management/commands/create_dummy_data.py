@@ -47,7 +47,6 @@ class Command(BaseCommand):
                     flavor.save()
                     self.stdout.write(self.style.SUCCESS(' + Flavor {}'.format(flavor.name)))
                 num_availabilities = random.randrange(13, 15)
-                self.stdout.write('   Generating {} availabilities...'.format(num_availabilities))
                 for _ in range(num_availabilities):
                     which(
                         client_user=ClientUser.user_from_object(random_user_name()),
