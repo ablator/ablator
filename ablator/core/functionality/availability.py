@@ -39,9 +39,6 @@ def enable_or_create_availability_by_user_count(context: 'WhichContext') -> Opti
     """
     if context.functionality.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
         if context.functionality.current_release.max_enabled_users > context.enabled_count:
-            if not context.availability:
-                create_new_availability_with_random_flavor(context)
-
             context.availability.is_enabled = True
             context.availability.save()
             return _availability_or_none(context.availability)
@@ -58,8 +55,12 @@ def assert_existence_of_flavors(context: 'WhichContext'):
 
 
 def create_new_availability_with_random_flavor(context: 'WhichContext'):
-    availability = Availability()
-    availability.user = context.client_user
-    availability.flavor = random.choice(context.available_flavors)
-    availability.save()
-    context.availability = availability
+    if not context.availability:
+        availability = Availability()
+        availability.user = context.client_user
+        availability.flavor = random.choice(context.available_flavors)
+        availability.save()
+        context.availability = availability
+
+
+# def create_disabled_availability(context: )

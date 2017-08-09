@@ -1,4 +1,3 @@
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
@@ -15,6 +14,7 @@ class HomePageView(TemplateView):
         context_data['apps'] = App.objects.all()
         return context_data
 
+
 class AppView(TemplateView):
     template_name = 'app.html'
 
@@ -22,6 +22,7 @@ class AppView(TemplateView):
         context_data = super().get_context_data(**kwargs)
         context_data['app'] = App.objects.get(id=app_id)
         return context_data
+
 
 class FunctionalityView(TemplateView):
     template_name = 'functionality.html'

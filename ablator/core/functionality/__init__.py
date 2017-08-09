@@ -1,4 +1,3 @@
-import random
 from typing import Optional, List
 
 from .availability import *
@@ -62,7 +61,12 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
         assert_existence_of_release,
         assert_existence_of_flavors,
         get_enabled_count,
+        create_new_availability_with_random_flavor,
         enable_or_create_availability_by_user_count,
+
+        # none of the previous pipeline functions yielded an availability.
+        # create a disabled availability to save that fact
+        # create_disabled_availability,
     ]
 
     # Go through each function in the pipeline. If it yields an Availability, we're done
