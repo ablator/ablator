@@ -202,48 +202,49 @@
         {% endfor %}
     </div>
     <section>
-    <h2>Flavors</h2>
-    <div class="row">
-        {% for flavor in functionality.flavor_set.all %}
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
+        <h2>Flavors</h2>
+        <div class="row">
+            {% for flavor in functionality.flavor_set.all %}
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
                                 <span class="label label-default"
                                       style="background-color: #{{ flavor.color }}">
                                     {{ flavor.name }}
                                 </span>
-                            <span style="float: right;">
+                                <span style="float: right;">
                                 <span class="label label-success">{{ flavor.number_of_enabled_users }} enabled users</span>
                                 <span class="label label-default">{{ flavor.number_of_users }} users overall</span>
                                     </span>
-                        </h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="progress">
-                            <div class="progress-bar"
-                                 style="width: {{ flavor.single_width_percent }}%"></div>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="progress">
+                                <div class="progress-bar"
+                                     style="width: {{ flavor.single_width_percent }}%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
     </section>
 
     <section>
-    <h2>Release Timeline</h2>
+        <h2>Release Timeline</h2>
         <ul class="timeline">
             {% for release in functionality.release_set.all %}
                 <li class="{% cycle '' 'timeline-inverted' %}">
                     <div class="timeline-badge primary">
-                        <a><i class="glyphicon glyphicon-record" rel="tooltip" title="{{ release.starts_at }}" id=""></i></a>
+                        <a><i class="glyphicon glyphicon-record" rel="tooltip"
+                              title="{{ release.starts_at }}" id=""></i></a>
                     </div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
                             <h3>{{ release.name }}
                                 {% if release.is_current %}
-                                <span class="label label-success">currently active</span>
+                                    <span class="label label-success">currently active</span>
                                 {% endif %}
                             </h3>
                         </div>
@@ -255,7 +256,7 @@
                                 </tr>
                                 <tr>
                                     <td>End at</td>
-                                    <td>{{ release.end_at}}</td>
+                                    <td>{{ release.end_at }}</td>
                                 </tr>
                                 <tr>
                                     <td>Maximum Enabled Users</td>
@@ -268,6 +269,6 @@
             {% endfor %}
         </ul>
 
-    <!-- https://bootsnipp.com/snippets/featured/timeline-21-with-images-and-responsive -->
+        <!-- https://bootsnipp.com/snippets/featured/timeline-21-with-images-and-responsive -->
     </section>
 {% endblock %}
