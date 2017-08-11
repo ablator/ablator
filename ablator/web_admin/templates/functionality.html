@@ -1,24 +1,25 @@
 {% extends '_base.html' %}
 {% block back %}
-    <li class="breadcrumb-item"><a href="{% url 'app' functionality.app.id %}">{{ functionality.app.name }}</a></li>
+    <li class="breadcrumb-item"><a
+            href="{% url 'app' functionality.app.id %}">{{ functionality.app.name }}</a></li>
     <li class="breadcrumb-item active">{{ functionality.name }}</li>
 
 {% endblock %}
 
 {% block content %}
     <section>
-    <div class="page-header">
-        {% include '_includes/functionality_enabled_users.html' %}
-    </div>
+        <div class="page-header">
+            {% include '_includes/functionality_enabled_users.html' %}
+        </div>
 
-    <div class="progress">
-        {% for flavor in functionality.flavor_set.all %}
-            <div class="progress-bar"
-                 style="height: 4em; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                <span style="line-height: 4em;">{{ flavor.name }}</span>
-            </div>
-        {% endfor %}
-    </div>
+        <div class="progress">
+            {% for flavor in functionality.flavor_set.all %}
+                <div class="progress-bar"
+                     style="height: 4em; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                    <span style="line-height: 4em;">{{ flavor.name }}</span>
+                </div>
+            {% endfor %}
+        </div>
     </section>
 
     <hr>
@@ -30,17 +31,18 @@
         <div class="row">
             {% for flavor in functionality.flavor_set.all %}
                 <div class="col-md-4">
-                <div class="card">
-                      <div class="card-body">
-                        <h4 class="card-title">{{ flavor.name }}</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            <span class="badge badge-primary">{{ flavor.number_of_enabled_users }} enabled users</span>
-                            <span class="badge badge-secondary">{{ flavor.number_of_users }} users overall</span>
-                        </h6>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ flavor.single_width_percent }}%; background-image: none; background-color: #{{ flavor.color }}"></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ flavor.name }}</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <span class="badge badge-primary">{{ flavor.number_of_enabled_users }} enabled users</span>
+                                <span class="badge badge-secondary">{{ flavor.number_of_users }} users overall</span>
+                            </h6>
+                            <div class="progress">
+                                <div class="progress-bar"
+                                     style="width: {{ flavor.single_width_percent }}%; background-image: none; background-color: #{{ flavor.color }}"></div>
+                            </div>
                         </div>
-                      </div>
                     </div>
                 </div>
 
@@ -51,47 +53,54 @@
                 {% endif %}
             {% endfor %}
 
-            <div class="col-md-4"><div class="card text-center">
-                <div class="card-body">
-                    <button type="button" class="btn btn-outline-primary">Add New Flavor</button>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-outline-primary">Add New Flavor
+                        </button>
+                    </div>
                 </div>
-            </div></div>
-        </div>
+            </div>
+            </div>
     </section>
 
     <hr>
 
     <section>
-    <h2>Release Timeline</h2>
+        <h2>Release Timeline</h2>
 
-    <div class="row">
-        {% for release in functionality.release_set.all %}
-            <div class="col-md-3">
-            <div class="card {% if release.is_current %}text-white bg-primary{% endif %}">
-                <div class="card-body">
-                    <h4 class="card-title">{{ release.name }}</h4>
-                    <h6 class="card-subtitle mb-2">
-                        {{ release.start_at }}
-                    </h6>
-                    <div class="text-center">
-                    <span class="display-2">{{ release.max_enabled_users }}</span><br><small>users max</small>
+        <div class="row">
+            {% for release in functionality.release_set.all %}
+                <div class="col-md-3">
+                    <div class="card {% if release.is_current %}text-white bg-primary{% endif %}">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ release.name }}</h4>
+                            <h6 class="card-subtitle mb-2">
+                                {{ release.start_at }}
+                            </h6>
+                            <div class="text-center">
+                                <span class="display-2">{{ release.max_enabled_users }}</span><br>
+                                <small>users max</small>
+                            </div>
                         </div>
+                    </div>
                 </div>
-            </div>
-            </div>
-            {% if forloop.counter|divisibleby:3 %}
+                {% if forloop.counter|divisibleby:4 %}
                     </div>
                     <br>
                     <div class="row">
                 {% endif %}
-        {% endfor %}
+            {% endfor %}
 
-        <div class="col-md-3"><div class="card text-center">
-                <div class="card-body">
-                    <button type="button" class="btn btn-outline-primary">Add New Release</button>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-outline-primary">Add New Release
+                        </button>
+                    </div>
                 </div>
-            </div></div>
-    </div>
+            </div>
+            </div>
     </section>
 
     <hr>
@@ -113,7 +122,7 @@ functionality_id = "{{ functionality.id }}"
 availability = karman.which(username, functionality_id)
 
 # this will return one of the following:{% for flavor in functionality.flavor_set.all %}
-# availability == "{{ flavor }}"{% endfor %}
-# availability == None</code></pre>
+            # availability == "{{ flavor }}"{% endfor %}
+            # availability == None</code></pre>
     </section>
 {% endblock %}
