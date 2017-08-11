@@ -9,8 +9,41 @@
 {% block content %}
     <section>
         <div class="page-header">
-            {% include '_includes/functionality_enabled_users.html' %}
+            <h1>{{ functionality.name }}</h1>
         </div>
+
+        <hr>
+
+        <section>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <span class="display-2">{{ functionality.number_of_enabled_users }}</span><br>
+                            <small>users enabled</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <span class="display-2">{{ functionality.number_of_users }}</span><br>
+                            <small>potential users</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+
+        <hr>
 
         <div class="progress">
             {% for flavor in functionality.flavor_set.all %}
@@ -34,14 +67,19 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">{{ flavor.name }}</h4>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                <span class="badge badge-primary">{{ flavor.number_of_enabled_users }} enabled users</span>
-                                <span class="badge badge-secondary">{{ flavor.number_of_users }} users overall</span>
-                            </h6>
+
                             <div class="progress">
                                 <div class="progress-bar"
                                      style="width: {{ flavor.single_width_percent }}%; background-image: none; background-color: #{{ flavor.color }}"></div>
                             </div>
+                            <hr>
+                            <div class="text-center">
+                                <span class="display-2">{{ flavor.number_of_enabled_users }}</span><br>
+                                <small>users enabled, of
+                                    <strong>{{ flavor.number_of_users }}</strong> users overall
+                                </small>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -74,10 +112,7 @@
                 <div class="col-md-3">
                     <div class="card {% if release.is_current %}text-white bg-primary{% endif %}">
                         <div class="card-body">
-                            <h4 class="card-title">{{ release.name }}</h4>
-                            <h6 class="card-subtitle mb-2">
-                                {{ release.start_at }}
-                            </h6>
+                            <h4 class="card-title">{{ release.start_at }}</h4>
                             <div class="text-center">
                                 <span class="display-2">{{ release.max_enabled_users }}</span><br>
                                 <small>users max</small>
@@ -122,7 +157,7 @@ functionality_id = "{{ functionality.id }}"
 availability = karman.which(username, functionality_id)
 
 # this will return one of the following:{% for flavor in functionality.flavor_set.all %}
-            # availability == "{{ flavor }}"{% endfor %}
-            # availability == None</code></pre>
+# availability == "{{ flavor }}"{% endfor %}
+# availability == None</code></pre>
     </section>
 {% endblock %}
