@@ -271,4 +271,25 @@
 
         <!-- https://bootsnipp.com/snippets/featured/timeline-21-with-images-and-responsive -->
     </section>
+
+    <section>
+        <h2>Including This Functionality</h2>
+
+        <div class="well">This functionality has the ID <strong>{{ functionality.id }}</strong></div>
+
+        <p>
+            To include this functionality in your code, use the <code>which</code> function in your
+            ablator client. Here's an example for the Python Client, <code>karman</code>:
+        </p>
+
+        <pre>
+import karman
+username = "(your user name string)"
+functionality_id = "{{ functionality.id }}"
+availability = karman.which(username, functionality_id)
+
+# this will return one of the following:{% for flavor in functionality.flavor_set.all %}
+# availability == "{{ flavor }}"{% endfor %}
+# availability == None</pre>
+    </section>
 {% endblock %}
