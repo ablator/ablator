@@ -97,6 +97,7 @@ class Functionality(models.Model):
     class Meta:
         verbose_name_plural = "Functionalities"
 
+    @property
     def number_of_users(self):
         return Availability.objects.filter(
             flavor__functionality=self
@@ -158,8 +159,10 @@ class Flavor(models.Model):
 
     @property
     def width_percent(self):
-        number_of_f = self.functionality.flavor_set.count()
-        return self.single_width_percent / number_of_f
+        try:
+            return float(self.number_of_enabled_users) / self.functionality.number_of_users * 100
+        except ZeroDivisionError:
+            return 1 * 100
 
 
 class Release(models.Model):
