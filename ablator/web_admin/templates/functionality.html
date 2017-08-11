@@ -201,7 +201,8 @@
             </div>
         {% endfor %}
     </div>
-
+    <section>
+    <h2>Flavors</h2>
     <div class="row">
         {% for flavor in functionality.flavor_set.all %}
             <div class="col-md-6">
@@ -228,11 +229,25 @@
             </div>
         {% endfor %}
     </div>
+    </section>
+    <section>
+    <h2>Releases</h2>
+    <table class="table">
+        {% for release in functionality.release_set.all %}
+            <tr class="{% if release.is_current %}success{% endif %}">
+                <td>{{ release.name }}</td>
+                <td>{{ release.start_at }}</td>
+                <td>{{ release.max_enabled_users }}</td>
+                <td>{% if release.is_current %}<span class="label label-success">active</span>{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    </section>
 
+    {% comment %}
     <!-- https://bootsnipp.com/snippets/featured/timeline-21-with-images-and-responsive -->
-    <div class="container">
-    <div class="page-header text-center">
-        <h1 id="timeline">Timeline 2.1</h1>
+    <div class="page-header">
+        <h1 id="timeline">Releases</h1>
     </div>
     <ul class="timeline">
         <li>
@@ -366,5 +381,5 @@
 
         <li class="clearfix" style="float: none;"></li>
     </ul>
-</div>
+    {% endcomment %}
 {% endblock %}
