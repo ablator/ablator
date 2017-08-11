@@ -1,288 +1,112 @@
 {% extends '_base.html' %}
 {% block back %}
-    <a href="{% url 'app' functionality.app.id %}">&larr; Back to {{ functionality.app.name }}</a>
+    <li class="breadcrumb-item"><a href="{% url 'app' functionality.app.id %}">{{ functionality.app.name }}</a></li>
+    <li class="breadcrumb-item active">{{ functionality.name }}</li>
+
 {% endblock %}
 
-{% block body %}
-    <style type="text/css">
-        .timeline {
-            list-style: none;
-            padding: 20px 0 20px;
-            position: relative;
-        }
-
-        .timeline:before {
-            top: 0;
-            bottom: 0;
-            position: absolute;
-            content: " ";
-            width: 3px;
-            background-color: #eeeeee;
-            left: 50%;
-            margin-left: -1.5px;
-        }
-
-        .timeline > li {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .timeline > li:before,
-        .timeline > li:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline > li:after {
-            clear: both;
-        }
-
-        .timeline > li:before,
-        .timeline > li:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline > li:after {
-            clear: both;
-        }
-
-        .timeline > li > .timeline-panel {
-            width: 46%;
-            float: left;
-            border: 1px solid #d4d4d4;
-            border-radius: 2px;
-            padding: 20px;
-            position: relative;
-            -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
-        }
-
-        .timeline > li > .timeline-panel:before {
-            position: absolute;
-            top: 26px;
-            right: -15px;
-            display: inline-block;
-            border-top: 15px solid transparent;
-            border-left: 15px solid #ccc;
-            border-right: 0 solid #ccc;
-            border-bottom: 15px solid transparent;
-            content: " ";
-        }
-
-        .timeline > li > .timeline-panel:after {
-            position: absolute;
-            top: 27px;
-            right: -14px;
-            display: inline-block;
-            border-top: 14px solid transparent;
-            border-left: 14px solid #fff;
-            border-right: 0 solid #fff;
-            border-bottom: 14px solid transparent;
-            content: " ";
-        }
-
-        .timeline > li > .timeline-badge {
-            color: #fff;
-            width: 50px;
-            height: 50px;
-            line-height: 50px;
-            font-size: 1.4em;
-            text-align: center;
-            position: absolute;
-            top: 16px;
-            left: 50%;
-            margin-left: -25px;
-            background-color: #999999;
-            z-index: 100;
-            border-top-right-radius: 50%;
-            border-top-left-radius: 50%;
-            border-bottom-right-radius: 50%;
-            border-bottom-left-radius: 50%;
-        }
-
-        .timeline > li.timeline-inverted > .timeline-panel {
-            float: right;
-        }
-
-        .timeline > li.timeline-inverted > .timeline-panel:before {
-            border-left-width: 0;
-            border-right-width: 15px;
-            left: -15px;
-            right: auto;
-        }
-
-        .timeline > li.timeline-inverted > .timeline-panel:after {
-            border-left-width: 0;
-            border-right-width: 14px;
-            left: -14px;
-            right: auto;
-        }
-
-        .timeline-badge.primary {
-            background-color: #2e6da4 !important;
-        }
-
-        .timeline-badge.success {
-            background-color: #3f903f !important;
-        }
-
-        .timeline-badge.warning {
-            background-color: #f0ad4e !important;
-        }
-
-        .timeline-badge.danger {
-            background-color: #d9534f !important;
-        }
-
-        .timeline-badge.info {
-            background-color: #5bc0de !important;
-        }
-
-        .timeline-title {
-            margin-top: 0;
-            color: inherit;
-        }
-
-        .timeline-body > p,
-        .timeline-body > ul {
-            margin-bottom: 0;
-        }
-
-        .timeline-body > p + p {
-            margin-top: 5px;
-        }
-
-        @media (max-width: 767px) {
-            ul.timeline:before {
-                left: 40px;
-            }
-
-            ul.timeline > li > .timeline-panel {
-                width: calc(100% - 90px);
-                width: -moz-calc(100% - 90px);
-                width: -webkit-calc(100% - 90px);
-            }
-
-            ul.timeline > li > .timeline-badge {
-                left: 15px;
-                margin-left: 0;
-                top: 16px;
-            }
-
-            ul.timeline > li > .timeline-panel {
-                float: right;
-            }
-
-            ul.timeline > li > .timeline-panel:before {
-                border-left-width: 0;
-                border-right-width: 15px;
-                left: -15px;
-                right: auto;
-            }
-
-            ul.timeline > li > .timeline-panel:after {
-                border-left-width: 0;
-                border-right-width: 14px;
-                left: -14px;
-                right: auto;
-            }
-        }
-    </style>
-
-
-    {% include '_includes/functionality_enabled_users.html' %}
+{% block content %}
+    <section>
+    <div class="page-header">
+        {% include '_includes/functionality_enabled_users.html' %}
+    </div>
 
     <div class="progress">
         {% for flavor in functionality.flavor_set.all %}
             <div class="progress-bar"
-                 style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                <span class="">{{ flavor.name }}</span>
+                 style="height: 4em; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                <span style="line-height: 4em;">{{ flavor.name }}</span>
             </div>
         {% endfor %}
     </div>
+    </section>
+
+    <hr>
+
+
+
     <section>
         <h2>Flavors</h2>
         <div class="row">
             {% for flavor in functionality.flavor_set.all %}
-                <div class="col-md-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="label label-default"
-                                      style="background-color: #{{ flavor.color }}">
-                                    {{ flavor.name }}
-                                </span>
-                                <span style="float: right;">
-                                <span class="label label-success">{{ flavor.number_of_enabled_users }} enabled users</span>
-                                <span class="label label-default">{{ flavor.number_of_users }} users overall</span>
-                                    </span>
-                            </h3>
+                <div class="col-md-4">
+                <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">{{ flavor.name }}</h4>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <span class="badge badge-primary">{{ flavor.number_of_enabled_users }} enabled users</span>
+                            <span class="badge badge-secondary">{{ flavor.number_of_users }} users overall</span>
+                        </h6>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ flavor.single_width_percent }}%; background-image: none; background-color: #{{ flavor.color }}"></div>
                         </div>
-                        <div class="panel-body">
-                            <div class="progress">
-                                <div class="progress-bar"
-                                     style="width: {{ flavor.single_width_percent }}%"></div>
-                            </div>
-                        </div>
+                      </div>
                     </div>
                 </div>
+
+                {% if forloop.counter|divisibleby:3 %}
+                    </div>
+                    <br>
+                    <div class="row">
+                {% endif %}
             {% endfor %}
+
+            <div class="col-md-4"><div class="card text-center">
+                <div class="card-body">
+                    <button type="button" class="btn btn-outline-primary">Add New Flavor</button>
+                </div>
+            </div></div>
         </div>
     </section>
 
-    <section>
-        <h2>Release Timeline</h2>
-        <ul class="timeline">
-            {% for release in functionality.release_set.all %}
-                <li class="{% cycle '' 'timeline-inverted' %}">
-                    <div class="timeline-badge primary">
-                        <a><i class="glyphicon glyphicon-record" rel="tooltip"
-                              title="{{ release.starts_at }}" id=""></i></a>
-                    </div>
-                    <div class="timeline-panel">
-                        <div class="timeline-heading">
-                            <h3>{{ release.name }}
-                                {% if release.is_current %}
-                                    <span class="label label-success">currently active</span>
-                                {% endif %}
-                            </h3>
-                        </div>
-                        <div class="timeline-body">
-                            <table class="table">
-                                <tr>
-                                    <td>Start at</td>
-                                    <td>{{ release.start_at }}</td>
-                                </tr>
-                                <tr>
-                                    <td>End at</td>
-                                    <td>{{ release.end_at }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Maximum Enabled Users</td>
-                                    <td>{{ release.max_enabled_users }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+    <hr>
 
-        <!-- https://bootsnipp.com/snippets/featured/timeline-21-with-images-and-responsive -->
+    <section>
+    <h2>Release Timeline</h2>
+
+    <div class="row">
+        {% for release in functionality.release_set.all %}
+            <div class="col-md-3">
+            <div class="card {% if release.is_current %}text-white bg-primary{% endif %}">
+                <div class="card-body">
+                    <h4 class="card-title">{{ release.name }}</h4>
+                    <h6 class="card-subtitle mb-2">
+                        {{ release.start_at }}
+                    </h6>
+                    <div class="text-center">
+                    <span class="display-2">{{ release.max_enabled_users }}</span><br><small>users max</small>
+                        </div>
+                </div>
+            </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 %}
+                    </div>
+                    <br>
+                    <div class="row">
+                {% endif %}
+        {% endfor %}
+
+        <div class="col-md-3"><div class="card text-center">
+                <div class="card-body">
+                    <button type="button" class="btn btn-outline-primary">Add New Release</button>
+                </div>
+            </div></div>
+    </div>
     </section>
+
+    <hr>
 
     <section>
         <h2>Including This Functionality</h2>
 
-        <div class="well">This functionality has the ID <strong>{{ functionality.id }}</strong></div>
+        <p class="lead">This functionality has the ID <strong>{{ functionality.id }}</strong></p>
 
         <p>
             To include this functionality in your code, use the <code>which</code> function in your
             ablator client. Here's an example for the Python Client, <code>karman</code>:
         </p>
 
-        <pre>
+        <pre><code>
 import karman
 username = "(your user name string)"
 functionality_id = "{{ functionality.id }}"
@@ -290,6 +114,6 @@ availability = karman.which(username, functionality_id)
 
 # this will return one of the following:{% for flavor in functionality.flavor_set.all %}
 # availability == "{{ flavor }}"{% endfor %}
-# availability == None</pre>
+# availability == None</code></pre>
     </section>
 {% endblock %}
