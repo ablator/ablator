@@ -1,9 +1,9 @@
 {% extends '_base.html' %}
 {% block back %}
-    <a href="{% url 'home' %}">&larr; Back to Overview</a>
+    <li class="breadcrumb-item active">{{ app.name }}</li>
 {% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>{{ app.name }}</h1>
     {% for functionality in app.functionality_set.all %}
             {% include '_includes/functionality_enabled_users.html' %}

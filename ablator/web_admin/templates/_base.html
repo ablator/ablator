@@ -48,8 +48,13 @@
     </div>
 </nav>
 
-{% block back %}
-{% endblock %}
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        {% block back %}
+        {% endblock %}
+    </ol>
+</div>
 
 {% block body %}
     <div class="container-fluid">
