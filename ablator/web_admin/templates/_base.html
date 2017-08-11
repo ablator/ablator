@@ -1,67 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+      <title>Ablator</title>
+
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-    <title>Ablator</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-          crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- jQuery -->
-    <script src="http://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">ablator</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
-
-
-</head>
-<body style="padding-top: 20px;">
-<div class="container">
-
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/" style="padding: 5px 15px;">
-                    <img src="http://via.placeholder.com/120x40" alt="ablator logo">
-                </a>
-            </div>
-            {% if request.user.is_authenticated %}
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href=" {% url 'home' %}">Apps</a></li>
-                        <li><a href="/admin/">Admin</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                    </ul>
-                    <p class="navbar-text navbar-right">
-                        Signed in as
-                        <a href="#" class="navbar-link">
-                            <strong>{{ request.user }}</strong>
-                        </a> of <strong>{{ request.user.ablatoruser.company }}</strong>-
-                        <a href="{% url 'logout' %}" class="navbar-link">Sign Out</a>
-                    </p>
-                </div><!--/.nav-collapse -->
-            {% endif %}
-        </div><!--/.container-fluid -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin/">Admin</a>
+              </li>
+                <li class="nav-item">
+                    Signed in as
+                    <strong>{{ request.user }}</strong>
+                    of
+                    <strong>{{ request.user.ablatoruser.company }}</strong>
+                </li>
+                <li>
+                    <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
+                </li>
+            </ul>
+        </div>
     </nav>
+
+    <h1>Hello, world!</h1>
 
     {% block back %}
     {% endblock %}
 
     {% block body %}
     {% endblock %}
+
 
     <footer>
         <p style="text-align: center;">
@@ -72,7 +56,29 @@
         </p>
     </footer>
 
-</div>
-
-</body>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
