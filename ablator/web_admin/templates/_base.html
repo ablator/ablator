@@ -52,16 +52,22 @@
 {% endblock %}
 
 {% block body %}
+    <div class="container-fluid">
+        {% block content %}
+        {% endblock %}
+    </div>
 {% endblock %}
 
 
 <footer>
-    <p style="text-align: center;">
-        <small>
-            ablator is created by Daniel Jilg and distributed under the MIT License. See <a
-                href="https://github.com/winsmith/ablator/">ablator on GitHub</a> for more info
-        </small>
-    </p>
+    <div class="container">
+        <p style="text-align: center;">
+            <small>
+                ablator is created by Daniel Jilg and distributed under the MIT License. See <a
+                    href="https://github.com/winsmith/ablator/">ablator on GitHub</a> for more info
+            </small>
+        </p>
+    </div>
 </footer>
 
 <!-- Optional JavaScript -->
