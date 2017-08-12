@@ -15,6 +15,7 @@ class HomePageView(TemplateView):
         return context_data
 
 
+@method_decorator(login_required, name='dispatch')
 class AppView(TemplateView):
     template_name = 'app.html'
 
@@ -24,6 +25,7 @@ class AppView(TemplateView):
         return context_data
 
 
+@method_decorator(login_required, name='dispatch')
 class FunctionalityView(TemplateView):
     template_name = 'functionality.html'
 
