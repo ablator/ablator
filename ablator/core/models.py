@@ -106,6 +106,7 @@ class Functionality(models.Model):
             flavor__functionality=self
         ).count()
 
+    @property
     def number_of_enabled_users(self):
         return Availability.objects.filter(
             flavor__functionality=self,
@@ -115,6 +116,9 @@ class Functionality(models.Model):
     @property
     def current_release(self) -> 'Release':
         return self.release_set.filter(start_at__lte=timezone.now()).order_by('-start_at').first()
+
+    def get_absolute_url(self):
+        return reverse_lazy('functionality-detail', kwargs={'pk': self.id})
 
 
 class Flavor(models.Model):

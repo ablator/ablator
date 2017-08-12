@@ -1,7 +1,7 @@
 {% extends '_base.html' %}
 {% block back %}
     <li class="breadcrumb-item"><a
-            href="{% url 'app' functionality.app.id %}">{{ functionality.app.name }}</a></li>
+            href="{% url 'app-detail' functionality.app.id %}">{{ functionality.app.name }}</a></li>
     <li class="breadcrumb-item active">{{ functionality.name }}</li>
 
 {% endblock %}
@@ -9,7 +9,8 @@
 {% block content %}
     <section>
         <div class="page-header">
-            <h1>{{ functionality.name }}</h1>
+            <h1>{{ functionality.name }} <small><a class="btn btn-sm btn-outline-secondary" href="{% url 'functionality-update' functionality.id %}">Edit</a></small></h1>
+            <p class="lead">{{ functionality }}</p>
         </div>
 
         <hr>

@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title"><a
-                                href="{% url 'functionality' functionality.id %}">{{ functionality.name }}</a>
+                                href="{% url 'functionality-detail' functionality.id %}">{{ functionality.name }}</a>
                         </h4>
                         <div class="progress">
                             {% for flavor in functionality.flavor_set.all %}
@@ -52,8 +52,7 @@
         <div class="col-md-6">
             <div class="card text-center">
                     <div class="card-body">
-                        <button type="button" class="btn btn-outline-primary">Add New Functionality
-                        </button>
+                        <a href="{% url 'functionality-create' app.id %}" class="btn btn-outline-primary">Add New Functionality</a>
                     </div>
                 </div>
         </div>

@@ -1,0 +1,29 @@
+{% extends '_form_container.html' %}
+{% load bootstrap4 %}
+
+{% block form %}
+    {% if object %}
+        <h1>Edit {{ object.name }}</h1>
+    {% else %}
+        <h1>Create New Functionality</h1>
+    {% endif %}
+    <hr>
+    <form action="." method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <hr>
+        {% buttons %}
+            {% if object.id %}
+                <a class="btn btn-sm btn-outline-danger"
+                   href="{% url 'functionality-delete' functionality.id %}">Delete {{ object.name }}</a>
+            {% endif %}
+
+            <span style="float: right;">
+
+        <a class="btn btn-lg btn-outline-secondary"
+           href="{% if object %}{% url 'functionality-detail' object.id %}{% else %}{% url 'home' %}{% endif %}">Go Back</a>
+        <button type="submit" class="btn btn-primary btn-lg">Save</button>
+        </span>
+        {% endbuttons %}
+    </form>
+{% endblock %}
