@@ -4,7 +4,7 @@ from core.models import Functionality, Availability
 
 
 def check_roll_out_recall(context: 'WhichContext'):
-    if context.functionality.rollout_strategy == Functionality.RECALL_FEATURE:
+    if context.functionality.rollout_strategy == Functionality.RECALL_FUNCTIONALITY:
         from core.functionality import NoAvailability
         raise NoAvailability
 

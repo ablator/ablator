@@ -7,7 +7,7 @@ from core.models import Functionality, Release, App
 class RollOutRecall(TestCase):
     def test_roll_out_recall_true(self):
         context = WhichContext()
-        context.functionality = Functionality(rollout_strategy=Functionality.RECALL_FEATURE)
+        context.functionality = Functionality(rollout_strategy=Functionality.RECALL_FUNCTIONALITY)
         with self.assertRaises(NoAvailability):
             check_roll_out_recall(context=context)
 

@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=140)),
                 ('slug', models.SlugField(max_length=100)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('rollout_strategy', models.CharField(choices=[('recall_feature', 'Recall Feature'), ('pause_rollout', 'Pause Roll Out'), ('defined_by_releases', 'As defined by Releases'), ('enable_globally', 'Enable Globally')], default='defined_by_releases', max_length=50)),
+                ('rollout_strategy', models.CharField(choices=[('recall', 'Recall'), ('pause_rollout', 'Pause Roll Out'), ('defined_by_releases', 'As defined by Releases'), ('enable_globally', 'Enable Globally')], default='defined_by_releases', max_length=50)),
                 ('app', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.App')),
             ],
             options={

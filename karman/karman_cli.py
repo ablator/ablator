@@ -6,7 +6,7 @@ from karman import Karman
 parser = argparse.ArgumentParser(description='Request ablator functionality '
                                              'status from the command line.')
 
-parser.add_argument("user", help="The user to request the feature")
+parser.add_argument("user", help="The user to request the functionality")
 parser.add_argument("func_group_id", help="The functionality group to query")
 
 

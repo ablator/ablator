@@ -81,7 +81,7 @@ class EnableExistingAvailability(TestCase):
     def test_wrong_roll_out_strategy(self):
         context = WhichContext()
         context.availability = Availability(is_enabled=False)
-        context.functionality = Functionality(rollout_strategy=Functionality.RECALL_FEATURE)
+        context.functionality = Functionality(rollout_strategy=Functionality.RECALL_FUNCTIONALITY)
         availability = enable_or_create_availability_by_user_count(context)
         self.assertIsNone(availability)
 

@@ -9,7 +9,7 @@ from core.models import ClientUser, Functionality
 class CanIUseView(APIView):
     def get(self, request, client_user_string, functionality_group_id):
         """
-        Is the specified user allowed to use the feature?
+        Is the specified user allowed to use the functionality?
 
         Returns `{ "enabled": true }` if the specified ClientUser is allowed to use the
         functionality group, ``{ "enabled": false }`` if the user is disallowed, or a 404 error if

@@ -19,7 +19,7 @@ class NoAvailability(Exception):
 
 def can_i_use(client_user: ClientUser, functionality: Functionality) -> bool:
     """
-    Is the specified user allowed to use the feature?
+    Is the specified user allowed to use the functionatlity?
 
     Returns `True` if the specified ClientUser is allowed to use the functionality group,
     `False` if the user is disallowed, or the functionality group does not exist.

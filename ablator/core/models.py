@@ -10,7 +10,7 @@ from django.utils import timezone
 from core.colors import random_color
 from user_management.models import Company
 
-HASH_SALT = settings.FEATURE_HASH_SALT
+HASH_SALT = settings.HASH_SALT
 
 
 class ClientUser(models.Model):
@@ -58,7 +58,6 @@ class App(models.Model):
     def __str__(self):
         return '{}.{}'.format(self.company, self.slug)
 
-
     def get_absolute_url(self):
         return reverse_lazy('app-detail', kwargs={'app_id': self.id})
 
@@ -77,15 +76,15 @@ class Functionality(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App)
 
-    RECALL_FEATURE = 'recall_feature'
+    RECALL_FUNCTIONALITY = 'recall'
     PAUSE_ROLLOUT = 'pause_rollout'
     DEFINED_BY_RELEASES = 'defined_by_releases'
     ENABLE_GLOBALLY = 'enable_globally'
     NEW_USER_BEAHAVIOUR_CHOICES = (
-        (RECALL_FEATURE, 'Recall Feature'),
-        (PAUSE_ROLLOUT, 'Pause Roll Out'),
+        (RECALL_FUNCTIONALITY, 'Recall'),
+        (PAUSE_ROLLOUT, 'Roll Out Paused'),
         (DEFINED_BY_RELEASES, 'Release-Driven'),
-        (ENABLE_GLOBALLY, 'Enable Globally')
+        (ENABLE_GLOBALLY, 'Enabled Globally')
     )
     rollout_strategy = models.CharField(
         max_length=50,
@@ -176,6 +175,13 @@ class Release(models.Model):
     functionality = models.ForeignKey(Functionality)
     start_at = models.DateTimeField(default=timezone.now)
     max_enabled_users = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['start_at']
+
+    @property
+    def is_past(self) -> bool:
+        return self.start_at < timezone.now() and self.functionality.current_release != self
 
     @property
     def is_current(self) -> bool:
