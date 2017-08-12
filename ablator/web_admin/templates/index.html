@@ -1,28 +1,36 @@
 {% extends '_base.html' %}
 {% block content %}
 
-    <!-- Main content -->
-    {% for app in apps %}
-        <section class="content">
-            <h1><a href="{% url 'app' app.id %}">{{ app.name }}</a></h1>
-            {% for functionality in app.functionality_set.all %}
-                {% include '_includes/functionality_enabled_users.html' %}
+    <div class="row">
+        <div class="col">
+            {% for app in apps %}
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title"><a href="{% url 'app' app.id %}">{{ app.name }}</a>
+                        </h2>
+                        {% for functionality in app.functionality_set.all %}
+                            <div class="progress" style="border-radius: 0;">
+                                {% for flavor in functionality.flavor_set.all %}
+                                    <div class="progress-bar"
+                                         style="height: 5px; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
 
-                <div class="progress">
-                {% for flavor in functionality.flavor_set.all %}
-                    <div class="progress-bar"
-                         style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                        <span class="">{{ flavor.name }}</span>
                     </div>
-                {% endfor %}
                 </div>
+                <br>
             {% endfor %}
-        
-        </section>
-        {% empty %}
-        <section class="content">
-        No apps yet. Add some via the admin.
-        </section>
-    {% endfor %}
+        </div>
+        <div class="col">
+            <h1>Welcome to Ablator</h1>
+            <p class="lead">Please select an app on the left to get started.</p>
+            <p>
+            <a class="btn btn-lg btn-primary" href="" role="button">Create a
+                new App</a>
+        </p>
+        </div>
+    </div>
 
 {% endblock %}
