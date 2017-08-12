@@ -9,8 +9,29 @@
 {% block content %}
     <section>
         <div class="page-header">
+            <div class="row">
+                <div class="col-md-8">
             <h1>{{ functionality.name }} <small><a class="btn btn-sm btn-outline-secondary" href="{% url 'functionality-update' functionality.id %}">Edit</a></small></h1>
             <p class="lead">{{ functionality }}</p>
+                    </div>
+                <div class="col-md-4 text-right">
+                    <span class="display-4">
+                        <span class="badge badge-{% spaceless %}
+                        {% if functionality.rollout_strategy == 'defined_by_releases' %}
+                        info
+                        {% elif functionality.rollout_strategy == 'enable_globally' %}
+                        success
+                        {% elif functionality.rollout_strategy == 'pause_rollout' %}
+                        warning
+                        {% elif functionality.rollout_strategy == 'recall_feature' %}
+                        danger
+                        {% endif %}
+                        {% endspaceless %}">
+                        {{ functionality.get_rollout_strategy_display }}
+                            </span>
+                    </span>
+                </div>
+                </div>
         </div>
 
         <hr>

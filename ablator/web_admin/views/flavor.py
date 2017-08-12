@@ -23,7 +23,7 @@ class FlavorCreate(CreateView):
 @method_decorator(login_required, name='dispatch')
 class FlavorUpdate(UpdateView):
     model = Flavor
-    fields = ['name', 'color']
+    fields = ['name', 'slug', 'color']
 
 
 @method_decorator(login_required, name='dispatch')

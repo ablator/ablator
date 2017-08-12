@@ -31,7 +31,7 @@ class AppCreate(CreateView):
 @method_decorator(login_required, name='dispatch')
 class AppUpdate(UpdateView):
     model = App
-    fields = ['name']
+    fields = ['name', 'slug']
 
 
 @method_decorator(login_required, name='dispatch')

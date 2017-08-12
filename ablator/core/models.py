@@ -85,7 +85,7 @@ class Functionality(models.Model):
     NEW_USER_BEAHAVIOUR_CHOICES = (
         (RECALL_FEATURE, 'Recall Feature'),
         (PAUSE_ROLLOUT, 'Pause Roll Out'),
-        (DEFINED_BY_RELEASES, 'As defined by Releases'),
+        (DEFINED_BY_RELEASES, 'Release-Driven'),
         (ENABLE_GLOBALLY, 'Enable Globally')
     )
     rollout_strategy = models.CharField(
