@@ -19,7 +19,6 @@
                             {% for flavor in functionality.flavor_set.all %}
                                 <div class="progress-bar"
                                      style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                                    <span class="">{{ flavor.name }}</span>
                                 </div>
                             {% endfor %}
                         </div>
