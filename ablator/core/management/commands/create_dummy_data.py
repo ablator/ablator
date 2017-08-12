@@ -54,7 +54,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS('Created Functionality {}'.format(functionality.name)))
                 release = Release(functionality=functionality, max_enabled_users=6)
                 release.save()
-                self.stdout.write(self.style.SUCCESS(' + Release {}'.format(release.name)))
+                self.stdout.write(self.style.SUCCESS(' + Release {}'.format(release.id)))
                 for flavor_name in functionality_descriptions[f_name]:
                     flavor = Flavor(name=flavor_name, slug=slugify(flavor_name))
                     flavor.functionality = functionality

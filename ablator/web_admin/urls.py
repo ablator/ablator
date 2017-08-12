@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import app, functionality, index, flavor
+from .views import app, functionality, index, flavor, release
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -25,6 +25,11 @@ urlpatterns = [
     url(r'functionality/(?P<pk>[^/]+)/add_flavor/$', flavor.FlavorCreate.as_view(), name='flavor-create'),
     url(r'flavor/(?P<pk>[^/]+)/update/$', flavor.FlavorUpdate.as_view(), name='flavor-update'),
     url(r'flavor/(?P<pk>[^/]+)/delete/$', flavor.FlavorDelete.as_view(), name='flavor-delete'),
+
+    # Release
+    url(r'functionality/(?P<pk>[^/]+)/add_release/$', release.ReleaseCreate.as_view(), name='release-create'),
+    url(r'release/(?P<pk>[^/]+)/update/$', release.ReleaseUpdate.as_view(), name='release-update'),
+    url(r'release/(?P<pk>[^/]+)/delete/$', release.ReleaseDelete.as_view(), name='release-delete'),
 
     # Home Page
     url('$', index.HomePageView.as_view(), name='home'),

@@ -1,0 +1,24 @@
+{% extends '_form_container.html' %}
+{% load bootstrap4 %}
+
+{% block form %}
+    <h1>Delete {{ object.name }}</h1>
+    <hr>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>
+            Are you sure you want to delete the Release with the start date
+            <strong>{{ object.start_at }}</strong>? This action is not
+            reversible.
+        </p>
+        <hr>
+
+        {% buttons %}
+        <span style="float: right;">
+        <a class="btn btn-lg btn-outline-secondary" href="{% url 'release-update' object.id %}">Go Back</a>
+        <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+        </span>
+        {% endbuttons %}
+    </form>
+{% endblock %}

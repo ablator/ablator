@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 import core.colors
-import core.tools.name_generator
 import datetime
 from django.db import migrations, models
 import django.db.models.deletion
@@ -78,7 +77,6 @@ class Migration(migrations.Migration):
             name='Release',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(default=core.tools.name_generator.generate_name, max_length=100)),
                 ('start_at', models.DateTimeField(default=datetime.datetime(2017, 8, 12, 11, 21, 4, 294140, tzinfo=utc))),
                 ('max_enabled_users', models.IntegerField(default=0)),
                 ('functionality', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.Functionality')),

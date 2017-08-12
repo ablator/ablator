@@ -144,7 +144,7 @@
                 <div class="col-md-3">
                     <div class="card {% if release.is_current %}text-white bg-primary{% endif %}">
                         <div class="card-body">
-                            <h4 class="card-title">{{ release.start_at }}</h4>
+                            <h4 class="card-title">{{ release.start_at }} <a class="btn btn-sm btn-outline-secondary" href="{% url 'release-update' release.id %}">Edit</a></h4>
                             <div class="text-center">
                                 <span class="display-2">{{ release.max_enabled_users }}</span><br>
                                 <small>users max</small>
@@ -162,8 +162,7 @@
             <div class="col-md-3">
                 <div class="card text-center">
                     <div class="card-body">
-                        <button type="button" class="btn btn-outline-primary">Add New Release
-                        </button>
+                        <a href="{% url 'release-create' functionality.id %}" class="btn btn-outline-secondary">Add new Release</a>
                     </div>
                 </div>
             </div>

@@ -36,7 +36,6 @@ class FunctionalityAdmin(admin.ModelAdmin):
 @admin.register(Release)
 class ReleaseAdmin(admin.ModelAdmin):
     list_display = (
-        'name',
         'id',
         'functionality',
         'start_at',

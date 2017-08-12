@@ -8,7 +8,6 @@ from django.urls.base import reverse_lazy
 from django.utils import timezone
 
 from core.colors import random_color
-from core.tools.name_generator import generate_name
 from user_management.models import Company
 
 HASH_SALT = settings.FEATURE_HASH_SALT
@@ -166,7 +165,7 @@ class Flavor(models.Model):
             return 1 * 100
 
     def get_absolute_url(self):
-        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id })
+        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
 
 
 class Release(models.Model):
@@ -175,13 +174,15 @@ class Release(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     functionality = models.ForeignKey(Functionality)
-    name = models.CharField(max_length=100, default=generate_name)
     start_at = models.DateTimeField(default=timezone.now)
     max_enabled_users = models.IntegerField(default=0)
 
     @property
     def is_current(self) -> bool:
         return self.functionality.current_release == self
+
+    def get_absolute_url(self):
+        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
 
 
 class Availability(models.Model):
