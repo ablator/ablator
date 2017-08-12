@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-2">&nbsp;</div>
+        {% block overwrite_spacer %}<div class="col-md-2">&nbsp;</div>{% endblock %}
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
@@ -10,7 +10,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col">
             {% block help %}{% endblock %}
         </div>
     </div>
