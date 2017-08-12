@@ -32,15 +32,21 @@ FEATURE_HASH_SALT = 'omsn'
 # Application definition
 
 INSTALLED_APPS = [
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third Party Libraries
+    'rest_framework',
+    'bootstrap4',
+
+    # Functionality
     'core',
     'api',
-    'rest_framework',
     'web_admin',
     'user_management',
 ]

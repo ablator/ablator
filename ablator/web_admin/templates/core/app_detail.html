@@ -4,7 +4,8 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ app.name }}</h1>
+    <h1>{{ app.name }} <small><a class="btn btn-sm btn-outline-secondary" href="{% url 'app-update' app.id %}">Edit</a></small></h1>
+    <p class="lead">{{ app }}</p>
     <hr>
 
     <div class="row">
@@ -51,7 +52,7 @@
         <div class="col-md-6">
             <div class="card text-center">
                     <div class="card-body">
-                        <button type="button" class="btn btn-outline-primary">Add New App
+                        <button type="button" class="btn btn-outline-primary">Add New Functionality
                         </button>
                     </div>
                 </div>

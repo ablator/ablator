@@ -6,7 +6,7 @@
             {% for app in apps %}
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title"><a href="{% url 'app' app.id %}">{{ app.name }}</a>
+                        <h2 class="card-title"><a href="{% url 'app-detail' app.id %}">{{ app.name }}</a>
                         </h2>
                         {% for functionality in app.functionality_set.all %}
                             <div class="progress" style="border-radius: 0;">
@@ -27,7 +27,7 @@
             <h1>Welcome to Ablator</h1>
             <p class="lead">Please select an app on the left to get started.</p>
             <p>
-            <a class="btn btn-lg btn-primary" href="" role="button">Create a
+            <a class="btn btn-lg btn-primary" href="{% url 'app-create' %}" role="button">Create a
                 new App</a>
         </p>
         </div>

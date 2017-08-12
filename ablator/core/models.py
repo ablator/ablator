@@ -4,6 +4,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
+from django.urls.base import reverse_lazy
 from django.utils import timezone
 
 from core.colors import random_color
@@ -57,6 +58,10 @@ class App(models.Model):
 
     def __str__(self):
         return '{}.{}'.format(self.company, self.slug)
+
+
+    def get_absolute_url(self):
+        return reverse_lazy('app-detail', kwargs={'app_id': self.id})
 
 
 class Functionality(models.Model):
