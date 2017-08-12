@@ -165,6 +165,9 @@ class Flavor(models.Model):
         except ZeroDivisionError:
             return 1 * 100
 
+    def get_absolute_url(self):
+        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id })
+
 
 class Release(models.Model):
     """

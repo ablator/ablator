@@ -77,7 +77,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">{{ flavor.name }}</h4>
+                            <h4 class="card-title">{{ flavor.name }} <a class="btn btn-sm btn-outline-secondary" href="{% url 'flavor-update' flavor.id %}">Edit</a></h4>
 
                             <div class="progress">
                                 <div class="progress-bar"
@@ -105,8 +105,7 @@
             <div class="col-md-4">
                 <div class="card text-center">
                     <div class="card-body">
-                        <button type="button" class="btn btn-outline-primary">Add New Flavor
-                        </button>
+                        <a href="{% url 'flavor-create' functionality.id %}" class="btn btn-outline-secondary">Add New Flavor</a>
                     </div>
                 </div>
             </div>
