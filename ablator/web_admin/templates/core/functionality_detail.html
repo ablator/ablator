@@ -135,6 +135,7 @@
 
     <hr>
 
+{% if functionality.rollout_strategy == 'defined_by_releases' %}
     <section>
         <h2>Release Timeline</h2>
 
@@ -170,6 +171,8 @@
     </section>
 
     <hr>
+    {% endif %}
+
 
     <section>
         <h2>Including This Functionality</h2>
