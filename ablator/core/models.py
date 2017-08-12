@@ -1,15 +1,13 @@
-from django.db import models
-from django.conf import settings
-from django.utils import timezone
-
-from datetime import datetime
-
+import datetime
 import hashlib
+import uuid
+
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
 
 from core.colors import random_color
 from core.tools.name_generator import generate_name
-import uuid
-
 from user_management.models import Company
 
 HASH_SALT = settings.FEATURE_HASH_SALT
@@ -111,13 +109,7 @@ class Functionality(models.Model):
 
     @property
     def current_release(self) -> 'Release':
-        try:
-            return self.release_set.get(
-                start_at__lte=timezone.now(),
-                end_at__gte=timezone.now()
-            )
-        except Release.DoesNotExist:
-            return None
+        return self.release_set.filter(start_at__lte=timezone.now()).order_by('-start_at').first()
 
 
 class Flavor(models.Model):
@@ -172,13 +164,12 @@ class Release(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     functionality = models.ForeignKey(Functionality)
     name = models.CharField(max_length=100, default=generate_name)
-    start_at = models.DateTimeField(default=datetime(1, 1, 1))
-    end_at = models.DateTimeField(default=datetime(5000, 1, 1))
+    start_at = models.DateTimeField(default=timezone.now)
     max_enabled_users = models.IntegerField(default=0)
 
     @property
     def is_current(self) -> bool:
-        return self.start_at < timezone.now() < self.end_at
+        return self.functionality.current_release == self
 
 
 class Availability(models.Model):

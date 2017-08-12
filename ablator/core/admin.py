@@ -40,7 +40,6 @@ class ReleaseAdmin(admin.ModelAdmin):
         'id',
         'functionality',
         'start_at',
-        'end_at',
     )
 
 
