@@ -5,17 +5,58 @@
 
 {% block content %}
     <h1>{{ app.name }}</h1>
-    {% for functionality in app.functionality_set.all %}
-            {% include '_includes/functionality_enabled_users.html' %}
+    <hr>
 
-        <div class="progress">
-            {% for flavor in functionality.flavor_set.all %}
-                <div class="progress-bar"
-                     style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                    <span class="">{{ flavor.name }}</span>
+    <div class="row">
+        {% for functionality in app.functionality_set.all %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"><a
+                                href="{% url 'functionality' functionality.id %}">{{ functionality.name }}</a>
+                        </h4>
+                        <div class="progress">
+                            {% for flavor in functionality.flavor_set.all %}
+                                <div class="progress-bar"
+                                     style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                                    <span class="">{{ flavor.name }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-center">
+                                <span class="display-2">{{ functionality.number_of_enabled_users }}</span><br>
+                                <small>users enabled</small>
+                            </div>
+                            </div>
+                            <div class="col">
+                                <div class="text-center">
+                                    <span class="display-2">{{ functionality.number_of_users }}</span><br>
+                                    <small>potential users</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
+            </div>
+
+            {% if forloop.counter|divisibleby:2 %}
+                </div>
+                <br>
+                <div class="row">
+            {% endif %}
+        {% endfor %}
+        <div class="col-md-6">
+            <div class="card text-center">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-outline-primary">Add New App
+                        </button>
+                    </div>
+                </div>
+        </div>
         </div>
 
-    {% endfor %}
 {% endblock %}
