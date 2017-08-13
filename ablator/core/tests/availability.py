@@ -3,7 +3,7 @@ from django.test import TestCase
 from core.functionality import WhichContext
 from core.functionality.availability import check_for_existing_enabled_availability, \
     get_availability, \
-    enable_or_create_availability_by_user_count, _availability_or_none, \
+    enable_availability_by_user_count, _availability_or_none, \
     assert_existence_of_flavors
 from core.models import Availability, ClientUser, Functionality, App, Flavor, Release
 from user_management.models import Company
@@ -80,25 +80,22 @@ class EnableExistingAvailability(TestCase):
         context.availability = Availability(is_enabled=True)
         context.functionality = Functionality()
         context.functionality.availability = context.availability
-        availability = enable_or_create_availability_by_user_count(context)
+        availability = enable_availability_by_user_count(context)
         self.assertEqual(availability, context.availability)
 
     def test_wrong_roll_out_strategy(self):
         context = WhichContext()
         context.availability = Availability(is_enabled=False)
         context.functionality = Functionality(rollout_strategy=Functionality.RECALL_FUNCTIONALITY)
-        availability = enable_or_create_availability_by_user_count(context)
+        availability = enable_availability_by_user_count(context)
         self.assertIsNone(availability)
 
     def test_enable_with_users_to_spare(self):
-        self.release.max_enabled_users = 100
-        self.availability.is_enabled = False
-        self.release.save()
-
         context = WhichContext()
         context.availability = self.availability
         context.functionality = self.functionality
-        availability = enable_or_create_availability_by_user_count(context)
+        context.enabled_count = 5
+        availability = enable_availability_by_user_count(context)
         self.assertEqual(availability, self.availability)
 
 

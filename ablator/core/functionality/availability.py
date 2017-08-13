@@ -32,12 +32,14 @@ def get_enabled_count(context: 'WhichContext'):
     ).count()
 
 
-def enable_or_create_availability_by_user_count(context: 'WhichContext') -> Optional['Availability']:
+def enable_availability_by_user_count(context: 'WhichContext') -> Optional['Availability']:
     """
     Availability already exists, but is disabled, so enable if there are still user slots left in
     max_enabled_users
     """
     if context.functionality.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
+        if context.availability.is_enabled:
+            return context.availability
         if context.functionality.current_release.max_enabled_users > context.enabled_count:
             context.availability.is_enabled = True
             context.availability.save()
@@ -61,6 +63,3 @@ def create_new_availability_with_random_flavor(context: 'WhichContext'):
         availability.flavor = random.choice(context.available_flavors)
         availability.save()
         context.availability = availability
-
-
-# def create_disabled_availability(context: )
