@@ -23,10 +23,11 @@ expertise in deploying a Django Application, but we want to mitigate that in the
 
 See the `road map`_ for a list of features that are planned for the future.
 
+.. _road map: docs/roadmap.rst
+
 For an in-depth explanation of the logical parts of ablator, see the `models description`_.
 
-.. _road map: docs/roadmap.rst
-.. _models description:: docs/models.rst
+.. _models description: docs/models.rst
 
 Accessing the Ablator API
 ~~~~~~~~~~~~~~~~~~~~~~~~~
