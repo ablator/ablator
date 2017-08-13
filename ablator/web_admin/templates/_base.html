@@ -12,10 +12,22 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
           crossorigin="anonymous">
+
+    <style type="text/css">
+        /* Custom page footer */
+        .footer {
+            padding-top: 1.5rem;
+            margin: 1.5rem 0;
+            font-size: small;
+            color: #777;
+            border-top: .05rem solid #e5e5e5;
+            }
+    </style>
+
 </head>
 <body>
 <div class="container">
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
     <a class="navbar-brand" href="{% url 'home' %}">ablator</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -49,7 +61,6 @@
     </div>
 </nav>
 </div>
-<br>
 
 {% block body %}
     <div class="container">
@@ -59,16 +70,12 @@
 {% endblock %}
 
 
-<footer>
-    <div class="container">
-        <p style="text-align: center;">
-            <small>
-                ablator is created by Daniel Jilg and distributed under the MIT License. See <a
-                    href="https://github.com/winsmith/ablator/">ablator on GitHub</a> for more info
-            </small>
-        </p>
-    </div>
-</footer>
+<div class="container">
+    <footer class="footer text-center">
+        ablator is created by Daniel Jilg and distributed under the MIT License. See <a
+            href="https://github.com/winsmith/ablator/">ablator on GitHub</a> for more info
+    </footer>
+</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
