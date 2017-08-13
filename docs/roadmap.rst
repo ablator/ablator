@@ -65,14 +65,6 @@ release period. Some of those are:
 - Slowly grow up to a certain percentage of users enabled
 - Let in x number of users, but not on first come first server but distributed over time
 
-Test Coverage
-~~~~~~~~~~~~~
-
-Unit Tests are an important way to ensure that a code base has a certain level of maturity and
-quality. Due to how ablator began, it has no tests whatsoever right now. After some slight
-restructuring of the functionality code, it should be possible to reach a high level of code
-coverage there.
-
 Ablator As A Service
 ~~~~~~~~~~~~~~~~~~~~
 
