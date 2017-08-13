@@ -17,9 +17,9 @@ enabled.
 At the moment, ablator is in an early stage of development. The core APIs are completely available,
 and there is a custom user interface to manage day-to-day operations.
 
-However, we are missing an easy way to deploy the software for non-technical users, and user
-management, which has to be done using the Django Admin panel for now. So for now, you'll need some
-expertise in deploying a Django Application, but we want to mitigate that in the future.
+However, we are missing an easy way to deploy the software for non-technical users. So for now,
+you'll need someexpertise in deploying a Django Application, but we want to mitigate that in
+the future.
 
 See the `road map`_ for a list of features that are planned for the future.
 

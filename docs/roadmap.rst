@@ -42,11 +42,6 @@ log into either Django's in memory cache, or something like redis. Logged data s
 other things, new users, recurring users, etc. Once the data is logged into temp storage, nice
 graphs can be generated from it and displayed. Or it can be displayed live.
 
-User Management
-~~~~~~~~~~~~~~~
-
-Django already has great user and permission management in the backend, so this is "just" a matter
-of writing the appropriate views.
 
 Dockerization
 ~~~~~~~~~~~~~
