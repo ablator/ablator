@@ -15,9 +15,6 @@ use in A/B or Red/Green testing.
 Defining Switchable Functionalities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Right now, you'll have to configure ablator entirely from the Django admin interface. A proper
-web interface will follow as soon as possible.
-
 To start, define a new *App*, giving it a name and a slug. The name is for use in the web interface,
 whereas the slug identifies the feature to the API and client libraries. Add a few *Functionalities*
 to your new app -- each *Functionality* should describe a distinct feature of your app. Give your
