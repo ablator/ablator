@@ -9,6 +9,19 @@
                         <h2 class="card-title"><a href="{% url 'app-detail' app.id %}">{{ app.name }}</a>
                         </h2>
                         {% for functionality in app.functionality_set.all %}
+                            {% if functionality.rollout_strategy == 'enable_globally' %}
+                            <div class="progress" style="border-radius: 0;">
+                                    <div class="progress-bar"
+                                         style="height: 5px; width: 100%; background-image: none; background-color: #28a745">
+                                    </div>
+                            </div>
+                            {% elif functionality.rollout_strategy == 'recall' %}
+                            <div class="progress" style="border-radius: 0;">
+                                    <div class="progress-bar"
+                                         style="height: 5px; width: 100%; background-image: none; background-color: #dc3545">
+                                    </div>
+                            </div>
+                            {% else %}
                             <div class="progress" style="border-radius: 0;">
                                 {% for flavor in functionality.flavor_set.all %}
                                     <div class="progress-bar"
@@ -16,6 +29,7 @@
                                     </div>
                                 {% endfor %}
                             </div>
+                            {% endif %}
                         {% endfor %}
 
                     </div>
