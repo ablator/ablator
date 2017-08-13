@@ -57,6 +57,6 @@ else:
     print('User: {}'.format(args.user))
     print('Functionality Group: {}'.format(args.func_group_id))
     if availability and availability[0]:
-        print('{}: {}'.format(availability))
+        print('Flavor: {}'.format(availability))
     else:
         print('No availability for that user')
