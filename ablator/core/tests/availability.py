@@ -6,6 +6,7 @@ from core.functionality.availability import check_for_existing_enabled_availabil
     enable_or_create_availability_by_user_count, _availability_or_none, \
     assert_existence_of_flavors
 from core.models import Availability, ClientUser, Functionality, App, Flavor, Release
+from user_management.models import Company
 
 
 class AvailabilityOrNone(TestCase):
@@ -22,9 +23,11 @@ class AvailabilityOrNone(TestCase):
 
 class GetAvailability(TestCase):
     def setUp(self):
+        self.company = Company(name='Testcompany')
+        self.company.save()
         self.user = ClientUser.user_from_object('testuser')
         self.user.save()
-        app = App(name='Test App', slug='test-app')
+        app = App(name='Test App', slug='test-app', company=self.company)
         app.save()
         self.functionality = Functionality(app=app, name='Test Func', slug='test-func')
         self.functionality.save()
@@ -56,9 +59,11 @@ class CheckAvailability(TestCase):
 
 class EnableExistingAvailability(TestCase):
     def setUp(self):
+        self.company = Company(name='Testcompany')
+        self.company.save()
         self.user = ClientUser.user_from_object('testuser')
         self.user.save()
-        app = App(name='Test App', slug='test-app')
+        app = App(name='Test App', slug='test-app', company=self.company)
         app.save()
         self.functionality = Functionality(app=app, name='Test Func', slug='test-func',
                                            rollout_strategy=Functionality.DEFINED_BY_RELEASES)
@@ -99,7 +104,9 @@ class EnableExistingAvailability(TestCase):
 
 class AssertExistenceOfFlavors(TestCase):
     def test_with_flavors_present(self):
-        app = App(name='Test App', slug='test-app')
+        company = Company(name='Testcompany')
+        company.save()
+        app = App(name='Test App', slug='test-app', company=company)
         app.save()
         self.functionality = Functionality(app=app, name='Test Func', slug='test-func',
                                            rollout_strategy=Functionality.DEFINED_BY_RELEASES)
