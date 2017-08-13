@@ -1,6 +1,8 @@
 {% extends '_form_container.html' %}
 {% load bootstrap4 %}
 
+{% block overwrite_spacer %}{% endblock %}
+
 {% block form %}
     {% if object %}
         <h1>Edit {{ object.name }}</h1>
@@ -26,4 +28,20 @@
         </span>
         {% endbuttons %}
     </form>
+{% endblock %}
+
+{% block help %}
+    <h4>What are Flavors?</h4>
+    <p>
+        Flavors are different representations of a functionality. Either one or none of them is
+        active for a user at a given time.
+    </p>
+    <p>
+        In case you want to A/B-test a few <strong>variations of a functionality</strong>, create
+        one flavor for each variation.
+    </p>
+    <p>
+        If you only want to <strong>switch a Functionality Off and On</strong>, you will only need
+        one flavor, named 'on' or similar.
+    </p>
 {% endblock %}
