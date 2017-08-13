@@ -4,8 +4,7 @@ Ablator is a Functionality-Switching-Service that makes it easy for your app to 
 It works like this:
 
 1. You define your app's switchable functionalities in ablator.
-2. Your app asks ablator "Can I user X use Functionality Y?" and shows or hides the functionality
-   as needed.
+2. Your app asks ablator "User X wants Functionality Y. Which Flavor should I show them, if any?"
 3. ablator takes care of slowly rolling out the feature in a way that you define.
 
 As an administrator, you'll get a nice overview of what percentage of users has a functionality
