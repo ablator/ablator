@@ -1,4 +1,3 @@
-import random
 from typing import Optional, List
 
 from .availability import *
@@ -20,7 +19,7 @@ class NoAvailability(Exception):
 
 def can_i_use(client_user: ClientUser, functionality: Functionality) -> bool:
     """
-    Is the specified user allowed to use the feature?
+    Is the specified user allowed to use the functionatlity?
 
     Returns `True` if the specified ClientUser is allowed to use the functionality group,
     `False` if the user is disallowed, or the functionality group does not exist.
@@ -62,7 +61,8 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
         assert_existence_of_release,
         assert_existence_of_flavors,
         get_enabled_count,
-        enable_or_create_availability_by_user_count,
+        create_new_availability_with_random_flavor,
+        enable_availability_by_user_count,
     ]
 
     # Go through each function in the pipeline. If it yields an Availability, we're done
@@ -72,9 +72,9 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
     # what actually happens through logging. Hopefully.
     for func in pipeline:
         try:
-            availability = func(context)
-            if availability:
-                return availability
+            av = func(context)
+            if av:
+                return av
         except NoAvailability:
             return None
     return None

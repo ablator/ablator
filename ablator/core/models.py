@@ -1,16 +1,16 @@
-from django.db import models
-from django.conf import settings
-from django.utils import timezone
-
-from datetime import datetime
-
+import datetime
 import hashlib
-
-from core.colors import random_color
-from core.tools.name_generator import generate_name
 import uuid
 
-HASH_SALT = settings.FEATURE_HASH_SALT
+from django.conf import settings
+from django.db import models
+from django.urls.base import reverse_lazy
+from django.utils import timezone
+
+from core.colors import random_color
+from user_management.models import Company
+
+HASH_SALT = settings.HASH_SALT
 
 
 class ClientUser(models.Model):
@@ -53,9 +53,13 @@ class App(models.Model):
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    company = models.ForeignKey(Company)
 
     def __str__(self):
-        return self.slug
+        return '{}.{}'.format(self.company, self.slug)
+
+    def get_absolute_url(self):
+        return reverse_lazy('app-detail', kwargs={'app_id': self.id})
 
 
 class Functionality(models.Model):
@@ -72,15 +76,15 @@ class Functionality(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App)
 
-    RECALL_FEATURE = 'recall_feature'
+    RECALL_FUNCTIONALITY = 'recall'
     PAUSE_ROLLOUT = 'pause_rollout'
     DEFINED_BY_RELEASES = 'defined_by_releases'
     ENABLE_GLOBALLY = 'enable_globally'
     NEW_USER_BEAHAVIOUR_CHOICES = (
-        (RECALL_FEATURE, 'Recall Feature'),
-        (PAUSE_ROLLOUT, 'Pause Roll Out'),
-        (DEFINED_BY_RELEASES, 'As defined by Releases'),
-        (ENABLE_GLOBALLY, 'Enable Globally')
+        (RECALL_FUNCTIONALITY, 'Recall'),
+        (PAUSE_ROLLOUT, 'Roll Out Paused'),
+        (DEFINED_BY_RELEASES, 'Release-Driven'),
+        (ENABLE_GLOBALLY, 'Enabled Globally')
     )
     rollout_strategy = models.CharField(
         max_length=50,
@@ -94,11 +98,13 @@ class Functionality(models.Model):
     class Meta:
         verbose_name_plural = "Functionalities"
 
+    @property
     def number_of_users(self):
         return Availability.objects.filter(
             flavor__functionality=self
         ).count()
 
+    @property
     def number_of_enabled_users(self):
         return Availability.objects.filter(
             flavor__functionality=self,
@@ -107,13 +113,10 @@ class Functionality(models.Model):
 
     @property
     def current_release(self) -> 'Release':
-        try:
-            return self.release_set.get(
-                start_at__lte=timezone.now(),
-                end_at__gte=timezone.now()
-            )
-        except Release.DoesNotExist:
-            return None
+        return self.release_set.filter(start_at__lte=timezone.now()).order_by('-start_at').first()
+
+    def get_absolute_url(self):
+        return reverse_lazy('functionality-detail', kwargs={'pk': self.id})
 
 
 class Flavor(models.Model):
@@ -155,8 +158,13 @@ class Flavor(models.Model):
 
     @property
     def width_percent(self):
-        number_of_f = self.functionality.flavor_set.count()
-        return self.single_width_percent / number_of_f
+        try:
+            return float(self.number_of_enabled_users) / self.functionality.number_of_users * 100
+        except ZeroDivisionError:
+            return 1 * 100
+
+    def get_absolute_url(self):
+        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
 
 
 class Release(models.Model):
@@ -165,14 +173,22 @@ class Release(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     functionality = models.ForeignKey(Functionality)
-    name = models.CharField(max_length=100, default=generate_name)
-    start_at = models.DateTimeField(default=datetime(1, 1, 1))
-    end_at = models.DateTimeField(default=datetime(5000, 1, 1))
+    start_at = models.DateTimeField(default=timezone.now)
     max_enabled_users = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['start_at']
+
+    @property
+    def is_past(self) -> bool:
+        return self.start_at < timezone.now() and self.functionality.current_release != self
 
     @property
     def is_current(self) -> bool:
-        return self.start_at < timezone.now() < self.end_at
+        return self.functionality.current_release == self
+
+    def get_absolute_url(self):
+        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
 
 
 class Availability(models.Model):

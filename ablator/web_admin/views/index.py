@@ -1,7 +1,6 @@
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView
 
 from core.models import App
 
@@ -12,5 +11,5 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['apps'] = App.objects.all()
+        context_data['apps'] = App.objects.filter(company=self.request.user.ablatoruser.company)
         return context_data

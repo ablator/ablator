@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="row">
+        {% block overwrite_spacer %}<div class="col-md-2">&nbsp;</div>{% endblock %}
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    {% block form %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            {% block help %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

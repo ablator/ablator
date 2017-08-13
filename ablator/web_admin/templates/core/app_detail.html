@@ -1,0 +1,87 @@
+{% extends '_base.html' %}
+{% load humanize %}
+
+{% block back %}
+    <li class="breadcrumb-item active">{{ app.name }}</li>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ app.name }}
+        <small><a class="btn btn-sm btn-outline-secondary"
+                  href="{% url 'app-update' app.id %}">Edit</a></small>
+    </h1>
+
+    <p class="lead">
+        {% spaceless %}
+            <a href="{% url 'home' %}" class="text-dark">{{ app.company }}</a>
+            <span>.{{ app.slug }}</span>
+        {% endspaceless %}
+    </p>
+    <hr>
+
+    <div class="card-deck">
+        {% for functionality in app.functionality_set.all %}
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"><a
+                                href="{% url 'functionality-detail' functionality.id %}">{{ functionality.name }}</a>
+                        </h4>
+                        <div class="progress">
+                            {% for flavor in functionality.flavor_set.all %}
+                                <div class="progress-bar"
+                                     style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+                    {% if functionality.rollout_strategy == 'enable_globally' %}
+                        <h1 class="text-center"><span class="badge badge-success">
+                            {{ functionality.get_rollout_strategy_display }}
+                        </span></h1>
+                    {% elif functionality.rollout_strategy == 'recall' %}
+                        <h1 class="text-center"><span class="badge badge-danger">
+                            {{ functionality.get_rollout_strategy_display }}
+                        </span></h1>
+                    {% else %}
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-center">
+                                <span class="display-3">{{ functionality.number_of_enabled_users|intword|intcomma }}</span><br>
+                                <small>users enabled</small>
+                            </div>
+                            </div>
+                            <div class="col">
+                                <div class="text-center">
+                                    {% if functionality.rollout_strategy == 'pause_rollout' %}
+                                        <br>
+                                        <h1><span class="badge badge-warning display">
+                                        {{ functionality.get_rollout_strategy_display }}
+                                        </span></h1>
+                                    {% else %}
+                                        <span class="display-3">{{ functionality.number_of_users|intword|intcomma }}</span><br>
+                                        <small>potential users</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+
+            {% if forloop.counter|divisibleby:2 %}
+                </div>
+                <br>
+                <div class="card-deck">
+            {% endif %}
+        {% endfor %}
+
+            <div class="card text-center">
+                    <div class="card-body">
+                        <a href="{% url 'functionality-create' app.id %}" class="btn btn-outline-secondary">Add New Functionality</a>
+                    </div>
+                </div>
+        </div>
+
+
+{% endblock %}

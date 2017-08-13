@@ -2,12 +2,13 @@ from django.test import TestCase
 
 from core.functionality import *
 from core.models import Functionality, Release, App
+from user_management.models import Company
 
 
 class RollOutRecall(TestCase):
     def test_roll_out_recall_true(self):
         context = WhichContext()
-        context.functionality = Functionality(rollout_strategy=Functionality.RECALL_FEATURE)
+        context.functionality = Functionality(rollout_strategy=Functionality.RECALL_FUNCTIONALITY)
         with self.assertRaises(NoAvailability):
             check_roll_out_recall(context=context)
 
@@ -36,7 +37,9 @@ class RollOutEnableGlobally(TestCase):
 
 class CheckExistenceOfRelease(TestCase):
     def setUp(self):
-        self.app = App(name='test-app', slug='test-app')
+        self.company = Company(name='Testcompany')
+        self.company.save()
+        self.app = App(name='test-app', slug='test-app', company=self.company)
         self.app.save()
         self.functionality = Functionality(
             app=self.app,

@@ -1,84 +1,49 @@
 {% extends '_base.html' %}
-{% block body %}
+{% block content %}
 
-
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Dashboard
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
-      </ol>
-    </section>
-
-    <!-- Main content -->
-    {% for app in apps %}
-        <section class="content">
-            <h1>{{ app.name }}</h1>
-            {% for functionality in app.functionality_set.all %}
-                <h2>{{ functionality.name }}
-                    <small>
-                    <span class="label label-success">
-                        {{ functionality.number_of_enabled_users }}</span> of
-                    <span class="label label-default">
-                        {{ functionality.number_of_users }}</span> users enabled
-                        </small>
-                </h2>
-
-                <div class="progress">
-                {% for flavor in functionality.flavor_set.all %}
-                    <div class="progress-bar"
-                         style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                        <span class="">{{ flavor.name }}</span>
-                    </div>
-                {% endfor %}
-                </div>
-                {% if functionality.flavor_set.count > 1 %}
-
-                {% for flavor in functionality.flavor_set.all %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="label label-default" style="background-color: #{{ flavor.color }}">
-                                    {{ flavor.name }}
-                                </span>
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            Enabled Users:
-                            <span class="label label-success">
-                                {{ flavor.number_of_enabled_users }}</span>
-                                <br>
-                            Total Users:
-                            <span class="label label-default">
-                            {{ flavor.number_of_users }}
-                            </span>
-                            <div class="progress">
-                            <div class="progress-bar"
-                                 style="width: {{ flavor.single_width_percent }}%"></div>
-
+    <div class="row">
+        <div class="col">
+            {% for app in apps %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title"><a href="{% url 'app-detail' app.id %}">{{ app.name }}</a>
+                        </h2>
+                        {% for functionality in app.functionality_set.all %}
+                            {% if functionality.rollout_strategy == 'enable_globally' %}
+                            <div class="progress" style="border-radius: 0;">
+                                    <div class="progress-bar"
+                                         style="height: 5px; width: 100%; background-image: none; background-color: #28a745">
+                                    </div>
                             </div>
-                        </div>
+                            {% elif functionality.rollout_strategy == 'recall' %}
+                            <div class="progress" style="border-radius: 0;">
+                                    <div class="progress-bar"
+                                         style="height: 5px; width: 100%; background-image: none; background-color: #dc3545">
+                                    </div>
+                            </div>
+                            {% else %}
+                            <div class="progress" style="border-radius: 0;">
+                                {% for flavor in functionality.flavor_set.all %}
+                                    <div class="progress-bar"
+                                         style="height: 5px; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
                     </div>
-                {% endfor %}
-
-                {% endif %}
+                </div>
             {% endfor %}
-        
-        </section>
-        {% empty %}
-        <section class="content">
-        No apps yet. Add some via the admin.
-        </section>
-    {% endfor %}
-
-
-
-
-
-
-
+        </div>
+        <div class="col">
+            <h1>Welcome to Ablator</h1>
+            <p class="lead">Please select an app on the left to get started.</p>
+            <p>
+            <a class="btn btn-lg btn-primary" href="{% url 'app-create' %}" role="button">Create a
+                new App</a>
+        </p>
+        </div>
+    </div>
 
 {% endblock %}

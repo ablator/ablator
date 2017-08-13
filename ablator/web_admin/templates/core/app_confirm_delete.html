@@ -1,0 +1,24 @@
+{% extends '_form_container.html' %}
+{% load bootstrap4 %}
+
+{% block form %}
+    <h1>Delete {{ app.name }}</h1>
+    <hr>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>
+            Are you sure you want to delete <strong>{{ object }}</strong>? This will delete the
+            app and all its functionalities, flavors and users.
+        </p>
+        <p>This action is not reversible.</p>
+        <hr>
+
+        {% buttons %}
+        <span style="float: right;">
+        <a class="btn btn-lg btn-outline-secondary" href="{% url 'app-update' app.id %}">Go Back</a>
+        <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+        </span>
+        {% endbuttons %}
+    </form>
+{% endblock %}

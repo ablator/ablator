@@ -6,7 +6,7 @@ from karman import Karman
 parser = argparse.ArgumentParser(description='Request ablator functionality '
                                              'status from the command line.')
 
-parser.add_argument("user", help="The user to request the feature")
+parser.add_argument("user", help="The user to request the functionality")
 parser.add_argument("func_group_id", help="The functionality group to query")
 
 
@@ -57,6 +57,6 @@ else:
     print('User: {}'.format(args.user))
     print('Functionality Group: {}'.format(args.func_group_id))
     if availability and availability[0]:
-        print('{}: {}'.format(availability))
+        print('Flavor: {}'.format(availability))
     else:
         print('No availability for that user')
