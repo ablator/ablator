@@ -30,14 +30,9 @@ Web UI
 
 The web user interface for administrators is planned to reach these milestones:
 
-1. The Web UI should be able to completely replace the admin interface. All actions regarding the
-   creation of Apps, Functionalities, Flavors, etc should be able to be done via a custom interface.
-2. The Web UI should include helpful methods for releasing *right now* to a certain number of users,
-   or other features to make the life of ablator users more comfortable.
 3. Make the UI more interactive. Automatic reloading of data, separation of presentation and
    content, general ajaxyness.
 4. Inclusion of various types of graphs (this goes hand in hand with the logging feature below)
-5. It should be beautiful.
 
 Logging
 ~~~~~~~
