@@ -1,8 +1,8 @@
 {% extends '_form_container.html' %}
 {% load bootstrap4 %}
-{% block home_nav_active %}active{% endblock %}
+{% block users_nav_active %}active{% endblock %}
 {% block form %}
-    <h1>Delete {{ object.name }}</h1>
+    <h1>Delete {{ object.username }}</h1>
     <hr>
 
     <form action="" method="post">
@@ -15,7 +15,7 @@
 
         {% buttons %}
         <span style="float: right;">
-        <a class="btn btn-lg btn-outline-secondary" href="{% url 'flavor-update' object.id %}">Go Back</a>
+        <a class="btn btn-lg btn-outline-secondary" href="{% url 'user-update' object.id %}">Go Back</a>
         <button type="submit" class="btn btn-danger btn-lg">Delete</button>
         </span>
         {% endbuttons %}

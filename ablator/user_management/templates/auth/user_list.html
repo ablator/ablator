@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+
+{% block users_nav_active %}active{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Full Name and Email</th>
+                    <th>Is Staff?</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for object in object_list %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'user-update' object.id %}" class="display-4 text-dark">
+                                {{ object.username }}
+                            </a>
+                        </td>
+                        <td>
+                            <strong>{{ object.get_full_name }}</strong><br>
+                            {{ object.email }}
+                        </td>
+                        <td>
+                            {% if object.is_staff %}
+                                ✅
+                            {% else %}
+                                ❌
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4">
+                        <a href="{% url 'user-create' %}" class="btn btn-outline-secondary">Add New
+                            User</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <p>Add and Edit users here. All users in this list will be able to log in to ablator,
+                and manage Apps, Functionalities, and so on.</p>
+            <p>Users marked as staff are able to access this list, and add and edit users.</p>
+        </div>
+    </div>
+{% endblock %}

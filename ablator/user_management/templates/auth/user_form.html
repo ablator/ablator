@@ -1,11 +1,13 @@
 {% extends '_form_container.html' %}
 {% load bootstrap4 %}
-{% block home_nav_active %}active{% endblock %}
+
+{% block users_nav_active %}active{% endblock %}
+
 {% block form %}
-    {% if app %}
-        <h1>Edit {{ app.name }}</h1>
+    {% if object %}
+        <h1>Edit {{ object.username }}</h1>
     {% else %}
-        <h1>Create New App</h1>
+        <h1>Create New User</h1>
     {% endif %}
     <hr>
     <form action="." method="post" class="form">
@@ -13,15 +15,15 @@
         {% bootstrap_form form %}
         <hr>
         {% buttons %}
-            {% if app.id %}
+            {% if object.id %}
                 <a class="btn btn-sm btn-outline-danger"
-                   href="{% url 'app-delete' app.id %}">Delete {{ app.name }}</a>
+                   href="{% url 'user-delete' object.id %}">Delete {{ object.username }}</a>
             {% endif %}
 
             <span style="float: right;">
 
         <a class="btn btn-lg btn-outline-secondary"
-           href="{% if app.id %}{% url 'app-detail' app.id %}{% else %}{% url 'home' %}{% endif %}">Go Back</a>
+           href="{% url 'user-list' %}">Go Back</a>
         <button type="submit" class="btn btn-primary btn-lg">Save</button>
         </span>
         {% endbuttons %}
