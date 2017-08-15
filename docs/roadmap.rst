@@ -42,6 +42,11 @@ log into either Django's in memory cache, or something like redis. Logged data s
 other things, new users, recurring users, etc. Once the data is logged into temp storage, nice
 graphs can be generated from it and displayed. Or it can be displayed live.
 
+User Management
+~~~~~~~~~~~~~~~
+
+Django already has great user and permission management in the backend, so this is "just" a matter
+of writing the appropriate views.
 
 Dockerization
 ~~~~~~~~~~~~~
@@ -59,6 +64,14 @@ release period. Some of those are:
 - Distinguish Between App Versions
 - Slowly grow up to a certain percentage of users enabled
 - Let in x number of users, but not on first come first server but distributed over time
+
+Test Coverage
+~~~~~~~~~~~~~
+
+Unit Tests are an important way to ensure that a code base has a certain level of maturity and
+quality. Due to how ablator began, it has no tests whatsoever right now. After some slight
+restructuring of the functionality code, it should be possible to reach a high level of code
+coverage there.
 
 Ablator As A Service
 ~~~~~~~~~~~~~~~~~~~~
