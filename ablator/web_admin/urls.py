@@ -4,6 +4,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import app, functionality, index, flavor, release
 from django.contrib.auth import views as auth_views
 
+# flake8: noqa: E501
+
 urlpatterns = [
     # Account
     url(r'accounts/login/$', auth_views.LoginView.as_view(), name='login'),

@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from django.urls.base import reverse
 
 from . import views
 

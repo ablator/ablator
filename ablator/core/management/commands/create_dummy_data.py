@@ -2,7 +2,7 @@ import random
 import string
 
 from django.contrib.auth.models import User
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
 from core.models import App, Functionality, Flavor, Release, ClientUser
@@ -68,4 +68,3 @@ class Command(BaseCommand):
                     )
                 self.stdout.write(self.style.SUCCESS(' + {} availabilities'.format(num_availabilities)))
         self.stdout.write(self.style.SUCCESS('Done :)'))
-

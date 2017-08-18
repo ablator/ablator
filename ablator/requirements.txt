@@ -1,3 +1,4 @@
 Django
 djangorestframework
 django-bootstrap4
+flake8

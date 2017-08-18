@@ -14,7 +14,8 @@ class FunctionalityDetail(TemplateView):
 
     def get_context_data(self, pk, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['functionality'] = Functionality.objects.filter(app__company=self.request.user.ablatoruser.company).get(id=pk)
+        context_data['functionality'] = Functionality.objects.filter(
+            app__company=self.request.user.ablatoruser.company).get(id=pk)
         return context_data
 
 
