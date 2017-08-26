@@ -13,7 +13,7 @@ class AppDetail(TemplateView):
 
     def get_context_data(self, app_id, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['app'] = App.objects.filter(company=self.request.user.ablatoruser.company).get(id=app_id)
+        context_data['app'] = App.objects.filter(organization=self.request.user.ablatoruser.organization).get(id=app_id)
         return context_data
 
 
@@ -23,7 +23,7 @@ class AppCreate(CreateView):
     fields = ['name']
 
     def form_valid(self, form):
-        form.instance.company = self.request.user.ablatoruser.company
+        form.instance.organization = self.request.user.ablatoruser.organization
         form.instance.slug = slugify(form.instance.name)
         return super(AppCreate, self).form_valid(form)
 

@@ -1,0 +1,30 @@
+{% extends '_base.html' %}
+
+{% block users_profile_active %}active{% endblock %}
+
+{% block content %}
+    <h1>{{ object }}</h1>
+    <p class="lead">{{ object.first_name }} {{ object.last_name }}
+        of {{ object.ablatoruser.organization.name }}</p>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Username</th>
+            <td>{{ object.username }}</td>
+        </tr>
+        <tr>
+            <th>First Name</th>
+            <td>{{ object.first_name }}</td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td>{{ object.last_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Last Login</th>
+            <td>{{ object.last_login }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

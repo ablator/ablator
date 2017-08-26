@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=140)),
                 ('slug', models.SlugField(max_length=100)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user_management.Company')),
+                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user_management.Organization')),
             ],
         ),
         migrations.CreateModel(

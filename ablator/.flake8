@@ -1,4 +1,4 @@
 [flake8]
 max-line-length = 120
-exclude = manage.py,migrations/*,*/tests/__init__.py
+exclude = manage.py,*/migrations/*,*/tests/__init__.py
 ignore = E701

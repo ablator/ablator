@@ -7,7 +7,7 @@ from django.utils.text import slugify
 
 from core.models import App, Functionality, Flavor, Release, ClientUser
 from core.functionality import which
-from user_management.models import Company, AblatorUser
+from user_management.models import Organization, AblatorUser
 
 app_names = [
     'Rover',
@@ -31,20 +31,20 @@ class Command(BaseCommand):
     help = 'Creates dummy Applications, Functionalities and so on'
 
     def handle(self, *args, **options):
-        company = Company(name='Masa', slug='masa')
-        company.save()
-        self.stdout.write(self.style.SUCCESS('### Created Company {} ###'.format(company.name)))
+        organization = Organization(name='Masa', slug='masa')
+        organization.save()
+        self.stdout.write(self.style.SUCCESS('### Created Organization {} ###'.format(organization.name)))
 
         try:
             first_user = User.objects.all()[0]
-            ablator_user = AblatorUser(user=first_user, company=company)
+            ablator_user = AblatorUser(user=first_user, organization=organization)
             ablator_user.save()
             self.stdout.write(self.style.SUCCESS('### Created User {} ###'.format(ablator_user)))
         except IndexError:
             self.stdout.write('No users yet, skipping user creation')
 
         for app_name in app_names:
-            app = App(name=app_name, slug=slugify(app_name), company=company)
+            app = App(name=app_name, slug=slugify(app_name), organization=organization)
             app.save()
             self.stdout.write(self.style.SUCCESS('### Created App {} ###'.format(app.name)))
 

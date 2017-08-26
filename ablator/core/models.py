@@ -7,7 +7,7 @@ from django.urls.base import reverse_lazy
 from django.utils import timezone
 
 from core.colors import random_color
-from user_management.models import Company
+from user_management.models import Organization
 
 HASH_SALT = settings.HASH_SALT
 
@@ -52,10 +52,10 @@ class App(models.Model):
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-    company = models.ForeignKey(Company)
+    organization = models.ForeignKey(Organization)
 
     def __str__(self):
-        return '{}.{}'.format(self.company, self.slug)
+        return '{}.{}'.format(self.organization, self.slug)
 
     def get_absolute_url(self):
         return reverse_lazy('app-detail', kwargs={'app_id': self.id})

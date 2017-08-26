@@ -11,5 +11,5 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['apps'] = App.objects.filter(company=self.request.user.ablatoruser.company)
+        context_data['apps'] = App.objects.filter(organization=self.request.user.ablatoruser.organization)
         return context_data

@@ -6,7 +6,7 @@ from core.functionality.availability import check_for_existing_enabled_availabil
     enable_availability_by_user_count, _availability_or_none, \
     assert_existence_of_flavors
 from core.models import Availability, ClientUser, Functionality, App, Flavor, Release
-from user_management.models import Company
+from user_management.models import Organization
 
 
 class AvailabilityOrNone(TestCase):
@@ -23,11 +23,11 @@ class AvailabilityOrNone(TestCase):
 
 class GetAvailability(TestCase):
     def setUp(self):
-        self.company = Company(name='Testcompany')
-        self.company.save()
+        self.organization = Organization(name='Testorganization')
+        self.organization.save()
         self.user = ClientUser.user_from_object('testuser')
         self.user.save()
-        app = App(name='Test App', slug='test-app', company=self.company)
+        app = App(name='Test App', slug='test-app', organization=self.organization)
         app.save()
         self.functionality = Functionality(app=app, name='Test Func', slug='test-func')
         self.functionality.save()
@@ -59,11 +59,11 @@ class CheckAvailability(TestCase):
 
 class EnableExistingAvailability(TestCase):
     def setUp(self):
-        self.company = Company(name='Testcompany')
-        self.company.save()
+        self.organization = Organization(name='Testorganization')
+        self.organization.save()
         self.user = ClientUser.user_from_object('testuser')
         self.user.save()
-        app = App(name='Test App', slug='test-app', company=self.company)
+        app = App(name='Test App', slug='test-app', organization=self.organization)
         app.save()
         self.functionality = Functionality(app=app, name='Test Func', slug='test-func',
                                            rollout_strategy=Functionality.DEFINED_BY_RELEASES)
@@ -101,9 +101,9 @@ class EnableExistingAvailability(TestCase):
 
 class AssertExistenceOfFlavors(TestCase):
     def test_with_flavors_present(self):
-        company = Company(name='Testcompany')
-        company.save()
-        app = App(name='Test App', slug='test-app', company=company)
+        organization = Organization(name='Testorganization')
+        organization.save()
+        app = App(name='Test App', slug='test-app', organization=organization)
         app.save()
         self.functionality = Functionality(app=app, name='Test Func', slug='test-func',
                                            rollout_strategy=Functionality.DEFINED_BY_RELEASES)
