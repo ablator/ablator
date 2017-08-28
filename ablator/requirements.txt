@@ -1,4 +1,11 @@
 Django
 djangorestframework
 django-bootstrap4
+
+# Testing Stuff
 flake8
+
+# Server Stuff
+gunicorn
+gevent
+whitenoise
