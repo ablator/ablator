@@ -1,6 +1,7 @@
+import time
 from typing import Optional, List
 
-
+from request_logging.logging import save_request_log_entry
 from .availability import (
     check_for_existing_enabled_availability,
     get_availability, assert_existence_of_flavors,
@@ -82,11 +83,26 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
     # exception.
     # Splitting the methods up like this helps with testing, caching, and gaining an overview over
     # what actually happens through logging. Hopefully.
+    start_time = time.process_time()
     for func in pipeline:
         try:
             av = func(context)
             if av:
+                save_request_log_entry(
+                    str(context.functionality.id),
+                    str(av.flavor_id),
+                    func.__name__,
+                    client_user.id,
+                    time.process_time() - start_time
+                )
                 return av
         except NoAvailability:
+            save_request_log_entry(
+                str(context.functionality.id),
+                None,
+                func.__name__,
+                client_user.id,
+                time.process_time() - start_time
+            )
             return None
     return None

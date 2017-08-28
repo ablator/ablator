@@ -178,6 +178,13 @@
 
         <hr>
 
+        <section>
+            <h2>Logs</h2>
+            <div class="card" id="log-window" style="max-height: 30rem; overflow: scroll;"></div>
+        </section>
+
+        <hr>
+
         {% if functionality.rollout_strategy == 'defined_by_releases' %}
             <section>
             <h2>Release Timeline</h2>
@@ -236,7 +243,7 @@
             <hr>
         {% endif %}
     {% endif %}
-
+</section>
 
 <section>
     <p>
@@ -272,4 +279,15 @@ availability = karman.which(username, functionality_id)
 
 
 </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $("#log-window").html("<p>loading...</p>");
+            $.get("{% url 'logging-list' functionality.id %}", function (data) {
+                $("#log-window").html(data);
+            });
+        });
+    </script>
 {% endblock %}

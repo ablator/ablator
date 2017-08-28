@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api.urls')),
     url(r'^management/', include('user_management.urls')),
+    url(r'^logging/', include('request_logging.urls')),
     url(r'^', include('web_admin.urls')),
 ]

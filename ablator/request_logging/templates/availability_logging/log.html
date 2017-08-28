@@ -1,0 +1,26 @@
+{% load humanize %}
+<div class="card-body">
+
+{% for timestamp, log_collection in logs.items %}
+    <h4>{{ timestamp }}</h4>
+    <table class="table table-hover table-sm" style="font-size: small;">
+
+        {% for log in log_collection %}
+            <tr>
+                <td><small>{{ log.client_user_id_short }}</small></td>
+                <td>{{ log.timestamp|naturaltime }}</td>
+                <td>{% if log.flavor %}
+                    <span class="badge" style="background-color: #{{ log.flavor.color }};">{{ log.flavor.name }}</span>
+                    {% else %}
+                    (not active)
+                    {% endif %}
+                </td>
+                <td><kbd>{{ log.action }}</kbd></td>
+                <td>{{ log.elapsed_time|floatformat:"-5" }}s</td>
+            </tr>
+
+        {% endfor %}
+    </table>
+{% endfor %}
+
+</div>
