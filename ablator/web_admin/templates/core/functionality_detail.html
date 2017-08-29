@@ -2,36 +2,36 @@
 {% load humanize %}
 {% block home_nav_active %}active{% endblock %}
 {% block back %}
-    <li class="breadcrumb-item"><a
-            href="{% url 'app-detail' functionality.app.id %}">{{ functionality.app.name }}</a></li>
-    <li class="breadcrumb-item active">{{ functionality.name }}</li>
+<li class="breadcrumb-item"><a
+        href="{% url 'app-detail' functionality.app.id %}">{{ functionality.app.name }}</a></li>
+<li class="breadcrumb-item active">{{ functionality.name }}</li>
 
 {% endblock %}
 
 {% block content %}
-    <section>
-        <div class="page-header">
-            <div class="row">
-                <div class="col-md-8">
-                    <h1>{{ functionality.name }}
-                        <small><a class="btn btn-sm btn-outline-secondary"
-                                  href="{% url 'functionality-update' functionality.id %}">Edit</a>
-                        </small>
-                    </h1>
-                    <p class="lead">
-                        {% spaceless %}
-                            <a href="{% url 'home' %}"
-                               class="text-dark">{{ functionality.app.organization }}</a>
-                            <span>.</span>
-                            <a href="{% url 'app-detail' functionality.app.id %}"
-                               class="text-dark">{{ functionality.app.slug }}</a>
-                            <span>.{{ functionality.slug }}</span>
-                        {% endspaceless %}
-                        <br>
-                        <kbd>{{ functionality.id }}</kbd>
-                    </p>
-                </div>
-                <div class="col-md-4 text-right">
+<section>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>{{ functionality.name }}
+                    <small><a class="btn btn-sm btn-outline-secondary"
+                              href="{% url 'functionality-update' functionality.id %}">Edit</a>
+                    </small>
+                </h1>
+                <p class="lead">
+                    {% spaceless %}
+                    <a href="{% url 'home' %}"
+                       class="text-dark">{{ functionality.app.organization }}</a>
+                    <span>.</span>
+                    <a href="{% url 'app-detail' functionality.app.id %}"
+                       class="text-dark">{{ functionality.app.slug }}</a>
+                    <span>.{{ functionality.slug }}</span>
+                    {% endspaceless %}
+                    <br>
+                    <kbd>{{ functionality.id }}</kbd>
+                </p>
+            </div>
+            <div class="col-md-4 text-right">
                     <span class="display-4">
                         <a class="badge badge-{% spaceless %}
                             {% if functionality.rollout_strategy == 'defined_by_releases' %}
@@ -48,200 +48,94 @@
                             {{ functionality.get_rollout_strategy_display }}
                         </a>
                     </span>
-                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<hr>
+<div id="functionality-enabled-users"
+     data-id="{% url 'functionality-part-enabled-users' functionality.id %}">
+    <div style="height: 10em; background: #fafafa;"></div>
+</div>
+
+{% if functionality.rollout_strategy == 'enable_globally' %}
+{% elif functionality.rollout_strategy == 'recall' %}
+{% else %}
+
+{% if functionality.flavor_set.all %}
+<section id="functionality-progress"
+         data-id="{% url 'functionality-part-progress' functionality.id %}">
+    <div style="height: 3em; background: #fafafa;"></div>
+</section>
+
+<section id="functionality-flavors"
+         data-id="{% url 'functionality-part-flavors' functionality.id %}">
+    <div style="height: 10em; background: #fafafa;"></div>
+</section>
+{% endif %}
+{% endif %}
+
+<hr>
+
+<section>
+    <h2>Logs</h2>
+    <div class="card" id="log-window" style="max-height: 30rem; overflow: scroll;"
+         data-id="{% url 'logging-list' functionality.id %}">
+        <div style="height: 30rem; background: #fafafa;"></div>
+    </div>
+</section>
+
+<hr>
+
+{% if functionality.rollout_strategy == 'defined_by_releases' %}
+<section>
+    <h2>Release Timeline</h2>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Start Date</th>
+            <th class="text-right">Max Enabled Users</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for release in functionality.release_set.all %}
+        <tr {% if release.is_current %}class="table-primary"
+            {% elif release.is_past %}class="text-muted" {% endif %}>
+            <td>
+                <strong>{{ release.start_at }}</strong><br>
+                {{ release.start_at|naturaltime }}
+            </td>
+            <td class="text-right">
+                <span class="display-4">{{ release.max_enabled_users|intword|intcomma }}</span>
+            </td>
+            <td class="align-middle">
+                <a class="btn btn-sm btn-outline-secondary btn-block"
+                   href="{% url 'release-update' release.id %}">Edit</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="px-0">
+                <div class="alert alert-warning mx-0" role="alert">
+                    <strong>You need to define at least one release.</strong> This release
+                    will tell Ablator how many users you want to allow in on this
+                    functionality, and when.
+                </div>
+            </td>
+        </tr>
+
+        {% endfor %}
+        <tr>
+            <td colspan="4"><a href="{% url 'release-create' functionality.id %}"
+                               class="btn btn-outline-secondary">Add new Release</a></td>
+        </tr>
+        </tbody>
+    </table>
 
     <hr>
-
-    {% if functionality.rollout_strategy == 'enable_globally' %}
-        <p class="lead text-center">
-            This functionality is <span class="badge badge-success">enabled globally</span>.
-            It is enabled for all users of {{ functionality.app.name }}.
-        </p>
-        <hr>
-    {% elif functionality.rollout_strategy == 'recall' %}
-        <p class="lead text-center">
-            This functionality is marked as <span class="badge badge-danger">Recall</span>. All
-            users will have that functionality revoked, even those who had it enabled in some
-            form
-            before.
-        </p>
-        <hr>
-
-    {% else %}
-
-        <section>
-            <div class="row">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="text-center">
-                                <span class="display-2">{{ functionality.number_of_enabled_users|intword|intcomma }}</span><br>
-                                <small>users enabled</small>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-
-                            <div class="text-center">
-                                <span class="display-2">{{ functionality.number_of_users|intword|intcomma }}</span><br>
-                                <small>potential users</small>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <hr>
-
-        {% if functionality.flavor_set.all %}
-            <section>
-                <div class="progress">
-                    {% for flavor in functionality.flavor_set.all %}
-                        <div class="progress-bar"
-                             style="height: 4em; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                            <span style="line-height: 4em;">{{ flavor.name }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-            <hr>
-        {% endif %}
-
-        <section>
-            <h2>Flavors</h2>
-            <div class="row">
-                {% for flavor in functionality.flavor_set.all %}
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">{{ flavor.name }} <a
-                                        class="btn btn-sm btn-outline-secondary"
-                                        href="{% url 'flavor-update' flavor.id %}">Edit</a></h4>
-
-                                <div class="progress">
-                                    <div class="progress-bar"
-                                         style="width: {{ flavor.single_width_percent }}%; background-image: none; background-color: #{{ flavor.color }}"></div>
-                                </div>
-                                <hr>
-                                <div class="text-center">
-                                    <span class="display-2">{{ flavor.number_of_enabled_users|intword|intcomma }}</span><br>
-                                    <small>users enabled, of
-                                        <strong>{{ flavor.number_of_users|intword|intcomma }}</strong>
-                                        users
-                                        overall
-                                    </small>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if forloop.counter|divisibleby:3 %}
-                        </div>
-                        <br>
-                        <div class="row">
-                    {% endif %}
-
-                {% empty %}
-                    <div class="col-md-8">
-                        <div class="alert alert-warning" role="alert">
-                            <strong>You need to define at least one flavor.</strong> This
-                            functionality is release-driven, which means it uses Flavors and
-                            Releases to determine what to deliver to users. Don't know what to call
-                            your flavor? Just call it <strong>On</strong>.
-                        </div>
-                    </div>
-                {% endfor %}
-
-                <div class="col-md-4">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <a href="{% url 'flavor-create' functionality.id %}"
-                               class="btn btn-outline-secondary">Add New Flavor</a>
-                        </div>
-                    </div>
-                </div>
-                </div>
-        </section>
-
-        <hr>
-
-        <section>
-            <h2>Logs</h2>
-            <div class="card" id="log-window" style="max-height: 30rem; overflow: scroll;"></div>
-        </section>
-
-        <hr>
-
-        {% if functionality.rollout_strategy == 'defined_by_releases' %}
-            <section>
-            <h2>Release Timeline</h2>
-
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Start Date</th>
-                    <th class="text-right">Max Enabled Users</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for release in functionality.release_set.all %}
-                    <tr {% if release.is_current %}class="table-primary"
-                        {% elif release.is_past %}class="text-muted"{% endif %}>
-                        <td>
-                            <strong>{{ release.start_at }}</strong><br>
-                            {{ release.start_at|naturaltime }}
-                        </td>
-                        <td class="text-right">
-                            <span class="display-4">{{ release.max_enabled_users|intword|intcomma }}</span>
-                        </td>
-                        <td class="align-middle">
-                            <a class="btn btn-sm btn-outline-secondary btn-block"
-                               href="{% url 'release-update' release.id %}">Edit</a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                    <td colspan="4" class="px-0">
-                        <div class="alert alert-warning mx-0" role="alert">
-                            <strong>You need to define at least one release.</strong> This release
-                            will tell Ablator how many users you want to allow in on this
-                            functionality, and when.
-                        </div>
-                    </td>
-                    </tr>
-
-                {% endfor %}
-                <tr>
-                    <td colspan="4"><a href="{% url 'release-create' functionality.id %}"
-                                       class="btn btn-outline-secondary">Add new Release</a></td>
-                </tr>
-                </tbody>
-            </table>
-
-            <hr>
-        {% else %}
-            <p class="lead text-center">
-                The rollout for this functionality is
-                <span class="badge badge-warning">paused</span>. All new users will get the
-                functionality disabled, but users who already had the functionality will get to
-                keep it.
-            </p>
-            <hr>
-        {% endif %}
     {% endif %}
 </section>
 
@@ -282,12 +176,4 @@ availability = karman.which(username, functionality_id)
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        $(document).ready(function () {
-            $("#log-window").html("<p>loading...</p>");
-            $.get("{% url 'logging-list' functionality.id %}", function (data) {
-                $("#log-window").html(data);
-            });
-        });
-    </script>
 {% endblock %}

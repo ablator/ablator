@@ -1,0 +1,9 @@
+<hr>
+<div class="progress">
+    {% for flavor in functionality.flavor_set.all %}
+    <div class="progress-bar"
+         style="height: 4em; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+        <span style="line-height: 4em;">{{ flavor.name }}</span>
+    </div>
+    {% endfor %}
+</div>

@@ -1,26 +1,41 @@
 {% load humanize %}
 <div class="card-body">
-
-{% for timestamp, log_collection in logs.items %}
-    <h4>{{ timestamp }}</h4>
+    {% if logs %}
     <table class="table table-hover table-sm" style="font-size: small;">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Time</th>
+            <th>Flavor</th>
+            <th>Deciding Rule</th>
+            <th>Work Time</th>
+        </tr>
+        </thead>
 
-        {% for log in log_collection %}
-            <tr>
-                <td><small>{{ log.client_user_id_short }}</small></td>
-                <td>{{ log.timestamp|naturaltime }}</td>
-                <td>{% if log.flavor %}
-                    <span class="badge" style="background-color: #{{ log.flavor.color }};">{{ log.flavor.name }}</span>
-                    {% else %}
-                    (not active)
-                    {% endif %}
-                </td>
-                <td><kbd>{{ log.action }}</kbd></td>
-                <td>{{ log.elapsed_time|floatformat:"-5" }}s</td>
-            </tr>
+        {% for log in logs %}
+        <tr>
+            <td>
+                <small>{{ log.client_user_id_short }}</small>
+            </td>
+            <td>{{ log.timestamp|naturaltime }}</td>
+            <td>{% if log.flavor %}
+                <span class="badge" style="background-color: #{{ log.flavor.color }};">{{ log.flavor.name }}</span>
+                {% else %}
+                (not active)
+                {% endif %}
+            </td>
+            <td><kbd>{{ log.action }}</kbd></td>
+            <td>{{ log.elapsed_time|floatformat:"-5" }}s</td>
+        </tr>
 
         {% endfor %}
     </table>
-{% endfor %}
+    {% else %}
+    <div class="text-center text-muted">
+        <h4 class="mt-2">No Logs yet</h4>
+        <p>Once you get client requests for the <code>which</code> or <code>caniuse</code>
+            functions, they will appear here.</p>
+    </div>
+    {% endif %}
 
 </div>

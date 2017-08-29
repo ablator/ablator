@@ -13,8 +13,7 @@ class LogList(TemplateView):
         if not timestamp_keys:
             return context
         logs = {}
-        for timestamp_key in timestamp_keys:
-            if pk in timestamp_key:
-                logs[timestamp_key] = get_request_logs(timestamp_key)
+        newest_timestamp_key = max(filter(lambda x: pk in x, timestamp_keys))
+        logs = reversed(get_request_logs(newest_timestamp_key))
         context['logs'] = logs
         return context
