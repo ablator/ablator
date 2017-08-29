@@ -1,6 +1,7 @@
 Django
 djangorestframework
 django-bootstrap4
+dj-database-url
 
 # Testing Stuff
 flake8

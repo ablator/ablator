@@ -10,6 +10,10 @@ ENV DEBUG=False
 ENV SECRET_KEY=not_so_secret_key
 ENV DJANGO_LOG_LEVEL=INFO
 ENV TIME_ZONE=UTC
+ENV DATABASE_URL=sqlite:////ablator.sqlite
+ENV CACHES_BACKEND=django.core.cache.backends.locmem.LocMemCache
+ENV CACHES_LOCATION=ablator-chache
+ENV HASH_SALT=something_random
 
 # Server
 ENV PORT=8000

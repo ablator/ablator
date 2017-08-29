@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +28,7 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
-HASH_SALT = 'omsn'
+HASH_SALT = os.environ.get('HASH_SALT', 'ablator-hash-salt')
 
 # Application definition
 
@@ -86,19 +87,13 @@ WSGI_APPLICATION = 'ablator.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# https://github.com/kennethreitz/dj-database-url
+DATABASES = {'default': dj_database_url.config(default='sqlite:////tmp/db.sqlite')}
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'ablator-chache',
+        'BACKEND': os.environ.get('CACHES_BACKEND', 'django.core.cache.backends.locmem.LocMemCache'),
+        'LOCATION': os.environ.get('CACHES_LOCATION', 'ablator-chache'),
     }
 }
 
