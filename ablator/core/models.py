@@ -79,7 +79,7 @@ class Functionality(models.Model):
     PAUSE_ROLLOUT = 'pause_rollout'
     DEFINED_BY_RELEASES = 'defined_by_releases'
     ENABLE_GLOBALLY = 'enable_globally'
-    NEW_USER_BEAHAVIOUR_CHOICES = (
+    NEW_USER_BEHAVIOUR_CHOICES = (
         (RECALL_FUNCTIONALITY, 'Recall'),
         (PAUSE_ROLLOUT, 'Roll Out Paused'),
         (DEFINED_BY_RELEASES, 'Release-Driven'),
@@ -87,7 +87,7 @@ class Functionality(models.Model):
     )
     rollout_strategy = models.CharField(
         max_length=50,
-        choices=NEW_USER_BEAHAVIOUR_CHOICES,
+        choices=NEW_USER_BEHAVIOUR_CHOICES,
         default=DEFINED_BY_RELEASES
     )
 

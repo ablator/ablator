@@ -1,6 +1,9 @@
 Ablator is a Functionality-Switching-Service that makes it easy for your app to roll out new features in a controlled way, and to perform reliable A/B testing.
 ===========
 
+.. image:: ablator/web_admin/static/ablator/ablator_logo.png
+   :align: center
+
 It works like this:
 
 1. You define your app's switchable functionalities in ablator.
@@ -14,11 +17,8 @@ enabled.
    :alt: Screen shot showing the percentage of enabled users for a functionality
 
 At the moment, ablator is in an early stage of development. The core APIs are completely available,
-and there is a custom user interface to manage day-to-day operations.
-
-However, we are missing an easy way to deploy the software for non-technical users. So for now,
-you'll need some expertise in deploying a Django Application, but we want to mitigate that in
-the future.
+and there is a custom user interface to manage day-to-day operations. There is also a Docker
+file available, so you can deploy it yourself.
 
 See the `road map`_ for a list of features that are planned for the future.
 
