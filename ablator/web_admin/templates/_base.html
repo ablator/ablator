@@ -42,18 +42,18 @@
                 <a class="nav-link" href="{% url 'home' %}">Home <span
                         class="sr-only">(current)</span></a>
             </li>
+            {% if request.user.is_authenticated %}
             <li class="nav-item {% block users_profile_active %}{% endblock %}">
                 <a class="nav-link" href="{% url 'profile-detail' request.user.id %}">{{ request.user }}</a>
             </li>
             <li class="nav-item {% block users_nav_active %}{% endblock %}">
                 <a class="nav-link" href="{% url 'user-list' %}">{{ request.user.ablatoruser.organization.name }}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/">Admin</a>
-            </li>
+            {% endif %}
         </ul>
 
         <ul class="navbar-nav">
+            {% if request.user.is_authenticated %}
             <li>
             <span class="navbar-text">Signed in as
                 <strong>{{ request.user }}</strong>
@@ -64,6 +64,7 @@
             <li>
                 <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
             </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
