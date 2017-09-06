@@ -1,17 +1,23 @@
-{% extends '_base.html' %}
-{% block body %}
-    <div class="container">
-        <h1>Ablator Login</h1><br>
-        <form method="post">
-            {% csrf_token %}
-            {{ form }}
-            <button type="submit">Login</button>
-        </form>
-
-        {% if register_allowed %}
-            <div class="login-help">
-                <a href="#">Register</a>
-            </div>
-        {% endif %}
-    </div>
+{% extends '_form_container.html' %}
+{% load bootstrap4 %}
+{% block overwrite_spacer %}{% endblock %}
+{% block form %}
+<h1>Ablator Login</h1>
+<hr>
+<form method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <hr>
+    <div class="text-right">
+    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+        </div>
+</form>
+{% endblock %}{% block help %}
+<div class="login-help">
+    <h2>Want to Create a New Organization?</h2>
+    <p>Every app that ablator manages belongs to an <strong>organization</strong>.</p>
+    <p>Once you create an organization, you become its first administrator and can invite more
+        people.</p>
+    <a class="btn btn-outline-secondary btn-block" href="{% url 'organization-register' %}">Register an Organization</a>
+</div>
 {% endblock %}
