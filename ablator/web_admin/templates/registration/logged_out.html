@@ -1,6 +1,9 @@
 {% extends '_base.html' %}
-{% block body %}
+{% block content %}
     <div class="container">
-        <h1>Bye</h1><br>
+        <h1>Bye</h1>
+        <p>Thanks for using ablator. If you are experiencing any problems, consider opening an issue on
+            <a href="https://github.com/ablator/ablator">Ablator's GitHub</a>.</p>
+        <a href="{% url 'login' %}" class="btn btn-outline-secondary">Log In Again</a>
     </div>
 {% endblock %}

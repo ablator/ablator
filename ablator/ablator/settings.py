@@ -34,7 +34,6 @@ HASH_SALT = os.environ.get('HASH_SALT', 'ablator-hash-salt')
 
 INSTALLED_APPS = [
     # Django
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
