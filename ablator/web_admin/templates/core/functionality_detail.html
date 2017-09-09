@@ -166,7 +166,7 @@
             <pre><code>
 import shepard
 let ablatorClient = AblatorClient(baseURL: <span class="text-primary">"http://{{ request.META.HTTP_HOST }}/"</span>)
-let username = <span class="text-primary">"(your user name string)"</span>
+let username = <span class="text-primary">UIDevice.current.identifierForVendor!.uuidString</span>
 let functionalityID = <span class="text-primary">"{{ functionality.id }}"</span>
 
 <span class="text-muted"># The function `which` will return immediately
