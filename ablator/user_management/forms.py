@@ -18,9 +18,21 @@ class OrganizationField(forms.CharField):
             pass
 
 
+class UsernameField(forms.CharField):
+    def validate(self, value):
+        super().validate(value)
+        try:
+            User.objects.get(username=value)
+            raise ValidationError('A user with that name already exists. Please choose a different '
+                                  'user name. If you are trying to log in, go to the home page and '
+                                  'select "Login".')
+        except User.DoesNotExist:
+            pass
+
+
 class OrganizationRegisterForm(forms.Form):
     organization_name = OrganizationField(max_length=140)
-    user_name = forms.CharField(max_length=140)
+    user_name = UsernameField(max_length=140)
     user_email = forms.EmailField()
     user_password = forms.CharField(widget=forms.PasswordInput())
 
