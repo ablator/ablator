@@ -28,7 +28,7 @@ class OrganizationRegisterView(FormView):
         return super().form_valid(form)
 
 
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(staff_member_required(login_url='login'), name='dispatch')
 class UserList(ListView):
     model = User
 
@@ -37,7 +37,7 @@ class UserList(ListView):
             ablatoruser__organization=self.request.user.ablatoruser.organization)
 
 
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(staff_member_required(login_url='login'), name='dispatch')
 class UserCreate(CreateView):
     model = User
     fields = ['username', 'first_name', 'last_name', 'email', 'is_staff']
@@ -52,7 +52,7 @@ class UserCreate(CreateView):
         return super().form_valid(form)
 
 
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(staff_member_required(login_url='login'), name='dispatch')
 class UserUpdate(UpdateView):
     model = User
     fields = ['username', 'first_name', 'last_name', 'email', 'is_staff']
@@ -63,7 +63,7 @@ class UserUpdate(UpdateView):
             ablatoruser__organization=self.request.user.ablatoruser.organization)
 
 
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(staff_member_required(login_url='login'), name='dispatch')
 class UserDelete(DeleteView):
     model = User
     success_url = reverse_lazy('user-list')
@@ -73,7 +73,7 @@ class UserDelete(DeleteView):
             ablatoruser__organization=self.request.user.ablatoruser.organization)
 
 
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(staff_member_required(login_url='login'), name='dispatch')
 class OrganizationUpdate(UpdateView):
     model = Organization
     success_url = reverse_lazy('user-list')
