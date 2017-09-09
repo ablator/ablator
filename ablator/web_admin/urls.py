@@ -39,7 +39,8 @@ urlpatterns = [
     url(r'release/(?P<pk>[^/]+)/delete/$', release.ReleaseDelete.as_view(), name='release-delete'),
 
     # Home Page
-    url('$', index.HomePageView.as_view(), name='home'),
+    url(r'^$', index.HomePageView.as_view(), name='home'),
+    url(r'^status/?$', index.StatusView.as_view(), name='status'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+{% load humanize %}
+
+{% block content %}
+<h1>Status</h1>
+
+<div class="card-deck">
+    <div class="card">
+        <div class="card-body text-center">
+            <span class="display-2">{{number_of_organizations|intword|intcomma}}</span><br>
+            <small>Organizations</small>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body text-center">
+            <span class="display-2">{{number_of_apps|intword|intcomma}}</span><br>
+            <small>Apps</small>
+        </div>
+    </div>
+</div>
+<div class="card-deck mt-4">
+    <div class="card">
+        <div class="card-body text-center">
+            <span class="display-2">{{number_of_functionalities|intword|intcomma}}</span><br>
+            <small>Functionalities</small>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body text-center">
+            <span class="display-2">{{number_of_flavors|intword|intcomma}}</span><br>
+            <small>Flavors</small>
+        </div>
+    </div>
+</div>
+
+<div class="card-deck mt-4">
+    <div class="card">
+        <div class="card-body text-center">
+            <span class="display-2">{{number_of_availabilities|intword|intcomma}}</span><br>
+            <small>Availabilities</small>
+        </div>
+    </div>
+</div>
+{% endblock %}
