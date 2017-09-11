@@ -1,52 +1,56 @@
 {% extends '_base.html' %}
-
+{% load static %}
 {% block home_nav_active %}active{% endblock %}
 
 {% block content %}
 
-    <div class="row">
-        <div class="col">
-            {% for app in apps %}
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h2 class="card-title"><a href="{% url 'app-detail' app.id %}">{{ app.name }}</a>
-                        </h2>
-                        {% for functionality in app.functionality_set.all %}
-                            {% if functionality.rollout_strategy == 'enable_globally' %}
-                            <div class="progress" style="border-radius: 0;">
-                                    <div class="progress-bar"
-                                         style="height: 5px; width: 100%; background-image: none; background-color: #28a745">
-                                    </div>
-                            </div>
-                            {% elif functionality.rollout_strategy == 'recall' %}
-                            <div class="progress" style="border-radius: 0;">
-                                    <div class="progress-bar"
-                                         style="height: 5px; width: 100%; background-image: none; background-color: #dc3545">
-                                    </div>
-                            </div>
-                            {% else %}
-                            <div class="progress" style="border-radius: 0;">
-                                {% for flavor in functionality.flavor_set.all %}
-                                    <div class="progress-bar"
-                                         style="height: 5px; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-
+<div class="row">
+    <div class="col-md-6">
+        {% for app in apps %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><a href="{% url 'app-detail' app.id %}">{{ app.name }}</a>
+                </h2>
+                {% for functionality in app.functionality_set.all %}
+                {% if functionality.rollout_strategy == 'enable_globally' %}
+                <div class="progress" style="border-radius: 0;">
+                    <div class="progress-bar"
+                         style="height: 5px; width: 100%; background-image: none; background-color: #28a745">
                     </div>
                 </div>
-            {% endfor %}
+                {% elif functionality.rollout_strategy == 'recall' %}
+                <div class="progress" style="border-radius: 0;">
+                    <div class="progress-bar"
+                         style="height: 5px; width: 100%; background-image: none; background-color: #dc3545">
+                    </div>
+                </div>
+                {% else %}
+                <div class="progress" style="border-radius: 0;">
+                    {% for flavor in functionality.flavor_set.all %}
+                    <div class="progress-bar"
+                         style="height: 5px; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
         </div>
-        <div class="col">
-            <h1>Welcome to Ablator</h1>
-            <p class="lead">Please select an app on the left to get started.</p>
+
+        {% empty %}
+            <h1 style="margin-top: 8rem;">Welcome to Ablator</h1>
+            <p class="lead">Ablator manages Features.</p>
             <p>
-            <a class="btn btn-lg btn-primary" href="{% url 'app-create' %}" role="button">Create a
+                These features are grouped into Apps. To get started, create your first app now.
+            </p>
+        {% endfor %}
+        <a class="btn btn-lg btn-primary btn-block" href="{% url 'app-create' %}" role="button">Create a
                 new App</a>
-        </p>
-        </div>
     </div>
+    <div class="col-md-6 text-center">
+        <img src="{% static 'ablator/ablator_logo.svg' %}" alt="The ablator logo, a space
+            capsule screaming through the atmosphere" width="100%">
+    </div>
+</div>
 
 {% endblock %}

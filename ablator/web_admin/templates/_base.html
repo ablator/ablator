@@ -18,14 +18,19 @@
         body {
             background: linear-gradient(170deg, white, white 30%, lightgray);
             min-height: 100vh;
+            padding-bottom: 8rem;
         }
         /* Custom page footer */
         .footer {
-            padding: 2.5rem 0 1.5rem;
+            padding: 1.5rem 0 0.5rem;
             margin-top: 2rem;
             font-size: small;
             color: #ccc;
             background: radial-gradient(100% 100% at 50% 100%, #000 0%, #000000 99%, rgba(0, 0, 0, 0) 100%);
+
+            position:fixed;
+            width: 100%;
+            bottom:0;
         }
         .footer a {
             color: #fff;
@@ -96,9 +101,18 @@
 {% endblock %}
 
 
-<footer class="footer text-center">
-    ablator is created by Daniel Jilg and distributed under the BSD License. See <a
-        href="https://github.com/winsmith/ablator/">ablator on GitHub</a> for more info
+<footer class="footer">
+    <div style="max-width: 30rem; margin-left: auto; margin-right: auto;">
+        <img src="{% static 'ablator/ablator_logo_white.png' %}" alt="The ablator logo, a space
+            capsule screaming through the atmosphere" width="50px"
+             style="float: left; margin-right: 20px">
+
+        <p>
+            Ablator Version <kbd>{{ request.ablator_version }}</kbd>
+            Distributed under the BSD License. <br>See <a
+                href="http://ablator.io/">ablator.io</a> for more info
+        </p>
+    </div>
 </footer>
 
 
