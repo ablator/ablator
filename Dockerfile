@@ -14,6 +14,7 @@ ENV DATABASE_URL=sqlite:////ablator.sqlite
 ENV CACHES_BACKEND=django.core.cache.backends.locmem.LocMemCache
 ENV CACHES_LOCATION=ablator-chache
 ENV HASH_SALT=something_random
+ENV SENTRY_DSN=http://etc
 
 # Server
 ENV PORT=8000

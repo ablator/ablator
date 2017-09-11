@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
+from .version import __version__
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     # Third Party Libraries
     'rest_framework',
     'bootstrap4',
+    'raven.contrib.django.raven_compat',
 
     # Functionality
     'core',
@@ -154,4 +156,12 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     },
+}
+
+# Error Reporting
+RAVEN_CONFIG = {
+    'dsn': os.environ.get('SENTRY_DSN'),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': __version__,
 }

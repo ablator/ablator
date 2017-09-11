@@ -11,3 +11,4 @@ gunicorn
 gevent
 whitenoise
 psycopg2
+raven
