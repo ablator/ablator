@@ -2,36 +2,36 @@
 {% load humanize %}
 {% block home_nav_active %}active{% endblock %}
 {% block back %}
-    <li class="breadcrumb-item"><a
-            href="{% url 'app-detail' functionality.app.id %}">{{ functionality.app.name }}</a></li>
-    <li class="breadcrumb-item active">{{ functionality.name }}</li>
+<li class="breadcrumb-item"><a
+        href="{% url 'app-detail' functionality.app.id %}">{{ functionality.app.name }}</a></li>
+<li class="breadcrumb-item active">{{ functionality.name }}</li>
 
 {% endblock %}
 
 {% block content %}
-    <section>
-        <div class="page-header">
-            <div class="row">
-                <div class="col-md-8">
-                    <h1>{{ functionality.name }}
-                        <small><a class="btn btn-sm btn-outline-secondary"
-                                  href="{% url 'functionality-update' functionality.id %}">Edit</a>
-                        </small>
-                    </h1>
-                    <p class="lead">
-                        {% spaceless %}
-                            <a href="{% url 'home' %}"
-                               class="text-dark">{{ functionality.app.company }}</a>
-                            <span>.</span>
-                            <a href="{% url 'app-detail' functionality.app.id %}"
-                               class="text-dark">{{ functionality.app.slug }}</a>
-                            <span>.{{ functionality.slug }}</span>
-                        {% endspaceless %}
-                        <br>
-                        <kbd>{{ functionality.id }}</kbd>
-                    </p>
-                </div>
-                <div class="col-md-4 text-right">
+<section>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>{{ functionality.name }}
+                    <small><a class="btn btn-sm btn-outline-secondary"
+                              href="{% url 'functionality-update' functionality.id %}">Edit</a>
+                    </small>
+                </h1>
+                <p class="lead">
+                    {% spaceless %}
+                    <a href="{% url 'home' %}"
+                       class="text-dark">{{ functionality.app.organization }}</a>
+                    <span>.</span>
+                    <a href="{% url 'app-detail' functionality.app.id %}"
+                       class="text-dark">{{ functionality.app.slug }}</a>
+                    <span>.{{ functionality.slug }}</span>
+                    {% endspaceless %}
+                    <br>
+                    <kbd>{{ functionality.id }}</kbd>
+                </p>
+            </div>
+            <div class="col-md-4 text-right">
                     <span class="display-4">
                         <a class="badge badge-{% spaceless %}
                             {% if functionality.rollout_strategy == 'defined_by_releases' %}
@@ -48,228 +48,191 @@
                             {{ functionality.get_rollout_strategy_display }}
                         </a>
                     </span>
-                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <hr>
+<hr>
+<div id="functionality-enabled-users"
+     data-id="{% url 'functionality-part-enabled-users' functionality.id %}">
+    <div style="height: 10em; background: #fafafa;"></div>
+</div>
 
-    {% if functionality.rollout_strategy == 'enable_globally' %}
-        <p class="lead text-center">
-            This functionality is <span class="badge badge-success">enabled globally</span>.
-            It is enabled for all users of {{ functionality.app.name }}.
-        </p>
-        <hr>
-    {% elif functionality.rollout_strategy == 'recall' %}
-        <p class="lead text-center">
-            This functionality is marked as <span class="badge badge-danger">Recall</span>. All
-            users will have that functionality revoked, even those who had it enabled in some
-            form
-            before.
-        </p>
-        <hr>
+{% if functionality.rollout_strategy == 'enable_globally' %}
+{% elif functionality.rollout_strategy == 'recall' %}
+{% else %}
 
-    {% else %}
+{% if functionality.flavor_set.all %}
+<section id="functionality-progress"
+         data-id="{% url 'functionality-part-progress' functionality.id %}">
+    <div style="height: 3em; background: #fafafa;"></div>
+</section>
 
-        <section>
-            <div class="row">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="text-center">
-                                <span class="display-2">{{ functionality.number_of_enabled_users|intword|intcomma }}</span><br>
-                                <small>users enabled</small>
-                            </div>
+{% endif %}
+<section id="functionality-flavors"
+         data-id="{% url 'functionality-part-flavors' functionality.id %}">
+    <div style="height: 10em; background: #fafafa;"></div>
+</section>
+{% endif %}
 
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-
-                            <div class="text-center">
-                                <span class="display-2">{{ functionality.number_of_users|intword|intcomma }}</span><br>
-                                <small>potential users</small>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <hr>
-
-        {% if functionality.flavor_set.all %}
-            <section>
-                <div class="progress">
-                    {% for flavor in functionality.flavor_set.all %}
-                        <div class="progress-bar"
-                             style="height: 4em; width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                            <span style="line-height: 4em;">{{ flavor.name }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-            <hr>
-        {% endif %}
-
-        <section>
-            <h2>Flavors</h2>
-            <div class="row">
-                {% for flavor in functionality.flavor_set.all %}
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">{{ flavor.name }} <a
-                                        class="btn btn-sm btn-outline-secondary"
-                                        href="{% url 'flavor-update' flavor.id %}">Edit</a></h4>
-
-                                <div class="progress">
-                                    <div class="progress-bar"
-                                         style="width: {{ flavor.single_width_percent }}%; background-image: none; background-color: #{{ flavor.color }}"></div>
-                                </div>
-                                <hr>
-                                <div class="text-center">
-                                    <span class="display-2">{{ flavor.number_of_enabled_users|intword|intcomma }}</span><br>
-                                    <small>users enabled, of
-                                        <strong>{{ flavor.number_of_users|intword|intcomma }}</strong>
-                                        users
-                                        overall
-                                    </small>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if forloop.counter|divisibleby:3 %}
-                        </div>
-                        <br>
-                        <div class="row">
-                    {% endif %}
-
-                {% empty %}
-                    <div class="col-md-8">
-                        <div class="alert alert-warning" role="alert">
-                            <strong>You need to define at least one flavor.</strong> This
-                            functionality is release-driven, which means it uses Flavors and
-                            Releases to determine what to deliver to users. Don't know what to call
-                            your flavor? Just call it <strong>On</strong>.
-                        </div>
-                    </div>
-                {% endfor %}
-
-                <div class="col-md-4">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <a href="{% url 'flavor-create' functionality.id %}"
-                               class="btn btn-outline-secondary">Add New Flavor</a>
-                        </div>
-                    </div>
-                </div>
-                </div>
-        </section>
-
-        <hr>
-
-        {% if functionality.rollout_strategy == 'defined_by_releases' %}
-            <section>
-            <h2>Release Timeline</h2>
-
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Start Date</th>
-                    <th class="text-right">Max Enabled Users</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for release in functionality.release_set.all %}
-                    <tr {% if release.is_current %}class="table-primary"
-                        {% elif release.is_past %}class="text-muted"{% endif %}>
-                        <td>
-                            <strong>{{ release.start_at }}</strong><br>
-                            {{ release.start_at|naturaltime }}
-                        </td>
-                        <td class="text-right">
-                            <span class="display-4">{{ release.max_enabled_users|intword|intcomma }}</span>
-                        </td>
-                        <td class="align-middle">
-                            <a class="btn btn-sm btn-outline-secondary btn-block"
-                               href="{% url 'release-update' release.id %}">Edit</a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                    <td colspan="4" class="px-0">
-                        <div class="alert alert-warning mx-0" role="alert">
-                            <strong>You need to define at least one release.</strong> This release
-                            will tell Ablator how many users you want to allow in on this
-                            functionality, and when.
-                        </div>
-                    </td>
-                    </tr>
-
-                {% endfor %}
-                <tr>
-                    <td colspan="4"><a href="{% url 'release-create' functionality.id %}"
-                                       class="btn btn-outline-secondary">Add new Release</a></td>
-                </tr>
-                </tbody>
-            </table>
-
-            <hr>
-        {% else %}
-            <p class="lead text-center">
-                The rollout for this functionality is
-                <span class="badge badge-warning">paused</span>. All new users will get the
-                functionality disabled, but users who already had the functionality will get to
-                keep it.
-            </p>
-            <hr>
-        {% endif %}
-    {% endif %}
-
+<hr>
 
 <section>
-    <p>
-        <a class="btn btn-outline-secondary" data-toggle="collapse"
-           href="#includingInstructions" aria-expanded="false"
-           aria-controls="collapseExample">
-            Show Inclusion Instructions for Python
-        </a>
-    </p>
-    <div class="collapse" id="includingInstructions">
-        <div class="card card-body">
+    <h2>Logs</h2>
+    <div class="card" id="log-window" style="max-height: 30rem; overflow: scroll;"
+         data-id="{% url 'logging-list' functionality.id %}">
+        <div style="height: 30rem; background: #fafafa;"></div>
+    </div>
+</section>
+
+<hr>
+
+{% if functionality.rollout_strategy == 'defined_by_releases' %}
+<section>
+    <h2>Release Timeline</h2>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Start Date</th>
+            <th class="text-right">Max Enabled Users</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for release in functionality.release_set.all %}
+        <tr {% if release.is_current %}class="table-primary"
+            {% elif release.is_past %}class="text-muted" {% endif %}>
+            <td>
+                <strong>{{ release.start_at }}</strong><br>
+                {{ release.start_at|naturaltime }}
+            </td>
+            <td class="text-right">
+                <span class="display-4">{{ release.max_enabled_users|intword|intcomma }}</span>
+            </td>
+            <td class="align-middle">
+                <a class="btn btn-sm btn-outline-secondary btn-block"
+                   href="{% url 'release-update' release.id %}">Edit</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="px-0">
+                <div class="alert alert-warning mx-0" role="alert">
+                    <strong>You need to define at least one release.</strong> This release
+                    will tell Ablator how many users you want to allow in on this
+                    functionality, and when.
+                </div>
+            </td>
+        </tr>
+
+        {% endfor %}
+        <tr>
+            <td colspan="4"><a href="{% url 'release-create' functionality.id %}"
+                               class="btn btn-outline-secondary">Add new Release</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Use it in Your Code</h2>
+    <div class="row">
+        <div class="col-md-3">
+    <div class="nav flex-column nav-pills" role="tablist">
+        <a class="nav-link active" data-toggle="pill" href="#swift" role="tab" aria-expanded="true">Swift</a>
+        <a class="nav-link" data-toggle="pill" href="#python" role="tab" aria-expanded="true">Python</a>
+        <a class="nav-link" data-toggle="pill" href="#curl" role="tab" aria-expanded="true">Curl</a>
+    </div>
+            </div>
+        <div class="col-md-9">
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="swift" role="tabpanel">
+            <div class="card card-body">
             <p class="lead">This functionality has the ID <kbd>{{ functionality.id }}</kbd>
             </p>
 
             <p>
                 To include this functionality in your code, use the <code>which</code>
-                function
-                in your
-                ablator client. Here's an example for the Python Client, <code>karman</code>:
+                function in your
+                ablator client. Here's an example for the Swift Client, <code>shepard</code>.
+                (<a href="https://github.com/ablator/shepard">Shepard on GitHub</a>)
+            </p>
+
+            <pre><code>
+import shepard
+let ablatorClient = AblatorClient(baseURL: <span class="text-primary">"http://{{ request.META.HTTP_HOST }}/"</span>)
+let username = <span class="text-primary">UIDevice.current.identifierForVendor!.uuidString</span>
+let functionalityID = <span class="text-primary">"{{ functionality.id }}"</span>
+
+<span class="text-muted"># The function `which` will return immediately
+# with a cached value that should be enough for most uses. If you need
+# an up-to-date value and are willing to wait 50-100ms for it, use the
+# provided completion block.</span>
+let availability = ablatorClient.which(
+    user: username,
+    functionalityID: functionalityID,
+    completed:
+    { functionalityString in
+        print(functionalityString ?? "No Availability")
+    }
+)
+
+<span class="text-muted"># this will return one of the following:{% for flavor in functionality.flavor_set.all %}
+# availability == <span class="text-primary">"{{ flavor }}"</span>{% endfor %}
+# availability == <span class="text-primary">nil</span></span></code></pre>
+        </div>
+        </div>
+        <div class="tab-pane fade" id="python" role="tabpanel">
+            <div class="card card-body">
+            <p class="lead">This functionality has the ID <kbd>{{ functionality.id }}</kbd>
+            </p>
+
+            <p>
+                To include this functionality in your code, use the <code>which</code>
+                function in your
+                ablator client. Here's an example for the Python Client, <code>karman</code>.
+                (<a href="https://github.com/ablator/karman">Karman on GitHub</a>)
             </p>
 
             <pre><code>
 import karman
-username = "(your user name string)"
-functionality_id = "{{ functionality.id }}"
-availability = karman.which(username, functionality_id)
+username = <span class="text-primary">"(your user name string)"</span>
+functionality_id = <span class="text-primary">"{{ functionality.id }}"</span>
+ablator_client = karman.Karman(base_url=<span class="text-primary">'http://{{ request.META.HTTP_HOST }}/'</span>)
+availability = ablator_client.which(username, functionality_id)
 
-# this will return one of the following:{% for flavor in functionality.flavor_set.all %}
-# availability == "{{ flavor }}"{% endfor %}
-# availability == None</code></pre>
+<span class="text-muted"># this will return one of the following:{% for flavor in functionality.flavor_set.all %}
+# availability == <span class="text-primary">"{{ flavor }}"</span>{% endfor %}
+# availability == <span class="text-primary">None</span></span></code></pre>
+        </div>
+        </div>
+        <div class="tab-pane fade" id="curl" role="tabpanel">
+            <div class="card card-body">
+            <p class="lead">This functionality has the ID <kbd>{{ functionality.id }}</kbd>
+            </p>
+
+            <p>Here's an example for <code>curl</code> on the command line:</p>
+            <pre><code>curl  --header 'Accept: application/json' http://<span class="text-primary">{{ request.META.HTTP_HOST }}</span>/api/v1/which/<span class="text-primary">(username)</span>/<span class="text-primary">{{ functionality.id }}</span>/</code></pre>
+
+<strong>This will return one of the following:</strong>
+<pre><code>
+{% for flavor in functionality.flavor_set.all %}<span class="text-muted">{"functionality":<span class="text-primary">"{{ flavor}}"</span>}
+{% endfor %}{"functionality":<span class="text-primary">None</span>}</span>
+</code></pre>
+            </div>
         </div>
     </div>
-
+            </div>
+    </div>
 
 </section>
+
+{% endblock %}
+
+{% block scripts %}
 {% endblock %}

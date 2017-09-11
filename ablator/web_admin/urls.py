@@ -4,6 +4,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import app, functionality, index, flavor, release
 from django.contrib.auth import views as auth_views
 
+# flake8: noqa: E501
+
 urlpatterns = [
     # Account
     url(r'accounts/login/$', auth_views.LoginView.as_view(), name='login'),
@@ -21,6 +23,11 @@ urlpatterns = [
     url(r'functionality/(?P<pk>[^/]+)/update/$', functionality.FunctionalityUpdate.as_view(), name='functionality-update'),
     url(r'functionality/(?P<pk>[^/]+)/delete/$', functionality.FunctionalityDelete.as_view(), name='functionality-delete'),
 
+    # Functionality Partials
+    url(r'functionality/enabled-users/(?P<pk>[^/]+)/$', functionality.FunctionalityPartEnabledUsers.as_view(), name='functionality-part-enabled-users'),
+    url(r'functionality/progress/(?P<pk>[^/]+)/$', functionality.FunctionalityPartProgress.as_view(), name='functionality-part-progress'),
+    url(r'functionality/flavors/(?P<pk>[^/]+)/$', functionality.FunctionalityPartFlavors.as_view(), name='functionality-part-flavors'),
+
     # Flavor
     url(r'functionality/(?P<pk>[^/]+)/add_flavor/$', flavor.FlavorCreate.as_view(), name='flavor-create'),
     url(r'flavor/(?P<pk>[^/]+)/update/$', flavor.FlavorUpdate.as_view(), name='flavor-update'),
@@ -32,7 +39,8 @@ urlpatterns = [
     url(r'release/(?P<pk>[^/]+)/delete/$', release.ReleaseDelete.as_view(), name='release-delete'),
 
     # Home Page
-    url('$', index.HomePageView.as_view(), name='home'),
+    url(r'^$', index.HomePageView.as_view(), name='home'),
+    url(r'^status/?$', index.StatusView.as_view(), name='status'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

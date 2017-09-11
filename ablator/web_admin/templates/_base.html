@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,14 +15,26 @@
           crossorigin="anonymous">
 
     <style type="text/css">
+        body {
+            background: linear-gradient(170deg, white, white 30%, lightgray);
+            min-height: 100vh;
+            padding-bottom: 8rem;
+        }
         /* Custom page footer */
         .footer {
-            padding-top: 1.5rem;
-            margin: 1.5rem 0;
+            padding: 1.5rem 0 0.5rem;
+            margin-top: 2rem;
             font-size: small;
-            color: #777;
-            border-top: .05rem solid #e5e5e5;
-            }
+            color: #ccc;
+            background: radial-gradient(100% 100% at 50% 100%, #000 0%, #000000 99%, rgba(0, 0, 0, 0) 100%);
+
+            position:fixed;
+            width: 100%;
+            bottom:0;
+        }
+        .footer a {
+            color: #fff;
+        }
     </style>
 
 </head>
@@ -41,48 +54,71 @@
                 <a class="nav-link" href="{% url 'home' %}">Home <span
                         class="sr-only">(current)</span></a>
             </li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item {% block users_profile_active %}{% endblock %}">
+                <a class="nav-link" href="{% url 'profile-detail' request.user.id %}">{{ request.user }}</a>
+            </li>
             <li class="nav-item {% block users_nav_active %}{% endblock %}">
-                <a class="nav-link" href="{% url 'user-list' %}">Users</a>
+                <a class="nav-link" href="{% url 'user-list' %}">{{ request.user.ablatoruser.organization.name }}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/">Admin</a>
-            </li>
+            {% endif %}
         </ul>
 
         <ul class="navbar-nav">
+            {% if request.user.is_authenticated %}
             <li>
             <span class="navbar-text">Signed in as
                 <strong>{{ request.user }}</strong>
                 of
-                <strong>{{ request.user.ablatoruser.company }}</strong>
+                <strong>{{ request.user.ablatoruser.organization.name }}</strong>
             </span>
             </li>
             <li>
                 <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
             </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
 </div>
 
 {% block body %}
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message|safe }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+</div>
 {% endblock %}
 
 
-<div class="container">
-    <footer class="footer text-center">
-        ablator is created by Daniel Jilg and distributed under the MIT License. See <a
-            href="https://github.com/winsmith/ablator/">ablator on GitHub</a> for more info
-    </footer>
-</div>
+<footer class="footer">
+    <div style="max-width: 30rem; margin-left: auto; margin-right: auto;">
+        <img src="{% static 'ablator/ablator_logo_white.png' %}" alt="The ablator logo, a space
+            capsule screaming through the atmosphere" width="50px"
+             style="float: left; margin-right: 20px">
+
+        <p>
+            Ablator Version <kbd>{{ request.ablator_version }}</kbd>
+            Distributed under the BSD License. <br>See <a
+                href="http://ablator.io/">ablator.io</a> for more info
+        </p>
+    </div>
+</footer>
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
@@ -91,6 +127,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+<script src="{% static "ablator/main.js" %}"></script>
+
+{% block scripts %}{% endblock %}
 </body>
 </html>
 

@@ -1,3 +1,14 @@
 Django
 djangorestframework
 django-bootstrap4
+dj-database-url
+
+# Testing Stuff
+flake8
+
+# Server Stuff
+gunicorn
+gevent
+whitenoise
+psycopg2
+raven

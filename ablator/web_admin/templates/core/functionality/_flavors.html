@@ -1,0 +1,54 @@
+{% load humanize %}
+<hr>
+<h2>Flavors</h2>
+<div class="row">
+    {% for flavor in functionality.flavor_set.all %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">{{ flavor.name }} <a
+                        class="btn btn-sm btn-outline-secondary"
+                        href="{% url 'flavor-update' flavor.id %}">Edit</a></h4>
+
+                <div class="progress">
+                    <div class="progress-bar"
+                         style="width: {{ flavor.single_width_percent }}%; background-image: none; background-color: #{{ flavor.color }}"></div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <span class="display-2">{{ flavor.number_of_enabled_users|intword|intcomma }}</span><br>
+                    <small>users enabled, of
+                        <strong>{{ flavor.number_of_users|intword|intcomma }}</strong>
+                        users
+                        overall
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% if forloop.counter|divisibleby:3 %}
+</div>
+<br>
+<div class="row">
+    {% endif %}
+    {% empty %}
+    <div class="col-md-8">
+        <div class="alert alert-warning" role="alert">
+            <strong>You need to define at least one flavor.</strong> This
+            functionality is release-driven, which means it uses Flavors and
+            Releases to determine what to deliver to users. Don't know what to call
+            your flavor? Just call it <strong>On</strong>.
+        </div>
+    </div>
+    {% endfor %}
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <a href="{% url 'flavor-create' functionality.id %}"
+                   class="btn btn-outline-secondary">Add New Flavor</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,10 @@
 from django.test import TestCase
 
-from core.functionality import *
-from core.models import Functionality, Release, App
-from user_management.models import Company
+from core.functionality import WhichContext, NoAvailability
+from core.functionality.rollout_strategies import check_roll_out_recall, \
+    check_roll_out_enable_globally, assert_existence_of_release
+from core.models import Functionality, App, Release
+from user_management.models import Organization
 
 
 class RollOutRecall(TestCase):
@@ -37,9 +39,9 @@ class RollOutEnableGlobally(TestCase):
 
 class CheckExistenceOfRelease(TestCase):
     def setUp(self):
-        self.company = Company(name='Testcompany')
-        self.company.save()
-        self.app = App(name='test-app', slug='test-app', company=self.company)
+        self.organization = Organization(name='Testorganization')
+        self.organization.save()
+        self.app = App(name='test-app', slug='test-app', organization=self.organization)
         self.app.save()
         self.functionality = Functionality(
             app=self.app,

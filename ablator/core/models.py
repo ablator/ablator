@@ -1,4 +1,3 @@
-import datetime
 import hashlib
 import uuid
 
@@ -8,7 +7,7 @@ from django.urls.base import reverse_lazy
 from django.utils import timezone
 
 from core.colors import random_color
-from user_management.models import Company
+from user_management.models import Organization
 
 HASH_SALT = settings.HASH_SALT
 
@@ -53,10 +52,10 @@ class App(models.Model):
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-    company = models.ForeignKey(Company)
+    organization = models.ForeignKey(Organization)
 
     def __str__(self):
-        return '{}.{}'.format(self.company, self.slug)
+        return '{}.{}'.format(self.organization, self.slug)
 
     def get_absolute_url(self):
         return reverse_lazy('app-detail', kwargs={'app_id': self.id})
@@ -80,7 +79,7 @@ class Functionality(models.Model):
     PAUSE_ROLLOUT = 'pause_rollout'
     DEFINED_BY_RELEASES = 'defined_by_releases'
     ENABLE_GLOBALLY = 'enable_globally'
-    NEW_USER_BEAHAVIOUR_CHOICES = (
+    NEW_USER_BEHAVIOUR_CHOICES = (
         (RECALL_FUNCTIONALITY, 'Recall'),
         (PAUSE_ROLLOUT, 'Roll Out Paused'),
         (DEFINED_BY_RELEASES, 'Release-Driven'),
@@ -88,7 +87,7 @@ class Functionality(models.Model):
     )
     rollout_strategy = models.CharField(
         max_length=50,
-        choices=NEW_USER_BEAHAVIOUR_CHOICES,
+        choices=NEW_USER_BEHAVIOUR_CHOICES,
         default=DEFINED_BY_RELEASES
     )
 

@@ -14,8 +14,24 @@ class FunctionalityDetail(TemplateView):
 
     def get_context_data(self, pk, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['functionality'] = Functionality.objects.filter(app__company=self.request.user.ablatoruser.company).get(id=pk)
+        context_data['functionality'] = Functionality.objects.filter(
+            app__organization=self.request.user.ablatoruser.organization).get(id=pk)
         return context_data
+
+
+@method_decorator(login_required, name='dispatch')
+class FunctionalityPartEnabledUsers(FunctionalityDetail):
+    template_name = 'core/functionality/_enabled_users.html'
+
+
+@method_decorator(login_required, name='dispatch')
+class FunctionalityPartProgress(FunctionalityDetail):
+    template_name = 'core/functionality/_progress.html'
+
+
+@method_decorator(login_required, name='dispatch')
+class FunctionalityPartFlavors(FunctionalityDetail):
+    template_name = 'core/functionality/_flavors.html'
 
 
 @method_decorator(login_required, name='dispatch')

@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.urls.base import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.text import slugify
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from core.models import Release, Functionality

@@ -1,0 +1,23 @@
+{% extends '_form_container.html' %}
+{% load bootstrap4 %}
+
+{% block users_nav_active %}active{% endblock %}
+
+{% block form %}
+<h1>Register A New Organization</h1>
+<hr>
+
+<form action="." method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <hr>
+    {% buttons %}
+
+    <div class="text-right">
+        <a class="btn btn-lg btn-outline-secondary"
+           href="{% url 'home' %}">Go Back</a>
+        <button type="submit" class="btn btn-primary btn-lg">Save</button>
+    </div>
+    {% endbuttons %}
+</form>
+{% endblock %}
