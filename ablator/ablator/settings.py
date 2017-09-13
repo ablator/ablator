@@ -45,8 +45,7 @@ INSTALLED_APPS = [
     # Third Party Libraries
     'rest_framework',
     'bootstrap4',
-
-        'raven.contrib.django.raven_compat',
+    'raven.contrib.django.raven_compat',
 
     # Functionality
     'core',
