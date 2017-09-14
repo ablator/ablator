@@ -4,8 +4,9 @@ from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib import messages
 
-from core.models import Functionality, App
+from core.models import Functionality, App, Flavor, Release
 
 
 @method_decorator(login_required, name='dispatch')
@@ -44,6 +45,14 @@ class FunctionalityCreate(CreateView):
         app = App.objects.get(id=app_id)
         form.instance.app = app
         form.instance.slug = slugify(form.instance.name)
+
+        # Create Example Flavor and Release
+        on_flavor = Flavor.objects.create(name='On', functionality=form.instance)
+        Release.objects.create(functionality=form.instance)
+        messages.info(self.request, "Along with your app, a Flavor named {} was automatically "
+                                    "created for you. To start enabling client requests, edit "
+                                    "a release below.".format(on_flavor.name))
+
         return super(FunctionalityCreate, self).form_valid(form)
 
 
