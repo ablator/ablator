@@ -28,7 +28,6 @@
                     <span>.{{ functionality.slug }}</span>
                     {% endspaceless %}
                     <br>
-                    <kbd>{{ functionality.id }}</kbd>
                 </p>
             </div>
             <div class="col-md-4 text-right">
@@ -76,15 +75,6 @@
 </section>
 {% endif %}
 
-<hr>
-
-<section>
-    <h2>Logs</h2>
-    <div class="card" id="log-window" style="max-height: 30rem; overflow: scroll;"
-         data-id="{% url 'logging-list' functionality.id %}">
-        <div style="height: 30rem; background: #fafafa;"></div>
-    </div>
-</section>
 
 <hr>
 
@@ -134,102 +124,17 @@
         </tr>
         </tbody>
     </table>
-
-    <hr>
-    {% endif %}
 </section>
+{% endif %}
+
+<hr>
 
 <section>
-    <h2>Use it in Your Code</h2>
-    <div class="row">
-        <div class="col-md-3">
-    <div class="nav flex-column nav-pills" role="tablist">
-        <a class="nav-link active" data-toggle="pill" href="#swift" role="tab" aria-expanded="true">Swift</a>
-        <a class="nav-link" data-toggle="pill" href="#python" role="tab" aria-expanded="true">Python</a>
-        <a class="nav-link" data-toggle="pill" href="#curl" role="tab" aria-expanded="true">Curl</a>
+    <h2>Logs</h2>
+    <div class="card" id="log-window" style="max-height: 30rem; overflow: scroll;"
+         data-id="{% url 'logging-list' functionality.id %}">
+        <div style="height: 30rem; background: #fafafa;"></div>
     </div>
-            </div>
-        <div class="col-md-9">
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="swift" role="tabpanel">
-            <div class="card card-body">
-            <p class="lead">This functionality has the ID <kbd>{{ functionality.id }}</kbd>
-            </p>
-
-            <p>
-                To include this functionality in your code, use the <code>which</code>
-                function in your
-                ablator client. Here's an example for the Swift Client, <code>shepard</code>.
-                (<a href="https://github.com/ablator/shepard">Shepard on GitHub</a>)
-            </p>
-
-            <pre><code>
-import shepard
-let ablatorClient = AblatorClient(baseURL: <span class="text-primary">"http://{{ request.META.HTTP_HOST }}/"</span>)
-let username = <span class="text-primary">UIDevice.current.identifierForVendor!.uuidString</span>
-let functionalityID = <span class="text-primary">"{{ functionality.id }}"</span>
-
-<span class="text-muted"># The function `which` will return immediately
-# with a cached value that should be enough for most uses. If you need
-# an up-to-date value and are willing to wait 50-100ms for it, use the
-# provided completion block.</span>
-let availability = ablatorClient.which(
-    user: username,
-    functionalityID: functionalityID,
-    completed:
-    { functionalityString in
-        print(functionalityString ?? "No Availability")
-    }
-)
-
-<span class="text-muted"># this will return one of the following:{% for flavor in functionality.flavor_set.all %}
-# availability == <span class="text-primary">"{{ flavor }}"</span>{% endfor %}
-# availability == <span class="text-primary">nil</span></span></code></pre>
-        </div>
-        </div>
-        <div class="tab-pane fade" id="python" role="tabpanel">
-            <div class="card card-body">
-            <p class="lead">This functionality has the ID <kbd>{{ functionality.id }}</kbd>
-            </p>
-
-            <p>
-                To include this functionality in your code, use the <code>which</code>
-                function in your
-                ablator client. Here's an example for the Python Client, <code>karman</code>.
-                (<a href="https://github.com/ablator/karman">Karman on GitHub</a>)
-            </p>
-
-            <pre><code>
-import karman
-username = <span class="text-primary">"(your user name string)"</span>
-functionality_id = <span class="text-primary">"{{ functionality.id }}"</span>
-ablator_client = karman.Karman(base_url=<span class="text-primary">'http://{{ request.META.HTTP_HOST }}/'</span>)
-availability = ablator_client.which(username, functionality_id)
-
-<span class="text-muted"># this will return one of the following:{% for flavor in functionality.flavor_set.all %}
-# availability == <span class="text-primary">"{{ flavor }}"</span>{% endfor %}
-# availability == <span class="text-primary">None</span></span></code></pre>
-        </div>
-        </div>
-        <div class="tab-pane fade" id="curl" role="tabpanel">
-            <div class="card card-body">
-            <p class="lead">This functionality has the ID <kbd>{{ functionality.id }}</kbd>
-            </p>
-
-            <p>Here's an example for <code>curl</code> on the command line:</p>
-            <pre><code>curl  --header 'Accept: application/json' http://<span class="text-primary">{{ request.META.HTTP_HOST }}</span>/api/v1/which/<span class="text-primary">(username)</span>/<span class="text-primary">{{ functionality.id }}</span>/</code></pre>
-
-<strong>This will return one of the following:</strong>
-<pre><code>
-{% for flavor in functionality.flavor_set.all %}<span class="text-muted">{"functionality":<span class="text-primary">"{{ flavor}}"</span>}
-{% endfor %}{"functionality":<span class="text-primary">None</span>}</span>
-</code></pre>
-            </div>
-        </div>
-    </div>
-            </div>
-    </div>
-
 </section>
 
 {% endblock %}

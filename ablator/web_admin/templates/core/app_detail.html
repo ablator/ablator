@@ -13,27 +13,29 @@
 
     <p class="lead">
         {% spaceless %}
-            <a href="{% url 'home' %}" class="text-dark">{{ app.organization}}</a>
+            <a href="{% url 'home' %}" class="text-dark">{{ app.organization }}</a>
             <span>.{{ app.slug }}</span>
         {% endspaceless %}
+        <br>
+        <kbd>{{ app.id }}</kbd>
     </p>
     <hr>
 
     <div class="card-deck">
         {% for functionality in app.functionality_set.all %}
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title"><a
-                                href="{% url 'functionality-detail' functionality.id %}">{{ functionality.name }}</a>
-                        </h4>
-                        <div class="progress">
-                            {% for flavor in functionality.flavor_set.all %}
-                                <div class="progress-bar"
-                                     style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <hr>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"><a
+                            href="{% url 'functionality-detail' functionality.id %}">{{ functionality.name }}</a>
+                    </h4>
+                    <div class="progress">
+                        {% for flavor in functionality.flavor_set.all %}
+                            <div class="progress-bar"
+                                 style="width: {{ flavor.width_percent }}%; background-image: none; background-color: #{{ flavor.color }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr>
                     {% if functionality.rollout_strategy == 'enable_globally' %}
                         <h1 class="text-center"><span class="badge badge-success">
                             {{ functionality.get_rollout_strategy_display }}
@@ -47,9 +49,9 @@
                         <div class="row">
                             <div class="col">
                                 <div class="text-center">
-                                <span class="display-3">{{ functionality.number_of_enabled_users|intword|intcomma }}</span><br>
-                                <small>users enabled</small>
-                            </div>
+                                    <span class="display-3">{{ functionality.number_of_enabled_users|intword|intcomma }}</span><br>
+                                    <small>users enabled</small>
+                                </div>
                             </div>
                             <div class="col">
                                 <div class="text-center">
@@ -59,15 +61,16 @@
                                         {{ functionality.get_rollout_strategy_display }}
                                         </span></h1>
                                     {% else %}
-                                        <span class="display-3">{{ functionality.number_of_users|intword|intcomma }}</span><br>
+                                        <span class="display-3">{{ functionality.number_of_users|intword|intcomma }}</span>
+                                        <br>
                                         <small>potential users</small>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
                     {% endif %}
-                    </div>
                 </div>
+            </div>
 
             {% if forloop.counter|divisibleby:2 %}
                 </div>
@@ -76,12 +79,106 @@
             {% endif %}
         {% endfor %}
 
-            <div class="card text-center">
-                    <div class="card-body">
-                        <a href="{% url 'functionality-create' app.id %}" class="btn btn-outline-secondary">Add New Functionality</a>
-                    </div>
-                </div>
+        <div class="card text-center">
+            <div class="card-body">
+                <a href="{% url 'functionality-create' app.id %}" class="btn btn-outline-secondary">Add
+                    New Functionality</a>
+            </div>
+        </div>
         </div>
 
+    <hr>
+<section>
+    <h2>Use it in Your Code</h2>
+    <div class="row">
+        <div class="col-md-3">
+    <div class="nav flex-column nav-pills" role="tablist">
+        <a class="nav-link active" data-toggle="pill" href="#swift" role="tab" aria-expanded="true">Swift</a>
+        <a class="nav-link" data-toggle="pill" href="#python" role="tab" aria-expanded="true">Python</a>
+        <a class="nav-link" data-toggle="pill" href="#curl" role="tab" aria-expanded="true">Curl</a>
+    </div>
+            </div>
+        <div class="col-md-9">
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="swift" role="tabpanel">
+            <div class="card card-body">
+            <p class="lead">This app has the ID <kbd>{{ app.id }}</kbd>
+            </p>
+
+            <p>
+                To include this app's functionalities in your code, use the <code>which</code>
+                function in your
+                ablator client. Here's an example for the Swift Client, <code>shepard</code>.
+                (<a href="https://github.com/ablator/shepard">Shepard on GitHub</a>)
+            </p>
+
+            <pre><code>
+import shepard
+let ablatorClient = AblatorClient(baseURL: <span class="text-primary">"http://{{ request.META.HTTP_HOST }}/"</span>)
+let username = <span class="text-primary">UIDevice.current.identifierForVendor!.uuidString</span>
+let appID = <span class="text-primary">"{{ app.id }}"</span>
+
+<span class="text-muted"># The function `which` will return immediately
+# with a cached value that should be enough for most uses. If you need
+# an up-to-date value and are willing to wait 50-100ms for it, use the
+# provided completion block.</span>
+let availabilities = ablatorClient.which(
+    user: username,
+    appID: appID,
+    completed:
+    { functionalityStrings in
+        print(functionalityStrings)
+    }
+)
+
+<span class="text-muted"># <strong>this will return a list similar to this:</strong>
+# availabilities == [{% for functionality in app.functionality_set.all %}
+    "<span class="text-primary">{{ functionality.flavor_set.first }}</span>"{% if not forloop.last %},{% endif %}{% endfor %}
+]</span></code></pre>
+        </div>
+        </div>
+        <div class="tab-pane fade" id="python" role="tabpanel">
+            <div class="card card-body">
+            <p class="lead">This app has the ID <kbd>{{ app.id }}</kbd>
+            </p>
+
+            <p>
+                To include this app's functionalities in your code, use the <code>which</code>
+                function in your
+                ablator client. Here's an example for the Python Client, <code>karman</code>.
+                (<a href="https://github.com/ablator/karman">Karman on GitHub</a>)
+            </p>
+
+            <pre><code>
+import karman
+username = <span class="text-primary">"(your user name string)"</span>
+app_id = <span class="text-primary">"{{ app.id }}"</span>
+ablator_client = karman.Karman(base_url=<span class="text-primary">'http://{{ request.META.HTTP_HOST }}/'</span>)
+availabilities = ablator_client.which(username, app_id)
+
+<span class="text-muted"># <strong>this will return a list similar to this:</strong>
+# availabilities == [{% for functionality in app.functionality_set.all %}
+    "<span class="text-primary">{{ functionality.flavor_set.first }}</span>",{% endfor %}
+]</span></code></pre>
+        </div>
+        </div>
+        <div class="tab-pane fade" id="curl" role="tabpanel">
+            <div class="card card-body">
+            <p class="lead">This app has the ID <kbd>{{ app.id }}</kbd>
+            </p>
+
+            <p>Here's an example for <code>curl</code> on the command line:</p>
+            <pre><code>curl  --header 'Accept: application/json' http://<span class="text-primary">{{ request.META.HTTP_HOST }}</span>/api/v2/which/<span class="text-primary">(username)</span>/<span class="text-primary">{{ app.id }}</span>/</code></pre>
+
+<strong>This will return a list that might look like this:</strong>
+<pre><code>
+[{% for functionality in app.functionality_set.all %}"<span class="text-primary">{{ functionality.flavor_set.first }}</span>"{% if not forloop.last %},{% endif %}{% endfor %}]</span></code></pre>
+            </div>
+        </div>
+    </div>
+            </div>
+    </div>
+
+</section>
 
 {% endblock %}
