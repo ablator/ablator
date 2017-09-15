@@ -45,9 +45,10 @@ class FunctionalityCreate(CreateView):
         app = App.objects.get(id=app_id)
         form.instance.app = app
         form.instance.slug = slugify(form.instance.name)
+        form.instance.save()
 
         # Create Example Flavor and Release
-        on_flavor = Flavor.objects.create(name='On', functionality=form.instance)
+        on_flavor = Flavor.objects.create(name='On', slug='on', functionality=form.instance)
         Release.objects.create(functionality=form.instance)
         messages.info(self.request, "Along with your app, a Flavor named {} was automatically "
                                     "created for you. To start enabling client requests, edit "
