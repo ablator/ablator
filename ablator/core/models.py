@@ -98,6 +98,10 @@ class Functionality(models.Model):
         verbose_name_plural = "Functionalities"
 
     @property
+    def slug_as_scorecase(self):
+        return self.slug.replace('-', '_')
+
+    @property
     def number_of_users(self):
         return Availability.objects.filter(
             flavor__functionality=self

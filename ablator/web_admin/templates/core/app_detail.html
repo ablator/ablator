@@ -106,35 +106,69 @@
             </p>
 
             <p>
-                To include this app's functionalities in your code, use the <code>which</code>
-                function in your
-                ablator client. Here's an example for the Swift Client, <code>shepard</code>.
+                Here's an example for the Swift Client, <code>shepard</code>.
                 (<a href="https://github.com/ablator/shepard">Shepard on GitHub</a>)
+            </p>
+
+            <h3>AppDelegate</h3>
+            <p>
+                First, initialize the ablator client in your <code>AppDelegate.swift</code>.
+                This automatically retrieves the set of availabilities for your user.
             </p>
 
             <pre><code>
 import shepard
-let ablatorClient = AblatorClient(baseURL: <span class="text-primary">"http://{{ request.META.HTTP_HOST }}/"</span>)
-let username = <span class="text-primary">UIDevice.current.identifierForVendor!.uuidString</span>
-let appID = <span class="text-primary">"{{ app.id }}"</span>
 
-<span class="text-muted"># The function `which` will return immediately
-# with a cached value that should be enough for most uses. If you need
-# an up-to-date value and are willing to wait 50-100ms for it, use the
-# provided completion block.</span>
-let availabilities = ablatorClient.which(
-    user: username,
-    appID: appID,
-    completed:
-    { functionalityStrings in
-        print(functionalityStrings)
-    }
-)
+var ablatorClient: AblatorClient?
 
-<span class="text-muted"># <strong>this will return a list similar to this:</strong>
-# availabilities == [{% for functionality in app.functionality_set.all %}
-    "<span class="text-primary">{{ functionality.flavor_set.first }}</span>"{% if not forloop.last %},{% endif %}{% endfor %}
-]</span></code></pre>
+<span class="text-muted">func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+    // other initialization of your app
+    // ...
+
+    // Initialize the ablator client and set it aside for later use
+    // This will automatically cache your user's availabilities,
+    // so calls to which and canIUse are quick and and synchronous</span>
+    let username = <span class="text-primary">UIDevice.current.identifierForVendor!.uuidString</span>
+    let appID = <span class="text-primary">"{{ app.id }}"</span>
+    let ablatorClient = AblatorClient(
+        baseURL: "<span class="text-primary">"http://{{ request.META.HTTP_HOST }}/"</span>",
+        username: username,
+        appID: appID
+    )
+
+    self.ablatorClient = ablatorClient
+
+    <span class="text-muted">return true
+}</span>
+            </code></pre>
+
+            <h3>ViewController, when Feature Switching</h3>
+            <p>To use functionality switching in your ViewController, use the <code>canIUse</code> function:</p>
+
+            <pre><code><span class="text-muted">// Retrieve the ablatorClient from the app delegate</span>
+let appDelegate = UIApplication.shared.delegate as! AppDelegate
+let ablatorClient = appDelegate.ablatorClient!
+
+{% for functionality in app.functionality_set.all %}let <span class="text-primary">{{ functionality.slug_as_scorecase }}_functionality</span> = <span class="text-primary">"{{ functionality }}"</span>
+{% endfor %}
+if (ablatorClient.canIUse(functionalityName: <span class="text-primary">{{ app.functionality_set.first.slug_as_scorecase }}_functionality</span>)) {
+    <span class="text-muted">// Enable {{ app.functionality_set.first.name }}</span>
+} else {
+    <span class="text-muted">// Disable {{ app.functionality_set.first.name }}</span>
+}</code></pre>
+
+            <h3>ViewController, when A/B Testing</h3>
+            <p>If you have defined more than one flavor, for e.g. A/B testing, use the <code>which</code> function:</p>
+
+            <pre><code>switch ablatorClient.which(functionalityName: <span class="text-primary">{{ app.functionality_set.first.slug_as_scorecase }}_functionality</span>) {
+{% for flavor in app.functionality_set.first.flavor_set.all %}
+case <span class="text-primary">"{{ flavor }}"</span>?:
+    <span class="text-muted">// Flavor: {{ flavor.name }}</span>
+{% endfor %}
+default:
+    <span class="text-muted">// Disable {{ app.functionality_set.first.name }}</span>
+}</code></pre>
         </div>
         </div>
         <div class="tab-pane fade" id="python" role="tabpanel">
