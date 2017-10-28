@@ -98,8 +98,7 @@ class UserPasswordUpdateView(FormView):
     template_name = 'user_management/change_password.html'
 
     def get_form(self, form_class=None):
-        pk = self.kwargs['pk']
-        user = User.objects.get(pk=pk)
+        user = self.request.user
         form = PasswordChangeForm(user=user, **self.get_form_kwargs())
         return form
 
