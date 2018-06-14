@@ -52,7 +52,7 @@ class App(models.Model):
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-    organization = models.ForeignKey(Organization)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{}.{}'.format(self.organization, self.slug)
@@ -73,7 +73,7 @@ class Functionality(models.Model):
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-    app = models.ForeignKey(App)
+    app = models.ForeignKey(App, on_delete=models.CASCADE)
 
     RECALL_FUNCTIONALITY = 'recall'
     PAUSE_ROLLOUT = 'pause_rollout'
@@ -132,7 +132,7 @@ class Flavor(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
-    functionality = models.ForeignKey(Functionality)
+    functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
     client_users = models.ManyToManyField(ClientUser, through='Availability')
     color = models.CharField(max_length=6, default=random_color)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -175,7 +175,7 @@ class Release(models.Model):
     A point in time when a certain number of Availabilities should be switched on.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    functionality = models.ForeignKey(Functionality)
+    functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
     start_at = models.DateTimeField(default=timezone.now)
     max_enabled_users = models.IntegerField(default=0)
 

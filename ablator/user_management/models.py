@@ -14,8 +14,8 @@ class Organization(models.Model):
 
 class AblatorUser(models.Model):
     """Extension of the regular Django User Model with Ablator-Specific addons"""
-    user = models.OneToOneField(User)
-    organization = models.ForeignKey(Organization)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
