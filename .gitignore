@@ -101,3 +101,6 @@ ENV/
 .mypy_cache/
 *.sqlite3
 .DS_Store
+
+# IntelliJ
+.idea
