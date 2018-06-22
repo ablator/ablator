@@ -1,0 +1,26 @@
+{% extends '_form_container.html' %}
+{% load bootstrap4 %}
+{% block availability_nav_active %}active{% endblock %}
+{% block form %}
+    <h1>Availabilities</h1>
+    <p class="lead">Availabilities is what connects an App's Feature to a one of your users.</p>
+    <p>Since Ablator never saves user identities in the clear, you'll have to provide the user identity here. Ablator
+        will hash it and return all Availabilities that match the hashed Identitiy.</p>
+    <hr>
+    <form action="." method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <hr>
+        {% buttons %}
+            {% if app.id %}
+                <a class="btn btn-sm btn-outline-danger"
+                   href="{% url 'app-delete' app.id %}">Delete {{ app.name }}</a>
+            {% endif %}
+
+            <span style="float: right;">
+
+        <button type="submit" class="btn btn-primary btn-lg">Look Up</button>
+        </span>
+        {% endbuttons %}
+    </form>
+{% endblock %}

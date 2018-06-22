@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import app, functionality, index, flavor, release
+from .views import app, functionality, index, flavor, release, availability
 from django.contrib.auth import views as auth_views
 
 # flake8: noqa: E501
@@ -41,6 +41,12 @@ urlpatterns = [
     # Home Page
     url(r'^$', index.HomePageView.as_view(), name='home'),
     url(r'^status/?$', index.StatusView.as_view(), name='status'),
+
+    # User Profiling
+    url(r'availability/$', availability.AvailabilitySearch.as_view(), name='availability-index'),
+    url(r'availability/(?P<user>[^/]+)/$', availability.AvailabilityList.as_view(), name='availability-list'),
+    url(r'availability/(?P<user>[^/]+)/(?P<pk>[^/]+)/update/$', availability.AvailabilityUpdate.as_view(), name='availability-update'),
+    url(r'availability/(?P<user>[^/]+)/(?P<pk>[^/]+)/delete/$', availability.AvailabilityDelete.as_view(), name='availability-delete'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

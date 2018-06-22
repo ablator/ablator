@@ -51,10 +51,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% block home_nav_active %}{% endblock %}">
-                <a class="nav-link" href="{% url 'home' %}">Home <span
+                <a class="nav-link" href="{% url 'home' %}">Apps <span
                         class="sr-only">(current)</span></a>
             </li>
             {% if request.user.is_authenticated %}
+            <li class="nav-item {% block availability_nav_active %}{% endblock %}">
+                <a href="{% url 'availability-index' %}" class="nav-link">Availabilities</a>
+            </li>
             <li class="nav-item {% block users_profile_active %}{% endblock %}">
                 <a class="nav-link" href="{% url 'profile-detail' request.user.id %}">{{ request.user }}</a>
             </li>

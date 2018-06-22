@@ -1,0 +1,72 @@
+{% extends '_base.html' %}
+{% load humanize %}
+{% block availability_nav_active %}active{% endblock %}
+{% block back %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'availability-index' %}">kas</a>
+    </li>
+    <li class="breadcrumb-item active">omsn</li>
+
+{% endblock %}
+
+
+{% block content %}
+    <section>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>{{ user_identifier }}</h1>
+                    <p class="lead">
+                        These are the availabilities the user identifier string <kbd>{{ user_identifier }}</kbd> has for
+                        your organization, <em>{{ request.user.ablatoruser.organization.name }}</em>.
+                    </p>
+                    <p>
+                        Ablator can retrieve these availabilities because you provided it with the unhashed user
+                        identifier string. Please note that a reverse lookup of these is not possible. The user might
+                        have other availabilities for other organizations that are not displayed to members of your
+                        organization.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Flavor</th>
+                <th>Created At</th>
+                <th>Enabled</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for obj in object_list %}
+                <tr>
+                    <td>
+                        <span class="badge badge-secondary">{{ obj.flavor.functionality.app.organization.slug }}</span>
+                        <span class="badge badge-secondary">{{ obj.flavor.functionality.app.slug }}</span>
+                        <span class="badge badge-secondary">{{ obj.flavor.functionality.slug }}</span>
+                        <span class="badge" style="background: #{{ obj.flavor.color }};">
+                            {{ obj.flavor.slug }}
+                        </span>
+                    </td>
+                    <td>{{ obj.created_at }} ({{ obj.created_at|naturaltime }})</td>
+                    <td>
+                        {% if obj.is_enabled %}
+                        <span class="badge badge-pill badge-success">Yes</span>
+                        {% else %}
+                        <span class="badge badge-pill badge-danger">No</span>
+                        {% endif %}
+                    </td>
+                    <td><a class="btn btn-sm btn-outline-secondary" href="{% url 'availability-update' user_identifier obj.pk %}">Edit</a></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td>No Availablities for this user identifier.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

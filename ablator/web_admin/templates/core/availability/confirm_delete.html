@@ -1,0 +1,25 @@
+{% extends '_form_container.html' %}
+{% load bootstrap4 %}
+{% block home_nav_active %}active{% endblock %}
+{% block form %}
+    <h1>Delete {{ object.name }}</h1>
+    <hr>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>
+            Are you sure you want to delete <strong>{{ object }}</strong>? If the user requests availabilities for the
+            app again, a new Availability may be created, depending on rollout settings.
+        </p>
+        <p>This action is not reversible.</p>
+        <hr>
+
+        {% buttons %}
+
+        <span style="float: right;">
+        <a class="btn btn-lg btn-outline-secondary" href="{% url 'availability-update' user_identifier object.id %}">Go Back</a>
+        <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+        </span>
+        {% endbuttons %}
+    </form>
+{% endblock %}
