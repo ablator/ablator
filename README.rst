@@ -52,6 +52,12 @@ http://example.com/api/v1/which/<user_string>/<functionality_id>/
 You can also use client libraries instead of accessing the API yourself. The ``karman``
 directory contains an example library for Python projects, and more are planned.
 
+Branches
+--------
+
+If you want a tested, working, released version of Ablator, check out the :code:`release` 
+branch. The current stable development version is in the :code:`stable` branch. Unstable 
+feature branches are prefixed with :code:`feature/`. 
 
 Help Out and Code of Conduct
 ----------------------------
