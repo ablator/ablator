@@ -31,26 +31,38 @@ For an in-depth explanation of the logical parts of ablator, see the `models des
 Accessing the Ablator API
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When the ablator server is running, it exposes two API endpoints, named ``which`` and 
-``caniuse``. Both take a user-identifier and a functionality id. The identifier can be any
-string that identifies your users between launches of your app, e.g. a user ID, an email 
-address, etc. It will be hashed before being saved to the ablator database. The
-functionality id can be obtained from the admin interface. We don't use functionality
-slugs in the URL to make it harder for people who listen to your app's web traffic to find 
-out which functionalities (that might still be in development even) are theoretically 
-available.
+To identify your user, ablator needs a *client user string* of your choice.
+This can be any string that identifies your users between launches of your app,
+e.g. a user ID, an email address, etc. It will be hashed before being saved to the ablator
+database, so even someone with full database access won't be able to reproduce the user
+identifier.
 
-http://example.com/api/v1/caniuse/<user_string>/<functionality_id>/
-    This will return a boolean value indicating whether the functionality has any flavors that
-    are enabled for the user. You can use this API endpoint if you expect a functionality
+To identify you App, you need to go to ablator's web interface, and retrieve the app's ID,
+represented as a long hex string or UUID.
+
+You need these two pieces of information, a client user string and an App ID, to interact
+with ablator's Web API. The following is the commplete definiton of ablator's public API:
+
+https://ablator.space/api/v3/<client_user_string>/<app_id>/caniuse/
+    Returns a list of enabled functionalities of the specified app. Functionalities that
+    are not enabled are not shown. You can use this API endpoint if you expect a functionality
     which is only switched on or off using ablator.
 
-http://example.com/api/v1/which/<user_string>/<functionality_id>/
-    This endpoint will return the full slug of the *Flavor* that is enabled for the user
-    if any, or None otherwise. 
+https://ablator.space/api/v3/<client_user_string>/<app_id>/flavors/
+    Returns a list of enabled Flavors of the specified app. Flavors that are not enabled are
+    not shown. Unlike Functionalities, Flavors represent a specific *variant* of a feature. If
+    you use Flavors for A/B testing or something similar, this is where your data comes from.
 
-You can also use client libraries instead of accessing the API yourself. The ``karman``
-directory contains an example library for Python projects, and more are planned.
+https://ablator.space/api/v3/<client_user_string>/<app_id>/tag/
+    Returns a list of tags that are applied to the specified user. Tags allow you to segment
+    and manage your user base, and enable or disable certain functionalities based on tags.
+
+It is recommended you use client libraries instead of accessing the API yourself. Currently
+there are are libraries for `swift`_, `python`_, and `javascript`_ available.
+
+.. _python: https://github.com/ablator/karman
+.. _swift: https://github.com/ablator/shepard
+.. _javascript: https://github.com/ablator/herschel
 
 Branches
 --------

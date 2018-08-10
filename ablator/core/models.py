@@ -9,8 +9,6 @@ from django.utils import timezone
 from core.colors import random_color
 from user_management.models import Organization
 
-HASH_SALT = settings.HASH_SALT
-
 
 class ClientUser(models.Model):
     """
@@ -41,7 +39,7 @@ class ClientUser(models.Model):
 
     @classmethod
     def hash_from_object(cls, hashable_object):
-        return hashlib.sha256(HASH_SALT.encode() + str(hashable_object).encode()).hexdigest()
+        return hashlib.sha256(settings.HASH_SALT.encode() + str(hashable_object).encode()).hexdigest()
 
 
 class App(models.Model):

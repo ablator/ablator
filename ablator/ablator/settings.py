@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'api',
     'web_admin',
     'user_management',
+    'tagging',
     'request_logging',
 ]
 

@@ -1,9 +1,13 @@
-from rest_framework.generics import get_object_or_404
+from django.utils.text import slugify
+from rest_framework.generics import get_object_or_404, ListAPIView, DestroyAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.functionality import can_i_use, which
 from core.models import ClientUser, Functionality, App
+from tagging.models import Tag
+from tagging.serializers import TagSerializer
 
 
 class CanIUseSingleViewV1(APIView):
@@ -103,3 +107,56 @@ class CanIUseViewV2(APIView):
             functionality.__str__()
             for functionality in functionalities
         ])
+
+
+class TagListViewV3(ListAPIView):
+    """
+    Returns a list of all Tags applied to the specified User within the specified Organization.
+
+    Tags that are present in the Organization but not applied to the User are not shown.
+
+    Note that even though this API endpoint takes an App ID as its parameter, Tags are available
+    to a complete Organization, meaning that if an Organization has multiple Apps, the Tags are shared
+    between those apps. If you'd like App-specific Tags, you can prefix them with the app's name or
+    something similar.
+
+    To remove a User's associated Tag, use `/api/v3/<user>/<organization_id>/tag/<tag_name>/remove`
+    """
+    serializer_class = TagSerializer
+    permission_classes = [AllowAny, ]
+
+    def get_queryset(self):
+        client_user_string = self.kwargs['client_user_string']
+        user = ClientUser.user_from_object(client_user_string)
+        return user.tag_set.all()
+
+    def post(self, request, client_user_string, app_id):
+        app = App.objects.get(id=app_id)
+        user = ClientUser.user_from_object(client_user_string)
+        newTag = Tag.objects.get_or_create(
+            name=slugify(request.data['name']),
+            organization=app.organization
+        )[0]
+        newTag.users.add(user)
+        newTag.save()
+
+        return self.get(request, client_user_string, app_id)
+
+
+class TagRemoveViewV3(DestroyAPIView):
+    """
+    Removes the association between a specified User and Tag.
+
+    The Tag object itself is not deleted.
+
+    Note that because Tags are shared between all Apps of an Organization, the other Apps under the
+    same Organization will also lose the association between User and Tag. If you'd like App-specific
+    Tags, you can prefix them with the app's name or something similar.
+    """
+    permission_classes = [AllowAny, ]
+
+    def delete(self, request, client_user_string, app_id, tag_name):
+        client_user_string = self.kwargs['client_user_string']
+        user = ClientUser.user_from_object(client_user_string)
+        tag = get_object_or_404(user.tag_set.all(), name=tag_name)
+        user.tag_set.remove(tag)

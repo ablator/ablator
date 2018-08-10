@@ -202,7 +202,7 @@ availabilities = ablator_client.which(username, app_id)
             </p>
 
             <p>Here's an example for <code>curl</code> on the command line:</p>
-            <pre><code>curl  --header 'Accept: application/json' http://<span class="text-primary">{{ request.META.HTTP_HOST }}</span>/api/v2/which/<span class="text-primary">$(whoami)</span>/<span class="text-primary">{{ app.id }}</span>/</code></pre>
+            <pre><code>curl  --header 'Accept: application/json' http://<span class="text-primary">{{ request.META.HTTP_HOST }}</span>/api/v3/<span class="text-primary">$(whoami)</span>/<span class="text-primary">{{ app.id }}</span>/flavors/</code></pre>
 
 <strong>This will return a list that might look like this:</strong>
 <pre><code>
