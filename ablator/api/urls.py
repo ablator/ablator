@@ -18,8 +18,8 @@ urlpatternsV2 = [
 
 # v3 API
 urlpatternsV3 = [
-    url(r'^v3/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/which/?$', views.WhichViewV2.as_view()),
-    url(r'^v3/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/flavors/?$', views.CanIUseViewV2.as_view()),
+    url(r'^v3/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/caniuse/?$', views.CanIUseViewV2.as_view()),
+    url(r'^v3/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/flavors/?$', views.WhichViewV2.as_view()),
     url(r'^v3/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/tag/?$', views.TagListViewV3.as_view()),
     url(r'^v3/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/tag/(?P<tag_name>[^/]+)/remove/?$',
         views.TagRemoveViewV3.as_view()),
