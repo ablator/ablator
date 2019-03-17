@@ -33,14 +33,20 @@ class ClientUser(models.Model):
         return self.name
 
     @classmethod
-    def user_from_object(cls, user_object):
-        user_hash = cls.hash_from_object(user_object)
+    def user_from_object(cls, user_object, organization: Organization = None, organization_id: str = None):
+        if organization:
+            user_hash = cls.hash_from_object(user_object, str(organization.id))
+        elif organization_id:
+            user_hash = cls.hash_from_object(user_object, organization_id)
+        else:
+            raise AttributeError("You need to specify an Organization")
         instance, created = cls.objects.get_or_create(name=user_hash)
         return instance
 
     @classmethod
-    def hash_from_object(cls, hashable_object):
-        return hashlib.sha256(settings.HASH_SALT.encode() + str(hashable_object).encode()).hexdigest()
+    def hash_from_object(cls, hashable_object, organization_id: str):
+        string_to_hash = str(hashable_object) + organization_id
+        return hashlib.sha256(settings.HASH_SALT.encode() + string_to_hash.encode()).hexdigest()
 
 
 class App(models.Model):

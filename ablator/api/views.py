@@ -25,7 +25,7 @@ class CanIUseSingleViewV1(APIView):
     """
     def get(self, request, client_user_string, functionality_id):
         functionality = get_object_or_404(Functionality, id=functionality_id)
-        client_user = ClientUser.user_from_object(client_user_string)
+        client_user = ClientUser.user_from_object(client_user_string, organization=functionality.app.organization)
         return Response({'enabled': can_i_use(client_user, functionality)})
 
 
@@ -42,7 +42,7 @@ class WhichSingleViewV1(APIView):
     """
     def get(self, request, client_user_string, functionality_id):
         functionality = get_object_or_404(Functionality, id=functionality_id)
-        client_user = ClientUser.user_from_object(client_user_string)
+        client_user = ClientUser.user_from_object(client_user_string, organization=functionality.app.organization)
         availability = which(client_user, functionality)
         return Response({
             'functionality': availability.flavor.__str__() if availability else None,
@@ -64,9 +64,9 @@ class WhichViewV2(APIView):
             "masa.rover.dehumidifier.dry-as-bone"
         ]
     """
-    def get(self, request, client_user_string, app_id):
+    def get(self, request, organization_id, client_user_string, app_id):
         app = get_object_or_404(App, id=app_id)
-        client_user = ClientUser.user_from_object(client_user_string)
+        client_user = ClientUser.user_from_object(client_user_string, app.organization)
         availabilities = [
             which(client_user, functionality)
             for functionality in app.functionality_set.all()
@@ -95,9 +95,9 @@ class CanIUseViewV2(APIView):
             "masa.rover.space-heater"
         ]
     """
-    def get(self, request, client_user_string, app_id):
+    def get(self, request, organization_id, client_user_string, app_id):
         app = get_object_or_404(App, id=app_id)
-        client_user = ClientUser.user_from_object(client_user_string)
+        client_user = ClientUser.user_from_object(client_user_string, organization=app.organization)
         functionalities = [
             functionality
             for functionality in app.functionality_set.all()
@@ -127,12 +127,12 @@ class TagListViewV3(ListAPIView):
 
     def get_queryset(self):
         client_user_string = self.kwargs['client_user_string']
-        user = ClientUser.user_from_object(client_user_string)
+        user = ClientUser.user_from_object(client_user_string, organization=self.kwargs['organization_id'])
         return user.tag_set.all()
 
-    def post(self, request, client_user_string, app_id):
+    def post(self, request, organization_id, client_user_string, app_id):
         app = App.objects.get(id=app_id)
-        user = ClientUser.user_from_object(client_user_string)
+        user = ClientUser.user_from_object(client_user_string, organization_id=organization_id)
         newTag = Tag.objects.get_or_create(
             name=slugify(request.data['name']),
             organization=app.organization
@@ -155,8 +155,8 @@ class TagRemoveViewV3(DestroyAPIView):
     """
     permission_classes = [AllowAny, ]
 
-    def delete(self, request, client_user_string, app_id, tag_name):
+    def delete(self, request, organization_id, client_user_string, app_id, tag_name):
         client_user_string = self.kwargs['client_user_string']
-        user = ClientUser.user_from_object(client_user_string)
+        user = ClientUser.user_from_object(client_user_string, organization_id=organization_id)
         tag = get_object_or_404(user.tag_set.all(), name=tag_name)
         user.tag_set.remove(tag)

@@ -23,7 +23,8 @@ class AvailabilityList(ListView):
     template_name = "core/availability/list.html"
 
     def get_queryset(self):
-        client_user = ClientUser.user_from_object(self.kwargs['user'])
+        client_user = ClientUser.user_from_object(self.kwargs['user'],
+                                                  organization=self.request.user.ablatoruser.organization)
         return Availability.objects.filter(
             flavor__functionality__app__organization=self.request.user.ablatoruser.organization).filter(
             user=client_user
