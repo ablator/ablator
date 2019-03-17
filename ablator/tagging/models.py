@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.urls import reverse
 
 from core.models import ClientUser
 from user_management.models import Organization
@@ -21,3 +22,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return 'Tag "{}" in Organization "{}"'.format(self.name, self.organization)
+
+    def get_absolute_url(self):
+        return reverse('tags-detail', kwargs={'pk': self.pk})

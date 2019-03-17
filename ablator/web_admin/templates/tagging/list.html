@@ -1,0 +1,46 @@
+{% extends '_base.html' %}
+{% block tags_nav_active %}active{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Tags</h1>
+                    <p class="lead">
+                        These are the Tags for your organization.
+                    </p>
+                    <p>
+                        Tags tags more info tags. Tags are cool.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for obj in object_list %}
+                <tr>
+                    <td>#<a href="{% url 'tags-detail' obj.pk %}">{{ obj.name }}</a></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td>No Tags for this organization.</td>
+                </tr>
+            {% endfor %}
+            <tr>
+            <tr>
+                <td colspan="4"><a href="{% url 'tags-create' %}"
+                                   class="btn btn-outline-secondary">Add new Tag</a></td>
+            </tr>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

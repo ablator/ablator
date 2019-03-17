@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from core.models import App, Functionality, Flavor, Release, ClientUser
+from core.models import App, Functionality, Flavor, RolloutStrategy, ClientUser
 from core.functionality import which
+from tagging.models import Tag
 from user_management.models import Organization, AblatorUser
 
 app_names = [
@@ -35,6 +36,12 @@ class Command(BaseCommand):
         organization.save()
         self.stdout.write(self.style.SUCCESS('### Created Organization {} ###'.format(organization.name)))
 
+        available_tags = ["opensource", "paid", "unpaid", "betarelease"]
+        for tag_name in available_tags:
+            tag = Tag(name=tag_name, organization=organization)
+            tag.save()
+            self.stdout.write(self.style.SUCCESS('Created Tag {}'.format(tag.name)))
+
         try:
             first_user = User.objects.all()[0]
             ablator_user = AblatorUser(user=first_user, organization=organization)
@@ -52,7 +59,7 @@ class Command(BaseCommand):
                 functionality = Functionality(app=app, name=f_name, slug=slugify(f_name))
                 functionality.save()
                 self.stdout.write(self.style.SUCCESS('Created Functionality {}'.format(functionality.name)))
-                release = Release(functionality=functionality, max_enabled_users=6)
+                release = RolloutStrategy(functionality=functionality, max_enabled_users=6)
                 release.save()
                 self.stdout.write(self.style.SUCCESS(' + Release {}'.format(release.id)))
                 for flavor_name in functionality_descriptions[f_name]:

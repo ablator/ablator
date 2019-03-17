@@ -8,15 +8,15 @@
     <form action="" method="post">
         {% csrf_token %}
         <p>
-            Are you sure you want to delete the Release with the start date
-            <strong>{{ object.start_at }}</strong>? This action is not
-            reversible.
+            Are you sure you want to delete <strong>{{ object }}</strong>? This will delete the
+            Tag and all its functionalities, flavors, and Rollout Strategies.
         </p>
+        <p>This action is not reversible.</p>
         <hr>
 
         {% buttons %}
         <span style="float: right;">
-        <a class="btn btn-lg btn-outline-secondary" href="{% url 'release-update' object.id %}">Go Back</a>
+        <a class="btn btn-lg btn-outline-secondary" href="{% url 'tags-detail' object.id %}">Go Back</a>
         <button type="submit" class="btn btn-danger btn-lg">Delete</button>
         </span>
         {% endbuttons %}

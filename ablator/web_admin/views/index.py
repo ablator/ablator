@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from core.models import App, Functionality, Flavor, Availability, Release
+from core.models import App, Functionality, Flavor, Availability, RolloutStrategy
 from user_management.models import AblatorUser, Organization
 
 
@@ -27,5 +27,5 @@ class StatusView(TemplateView):
         context_data['number_of_functionalities'] = Functionality.objects.all().count()
         context_data['number_of_flavors'] = Flavor.objects.all().count()
         context_data['number_of_availabilities'] = Availability.objects.all().count()
-        context_data['number_of_releases'] = Release.objects.all().count()
+        context_data['number_of_releases'] = RolloutStrategy.objects.all().count()
         return context_data

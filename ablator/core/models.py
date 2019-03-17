@@ -2,6 +2,7 @@ import hashlib
 import uuid
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls.base import reverse_lazy
 from django.utils import timezone
@@ -73,22 +74,6 @@ class Functionality(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App, on_delete=models.CASCADE)
 
-    RECALL_FUNCTIONALITY = 'recall'
-    PAUSE_ROLLOUT = 'pause_rollout'
-    DEFINED_BY_RELEASES = 'defined_by_releases'
-    ENABLE_GLOBALLY = 'enable_globally'
-    NEW_USER_BEHAVIOUR_CHOICES = (
-        (RECALL_FUNCTIONALITY, 'Recall'),
-        (PAUSE_ROLLOUT, 'Roll Out Paused'),
-        (DEFINED_BY_RELEASES, 'Release-Driven'),
-        (ENABLE_GLOBALLY, 'Enabled Globally')
-    )
-    rollout_strategy = models.CharField(
-        max_length=50,
-        choices=NEW_USER_BEHAVIOUR_CHOICES,
-        default=DEFINED_BY_RELEASES
-    )
-
     def __str__(self):
         return '{}.{}'.format(self.app, self.slug)
 
@@ -112,12 +97,15 @@ class Functionality(models.Model):
             is_enabled=True
         ).count()
 
-    @property
-    def current_release(self) -> 'Release':
-        return self.release_set.filter(start_at__lte=timezone.now()).order_by('-start_at').first()
-
     def get_absolute_url(self):
         return reverse_lazy('functionality-detail', kwargs={'pk': self.id})
+
+    def get_default_tag(self):
+        from tagging.models import Tag
+        return Tag.objects.get_or_create(
+            name='Default',
+            organization=self.app.organization
+        )[0]
 
 
 class Flavor(models.Model):
@@ -168,28 +156,53 @@ class Flavor(models.Model):
         return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
 
 
-class Release(models.Model):
+class RolloutStrategy(models.Model):
     """
-    A point in time when a certain number of Availabilities should be switched on.
+    A description of how a feature should be rolled out, depending on a tag.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
+    possible_flavors = models.ManyToManyField(Flavor, blank=False)
+    tag = models.ForeignKey('tagging.Tag', on_delete=models.CASCADE, null=True, blank=True)
+
     start_at = models.DateTimeField(default=timezone.now)
     max_enabled_users = models.IntegerField(default=0)
+    priority = models.PositiveSmallIntegerField(default=0)
+
+    RECALL_FUNCTIONALITY = 'recall'
+    PAUSE_ROLLOUT = 'pause_rollout'
+    DEFINED_BY_RELEASES = 'defined_by_releases'
+    ENABLE_GLOBALLY = 'enable_globally'
+    STRATEGY_CHOICES = (
+        (RECALL_FUNCTIONALITY, 'Recall'),
+        (PAUSE_ROLLOUT, 'Roll Out Paused'),
+        (DEFINED_BY_RELEASES, 'Release-Driven'),
+        (ENABLE_GLOBALLY, 'Enabled Globally')
+    )
+    strategy = models.CharField(
+        max_length=50,
+        choices=STRATEGY_CHOICES,
+        default=DEFINED_BY_RELEASES
+    )
 
     class Meta:
         ordering = ['start_at']
-
-    @property
-    def is_past(self) -> bool:
-        return self.start_at < timezone.now() and self.functionality.current_release != self
-
-    @property
-    def is_current(self) -> bool:
-        return self.functionality.current_release == self
+        unique_together = ('tag', 'functionality')
 
     def get_absolute_url(self):
         return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
+
+    def clean(self):
+        super().clean()
+
+        # make sure only the functionality's flavors are selected
+        for flavor in self.possible_flavors.all():
+            if flavor.functionality != self.functionality:
+                raise ValidationError({'possible_flavors': "Only Related Flavors can be selected"})
+
+        # make sure only the organization's tags are selected
+        if self.tag and self.functionality and self.tag.organization != self.functionality.app.organization:
+            raise ValidationError({'tag': "Only your organization's tags can be selected"})
 
 
 class Availability(models.Model):

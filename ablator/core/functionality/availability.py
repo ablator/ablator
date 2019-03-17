@@ -1,7 +1,10 @@
 import random
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
-from core.models import Availability, Functionality
+from core.models import Availability, RolloutStrategy
+
+if TYPE_CHECKING:
+    from core.functionality import WhichContext
 
 
 def _availability_or_none(availability):
@@ -37,10 +40,10 @@ def enable_availability_by_user_count(context: 'WhichContext') -> Optional['Avai
     Availability already exists, but is disabled, so enable if there are still user slots left in
     max_enabled_users
     """
-    if context.functionality.rollout_strategy == Functionality.DEFINED_BY_RELEASES:
+    if context.rollout_strategy.strategy == RolloutStrategy.DEFINED_BY_RELEASES:
         if context.availability.is_enabled:
             return context.availability
-        if context.functionality.current_release.max_enabled_users > context.enabled_count:
+        if context.rollout_strategy.max_enabled_users > context.enabled_count:
             context.availability.is_enabled = True
             context.availability.save()
             return _availability_or_none(context.availability)
@@ -49,7 +52,7 @@ def enable_availability_by_user_count(context: 'WhichContext') -> Optional['Avai
 
 
 def assert_existence_of_flavors(context: 'WhichContext'):
-    context.available_flavors = context.functionality.flavor_set.all()
+    context.available_flavors = context.rollout_strategy.possible_flavors.all()
     if context.available_flavors:
         return None
     from core.functionality import NoAvailability

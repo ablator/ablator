@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'ablator.wsgi.application'
 
 # Database
 # https://github.com/kennethreitz/dj-database-url
-DATABASES = {'default': dj_database_url.config(default='sqlite:////tmp/db.sqlite')}
+DATABASES = {'default': dj_database_url.config(default='sqlite:////tmp/ablator.sqlite')}
 
 CACHES = {
     'default': {

@@ -1,6 +1,7 @@
 import time
 from typing import Optional, List
 
+from core.models import RolloutStrategy
 from request_logging.logging import save_request_log_entry
 from .availability import (
     check_for_existing_enabled_availability,
@@ -10,17 +11,19 @@ from .availability import (
     enable_availability_by_user_count,
 )
 from .rollout_strategies import (
+    get_rollout_strategy,
     check_roll_out_enable_globally,
     assert_roll_out_is_not_paused,
-    assert_existence_of_release,
     check_roll_out_recall
 )
 from ..models import Flavor, Functionality, ClientUser, Availability
 
 
 class WhichContext:
+    """Context class to pass around metadata during execution of the 'which' pipeline"""
     client_user: ClientUser
     functionality: Functionality
+    rollout_strategy: RolloutStrategy
     availability: Availability
     available_flavors: List[Flavor]
     enabled_count: int
@@ -62,16 +65,16 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
 
     pipeline = [
         # roll out strategies
+        get_rollout_strategy,
         check_roll_out_recall,
         check_roll_out_enable_globally,
 
         # retrieve availability
         get_availability,
 
-        # check availability and switch on based on max user count
+        # check availability and switch on based on rollout strategy
         check_for_existing_enabled_availability,
         assert_roll_out_is_not_paused,
-        assert_existence_of_release,
         assert_existence_of_flavors,
         get_enabled_count,
         create_new_availability_with_random_flavor,

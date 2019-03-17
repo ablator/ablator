@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Release
+from core.models import RolloutStrategy
 from .models import ClientUser, Functionality, Flavor, Availability, App
 
 
@@ -21,19 +21,19 @@ class FlavorInline(admin.TabularInline):
 
 
 class ReleaseInline(admin.TabularInline):
-    model = Release
+    model = RolloutStrategy
     readonly_fields = ('id',)
 
 
 @admin.register(Functionality)
 class FunctionalityAdmin(admin.ModelAdmin):
-    list_display = ('slug', 'name', 'app', 'created_at', 'rollout_strategy')
+    list_display = ('slug', 'name', 'app', 'created_at')
     inlines = [FlavorInline, ReleaseInline]
     prepopulated_fields = {"slug": ("name",)}
     readonly_fields = ('id',)
 
 
-@admin.register(Release)
+@admin.register(RolloutStrategy)
 class ReleaseAdmin(admin.ModelAdmin):
     list_display = (
         'id',
