@@ -9,10 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
-          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 
     <style type="text/css">
         body {
@@ -20,6 +19,7 @@
             min-height: 100vh;
             padding-bottom: 8rem;
         }
+
         /* Custom page footer */
         .footer {
             padding: 1.5rem 0 0.5rem;
@@ -28,10 +28,11 @@
             color: #ccc;
             background: radial-gradient(100% 100% at 50% 100%, #000 0%, #000000 99%, rgba(0, 0, 0, 0) 100%);
 
-            position:fixed;
+            position: fixed;
             width: 100%;
-            bottom:0;
+            bottom: 0;
         }
+
         .footer a {
             color: #fff;
         }
@@ -40,68 +41,70 @@
 </head>
 <body>
 <div class="container">
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-    <a class="navbar-brand" href="{% url 'home' %}">ablator</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <a class="navbar-brand" href="{% url 'home' %}">ablator</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% block home_nav_active %}{% endblock %}">
-                <a class="nav-link" href="{% url 'home' %}">Apps <span
-                        class="sr-only">(current)</span></a>
-            </li>
-            {% if request.user.is_authenticated %}
-            <li class="nav-item {% block tags_nav_active %}{% endblock %}"><a href="{% url 'tags-list' %}" class="nav-link">Tags</a></li>
-            <li class="nav-item {% block availability_nav_active %}{% endblock %}">
-                <a href="{% url 'availability-index' %}" class="nav-link">Client Users</a>
-            </li>
-            <li class="nav-item {% block users_profile_active %}{% endblock %}">
-                <a class="nav-link" href="{% url 'profile-detail' request.user.id %}">{{ request.user }}</a>
-            </li>
-            <li class="nav-item {% block users_nav_active %}{% endblock %}">
-                <a class="nav-link" href="{% url 'user-list' %}">{{ request.user.ablatoruser.organization.name }}</a>
-            </li>
-            {% endif %}
-        </ul>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% block home_nav_active %}{% endblock %}">
+                    <a class="nav-link" href="{% url 'home' %}">Apps <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item {% block tags_nav_active %}{% endblock %}"><a href="{% url 'tags-list' %}"
+                                                                                      class="nav-link">Tags</a></li>
+                    <li class="nav-item {% block availability_nav_active %}{% endblock %}">
+                        <a href="{% url 'availability-index' %}" class="nav-link">Client Users</a>
+                    </li>
+                    <li class="nav-item {% block users_profile_active %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'profile-detail' request.user.id %}">{{ request.user }}</a>
+                    </li>
+                    <li class="nav-item {% block users_nav_active %}{% endblock %}">
+                        <a class="nav-link"
+                           href="{% url 'user-list' %}">{{ request.user.ablatoruser.organization.name }}</a>
+                    </li>
+                {% endif %}
+            </ul>
 
-        <ul class="navbar-nav">
-            {% if request.user.is_authenticated %}
-            <li>
+            <ul class="navbar-nav">
+                {% if request.user.is_authenticated %}
+                    <li>
             <span class="navbar-text">Signed in as
                 <strong>{{ request.user }}</strong>
                 of
                 <strong>{{ request.user.ablatoruser.organization.name }}</strong>
             </span>
-            </li>
-            <li>
-                <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
-</nav>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 </div>
 
 {% block body %}
-<div class="container">
-    {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            {{ message|safe }}
-        </div>
-        {% endfor %}
-    {% endif %}
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message|safe }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    {% block content %}
-    {% endblock %}
-</div>
+        {% block content %}
+        {% endblock %}
+    </div>
 {% endblock %}
 
 
@@ -122,9 +125,15 @@
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
 <script src="{% static "ablator/main.js" %}"></script>
 
 {% block scripts %}{% endblock %}
