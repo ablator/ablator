@@ -13,7 +13,7 @@
     <div class="page-header">
         <div class="row">
             <div class="col-md-8">
-                <h1>{{ functionality.name }}</h1>
+                <h1>Flavors</h1>
                 <p class="lead">
                     {% spaceless %}
                     <a href="{% url 'home' %}"
@@ -26,46 +26,22 @@
                     <br>
                 </p>
             </div>
-            <div class="col-md-4 text-right">
-                    <span class="display-4">
-                        <a class="badge badge-{% spaceless %}
-                            {% if functionality.rollout_strategy == 'defined_by_releases' %}
-                            info
-                            {% elif functionality.rollout_strategy == 'enable_globally' %}
-                            success
-                            {% elif functionality.rollout_strategy == 'pause_rollout' %}
-                            warning
-                            {% elif functionality.rollout_strategy == 'recall' %}
-                            danger
-                            {% endif %}
-                            {% endspaceless %}"
-                           href="{% url 'functionality-update' functionality.id %}">
-                            {{ functionality.get_rollout_strategy_display }}
-                        </a>
-                    </span>
-            </div>
         </div>
     </div>
 </section>
 
-<hr>
-<div id="functionality-enabled-users"
-     data-id="{% url 'functionality-part-enabled-users' functionality.id %}">
-    <div style="height: 10em; background: #fafafa;"></div>
-</div>
 
 
-{% if functionality.flavor_set.all %}
 <section id="functionality-progress"
          data-id="{% url 'functionality-part-progress' functionality.id %}">
     <div style="height: 3em; background: #fafafa;"></div>
 </section>
 
-{% endif %}
 <section id="functionality-flavors"
          data-id="{% url 'functionality-part-flavors' functionality.id %}">
     <div style="height: 10em; background: #fafafa;"></div>
 </section>
+
 
 {% endblock %}
 

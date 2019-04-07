@@ -36,13 +36,28 @@
         .footer a {
             color: #fff;
         }
+
+        /* Quick and dirty nested navbars*/
+        li.nav-item ul.nav {
+            margin-left: 1em;
+            margin-bottom: 1em;
+        }
+
+        /* Scrollable Code Blocks */
+        .pre-x-scrollable {
+            overflow: auto;
+            -ms-word-wrap: normal;
+            word-wrap: normal;
+            overflow-wrap: normal;
+            white-space: pre;
+        }
     </style>
 
 </head>
 <body>
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <a class="navbar-brand" href="{% url 'home' %}">ablator</a>
+        <a class="navbar-brand" href="{% url 'home' %}">{{ request.user.ablatoruser.organization.name }} ablator</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -51,34 +66,53 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item {% block home_nav_active %}{% endblock %}">
-                    <a class="nav-link" href="{% url 'home' %}">Apps <span
-                            class="sr-only">(current)</span></a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if app %}{{ app.name }}{% else %}Apps{% endif %}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% for app in request.user.ablatoruser.organization.app_set.all %}
+                            <a class="dropdown-item" href="{% url 'app-detail' app.id %}">{{ app.name }}</a>
+                        {% endfor %}
+                    </div>
                 </li>
+
+                {% if app %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if functionality %}{{ functionality.name }}{% else %}Functionalities{% endif %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for functionality in app.functionality_set.all %}
+                                <a class="dropdown-item"
+                                   href="{% url 'functionality-detail' functionality.id %}">{{ functionality.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% endif %}
+
                 {% if request.user.is_authenticated %}
-                    <li class="nav-item {% block tags_nav_active %}{% endblock %}"><a href="{% url 'tags-list' %}"
-                                                                                      class="nav-link">Tags</a></li>
+                    <li class="nav-item {% block tags_nav_active %}{% endblock %}">
+                        <a href="{% url 'tags-list' %}" class="nav-link">Tags</a>
+                    </li>
                     <li class="nav-item {% block availability_nav_active %}{% endblock %}">
                         <a href="{% url 'availability-index' %}" class="nav-link">Client Users</a>
-                    </li>
-                    <li class="nav-item {% block users_profile_active %}{% endblock %}">
-                        <a class="nav-link" href="{% url 'profile-detail' request.user.id %}">{{ request.user }}</a>
-                    </li>
-                    <li class="nav-item {% block users_nav_active %}{% endblock %}">
-                        <a class="nav-link"
-                           href="{% url 'user-list' %}">{{ request.user.ablatoruser.organization.name }}</a>
                     </li>
                 {% endif %}
             </ul>
 
             <ul class="navbar-nav">
                 {% if request.user.is_authenticated %}
-                    <li>
-            <span class="navbar-text">Signed in as
-                <strong>{{ request.user }}</strong>
-                of
-                <strong>{{ request.user.ablatoruser.organization.name }}</strong>
-            </span>
+
+                    <li class="nav-item {% block users_profile_active %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'profile-detail' request.user.id %}">{{ request.user }}</a>
+                    </li>
+                    <li class="nav-item {% block users_nav_active %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'user-list' %}">
+                            {{ request.user.ablatoruser.organization.name }}
+                        </a>
                     </li>
                     <li>
                         <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>

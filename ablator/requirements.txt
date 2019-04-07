@@ -10,5 +10,5 @@ flake8
 gunicorn
 gevent
 whitenoise
-psycopg2
+psycopg2-binary
 raven

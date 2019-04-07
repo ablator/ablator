@@ -1,0 +1,43 @@
+{% extends '_functionality_base.html' %}
+{% load humanize %}
+{% block home_nav_active %}active{% endblock %}
+{% block back %}
+<li class="breadcrumb-item"><a
+        href="{% url 'app-detail' functionality.app.id %}">{{ functionality.app.name }}</a></li>
+<li class="breadcrumb-item active">{{ functionality.name }}</li>
+
+{% endblock %}
+
+{% block app_content %}
+<section>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Logs</h1>
+                <p class="lead">
+                    {% spaceless %}
+                    <a href="{% url 'home' %}"
+                       class="text-dark">{{ functionality.app.organization }}</a>
+                    <span>.</span>
+                    <a href="{% url 'app-detail' functionality.app.id %}"
+                       class="text-dark">{{ functionality.app.slug }}</a>
+                    <span>.{{ functionality.slug }}</span>
+                    {% endspaceless %}
+                    <br>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="card" id="log-window" style="max-height: 30rem; overflow: scroll;"
+         data-id="{% url 'logging-list' functionality.id %}">
+        <div style="height: 30rem; background: #fafafa;"></div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

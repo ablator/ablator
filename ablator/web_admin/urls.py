@@ -14,6 +14,7 @@ urlpatterns = [
     # App
     url(r'app/create/$', app.AppCreate.as_view(), name='app-create'),
     url(r'app/(?P<app_id>[^/]+)/$', app.AppDetail.as_view(), name='app-detail'),
+    url(r'app/(?P<app_id>[^/]+)/usage/$', app.AppUsage.as_view(), name='app-usage'),
     url(r'app/(?P<pk>[^/]+)/update/$', app.AppUpdate.as_view(), name='app-update'),
     url(r'app/(?P<pk>[^/]+)/delete/$', app.AppDelete.as_view(), name='app-delete'),
 
@@ -22,6 +23,9 @@ urlpatterns = [
     url(r'functionality/(?P<pk>[^/]+)/$', functionality.FunctionalityDetail.as_view(), name='functionality-detail'),
     url(r'functionality/(?P<pk>[^/]+)/update/$', functionality.FunctionalityUpdate.as_view(), name='functionality-update'),
     url(r'functionality/(?P<pk>[^/]+)/delete/$', functionality.FunctionalityDelete.as_view(), name='functionality-delete'),
+    url(r'functionality/(?P<pk>[^/]+)/flavors/$', functionality.FunctionalityFlavors.as_view(), name='functionality-flavors'),
+    url(r'functionality/(?P<pk>[^/]+)/rollouts/$', functionality.FunctionalityRollouts.as_view(), name='functionality-rollouts'),
+    url(r'functionality/(?P<pk>[^/]+)/logs/$', functionality.FunctionalityLogs.as_view(), name='functionality-logs'),
 
     # Functionality Partials
     url(r'functionality/enabled-users/(?P<pk>[^/]+)/$', functionality.FunctionalityPartEnabledUsers.as_view(), name='functionality-part-enabled-users'),

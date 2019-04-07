@@ -18,6 +18,11 @@ class AppDetail(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class AppUsage(AppDetail):
+    template_name = 'core/app_usage.html'
+
+
+@method_decorator(login_required, name='dispatch')
 class AppCreate(CreateView):
     model = App
     fields = ['name']

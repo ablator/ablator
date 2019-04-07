@@ -1,0 +1,51 @@
+{% extends '_base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <h1>
+                    <small>{{ functionality.app.name }}</small>
+                    <br>
+                    {{ functionality.name }}
+                </h1>
+                <hr>
+
+                <ul class="nav flex-column nav-pills">
+                    <il class="nav-item">
+                        <a class="nav-link" href="{% url 'functionality-detail' functionality.id %}">Overview</a>
+                    </il>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'functionality-update' functionality.id %}">Edit</a>
+                    </li>
+
+                    <il class="nav-item">
+                        <a class="nav-link" href="{% url 'functionality-flavors' functionality.id %}">Flavors</a>
+                    </il>
+
+                    <il class="nav-item">
+                        <a class="nav-link" href="{% url 'functionality-rollouts' functionality.id %}">Rollouts</a>
+                    </il>
+
+                    <il class="nav-item">
+                        <a class="nav-link" href="{% url 'functionality-logs' functionality.id %}">Logs</a>
+                    </il>
+                </ul>
+
+                <hr>
+
+                <ul class="nav flex-column nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'app-usage' functionality.app.id %}">Usage</a>
+                    </li>
+                </ul>
+
+            </div>
+            <div class="col-9">
+                {% block app_content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

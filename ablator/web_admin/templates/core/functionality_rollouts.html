@@ -1,0 +1,91 @@
+{% extends '_functionality_base.html' %}
+{% load humanize %}
+{% block home_nav_active %}active{% endblock %}
+{% block back %}
+<li class="breadcrumb-item"><a
+        href="{% url 'app-detail' functionality.app.id %}">{{ functionality.app.name }}</a></li>
+<li class="breadcrumb-item active">{{ functionality.name }}</li>
+
+{% endblock %}
+
+{% block app_content %}
+<section>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Rollouts</h1>
+                <p class="lead">
+                    {% spaceless %}
+                    <a href="{% url 'home' %}"
+                       class="text-dark">{{ functionality.app.organization }}</a>
+                    <span>.</span>
+                    <a href="{% url 'app-detail' functionality.app.id %}"
+                       class="text-dark">{{ functionality.app.slug }}</a>
+                    <span>.{{ functionality.slug }}</span>
+                    {% endspaceless %}
+                    <br>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Start Date</th>
+            <th>Tag</th>
+            <th>Possible Flavors</th>
+            <th>Strategy</th>
+            <th class="text-right">Max Enabled Users</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for rollout_strategy in functionality.rolloutstrategy_set.all %}
+            <tr>
+                <td>
+                    <strong>{{ rollout_strategy.start_at }}</strong><br>
+                    {{ rollout_strategy.start_at|naturaltime }}
+                </td>
+                <td>{% if rollout_strategy.tag %}#{{ rollout_strategy.tag.name }}{% endif %}</td>
+                <td>
+                    {% for flavor in rollout_strategy.possible_flavors.all %}
+                        <span class="badge" style="background-color: #{{ flavor.color }}">{{ flavor.name }}</span>
+                    {% endfor %}
+                </td>
+                <td>{{ rollout_strategy.strategy }}</td>
+                <td class="text-right">
+                    <span class="display-4">{{ rollout_strategy.max_enabled_users|intword|intcomma }}</span>
+                </td>
+                <td class="align-middle">
+                    <a class="btn btn-sm btn-outline-secondary btn-block"
+                       href="{% url 'rollout-strategy-update' rollout_strategy.id %}">Edit</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" class="px-0">
+                    <div class="alert alert-warning mx-0" role="alert">
+                        <strong>You need to define at least one Roll Out Strategy.</strong> This
+                        will tell Ablator how many users you want to allow in on this
+                        functionality, and when.
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+
+        <tr>
+            <td colspan="4"><a href="{% url 'rollout-strategy-create' functionality.id %}"
+                               class="btn btn-outline-secondary">Add new Rollout Strategy</a></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
