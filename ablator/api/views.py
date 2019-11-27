@@ -8,6 +8,8 @@ from core.functionality import can_i_use, which
 from core.models import ClientUser, Functionality, App
 from tagging.models import Tag
 from tagging.serializers import TagSerializer
+from telemetry.models import Signal, SignalType
+from telemetry.serializers import SignalTypeSerializer, SignalSerializer
 
 
 class CanIUseSingleViewV1(APIView):
@@ -109,6 +111,37 @@ class CanIUseViewV2(APIView):
         ])
 
 
+class CanIUseViewV4(APIView):
+    """
+    Returns a list of enabled functionalities of the specified app.
+
+    Functionalities that are not enabled are not shown.
+
+    This is the preferred endpoint to use if you are using ablator only as an on/off switch for
+    features. To get to a list of flavors instead, use the `which` endpoint.
+
+    Returns a list of strings, which correspond to the fqdn strings of the enabled
+    functionalities. Example:
+
+        [
+            "masa.rover.atmospheric-regulator",
+            "masa.rover.space-heater"
+        ]
+    """
+    def get(self, request, client_user_string, app_id):
+        app = get_object_or_404(App, id=app_id)
+        client_user = ClientUser.user_from_object(client_user_string, organization=app.organization)
+        functionalities = [
+            functionality
+            for functionality in app.functionality_set.all()
+            if can_i_use(client_user, functionality)
+        ]
+        return Response([
+            functionality.__str__()
+            for functionality in functionalities
+        ])
+
+
 class TagListViewV3(ListAPIView):
     """
     Returns a list of all Tags applied to the specified User within the specified Organization.
@@ -160,3 +193,30 @@ class TagRemoveViewV3(DestroyAPIView):
         user = ClientUser.user_from_object(client_user_string, organization_id=organization_id)
         tag = get_object_or_404(user.tag_set.all(), name=tag_name)
         user.tag_set.remove(tag)
+
+
+class PostSignalViewV4(APIView):
+    def get(self, request, client_user_string, app_id, signal_name):
+        app = get_object_or_404(App, id=app_id)
+        client_user = ClientUser.user_from_object(client_user_string, organization=app.organization)
+        signal_type = SignalType.objects.get_or_create(name=slugify(signal_name), app=app)[0]
+
+        signals = Signal.objects.all() # .filter(user__id=client_user.id).filter(type__name=signal_type.name)
+
+        return Response({
+            "signal_type": SignalTypeSerializer(signal_type).data,
+            "signals": [SignalSerializer(signal).data for signal in signals]
+        })
+
+    def post(self, request, client_user_string, app_id, signal_name):
+        app = App.objects.get(id=app_id)
+        user = ClientUser.user_from_object(client_user_string, organization_id=app.organization_id)
+        signal_type = SignalType.objects.get_or_create(name=slugify(signal_name), app=app)[0]
+
+        print(request.data)
+        new_signal = Signal(parameters=request.data)
+        new_signal.user = user
+        new_signal.type = signal_type
+        new_signal.save()
+
+        return self.get(request, client_user_string, app_id, signal_name)

@@ -45,7 +45,7 @@ class ClientUser(models.Model):
 
     @classmethod
     def hash_from_object(cls, hashable_object, organization_id: str):
-        string_to_hash = str(hashable_object) + organization_id
+        string_to_hash = str(hashable_object) + str(organization_id)
         return hashlib.sha256(settings.HASH_SALT.encode() + string_to_hash.encode()).hexdigest()
 
 
