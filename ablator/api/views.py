@@ -201,7 +201,7 @@ class PostSignalViewV4(APIView):
         client_user = ClientUser.user_from_object(client_user_string, organization=app.organization)
         signal_type = SignalType.objects.get_or_create(name=slugify(signal_name), app=app)[0]
 
-        signals = Signal.objects.filter(user__id=client_user.id).filter(type__name=signal_type.name)
+        signals = Signal.objects.all() # .filter(user__id=client_user.id).filter(type__name=signal_type.name)
 
         return Response({
             "signal_type": SignalTypeSerializer(signal_type).data,

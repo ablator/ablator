@@ -11,4 +11,4 @@ class SignalTypeSerializer(serializers.ModelSerializer):
 class SignalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Signal
-        fields = ['id', 'type', 'user', 'parameters']
+        fields = ['id', 'received_at', 'type', 'user', 'parameters']
