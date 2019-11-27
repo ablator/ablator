@@ -26,5 +26,14 @@ urlpatternsV3 = [
     url(r'^v3/(?P<organization_id>[^/]+)/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/tag/(?P<tag_name>[^/]+)/remove/?$', views.TagRemoveViewV3.as_view()),
 ]
 
+# v4 API
+urlpatternsV4 = [
+    url(r'^v4/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/caniuse/?$', views.CanIUseViewV4.as_view()),
+    url(r'^v4/(?P<organization_id>[^/]+)/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/flavors/?$', views.WhichViewV2.as_view()),
+    url(r'^v4/(?P<organization_id>[^/]+)/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/tag/?$', views.TagListViewV3.as_view()),
+    url(r'^v4/(?P<organization_id>[^/]+)/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/tag/(?P<tag_name>[^/]+)/remove/?$', views.TagRemoveViewV3.as_view()),
+    url(r'^v4/(?P<client_user_string>[^/]+)/(?P<app_id>[^/]+)/signals/(?P<signal_name>[^/]+)/?$', views.PostSignalViewV4.as_view()),
+]
+
 # Complete API
-urlpatterns = format_suffix_patterns(urlpatternsV1 + urlpatternsV2 + urlpatternsV3)
+urlpatterns = format_suffix_patterns(urlpatternsV1 + urlpatternsV2 + urlpatternsV3 + urlpatternsV4)

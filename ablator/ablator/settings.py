@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'user_management',
     'tagging',
     'request_logging',
+    'telemetry',
 ]
 
 MIDDLEWARE = [
