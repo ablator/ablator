@@ -11,9 +11,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(
-            "SET FOREIGN_KEY_CHECKS = 0;"
-        ),
         migrations.RenameField(
             model_name='tag',
             old_name='user',
@@ -24,7 +21,4 @@ class Migration(migrations.Migration):
             name='id',
             field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
         ),
-        migrations.RunSQL(
-            "SET FOREIGN_KEY_CHECKS = 1;"
-        )
     ]
