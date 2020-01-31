@@ -9,6 +9,8 @@
         <h1>{{ app.name }}
         <small><a class="btn btn-sm btn-outline-secondary"
                   href="{% url 'app-update' app.id %}">Edit</a></small>
+        <small><a class="btn btn-sm btn-outline-secondary"
+            href="{% url 'telemetry-signal-list' app.id %}">Telemetry Data</a></small>
     </h1>
 
     <p class="lead">

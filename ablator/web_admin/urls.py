@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import app, functionality, index, flavor, rolloutstrategy, availability, tagging
+from .views import app, functionality, index, flavor, rolloutstrategy, availability, tagging, telemetry
 from django.contrib.auth import views as auth_views
 
 # flake8: noqa: E501
@@ -17,6 +17,9 @@ urlpatterns = [
     url(r'app/(?P<app_id>[^/]+)/usage/$', app.AppUsage.as_view(), name='app-usage'),
     url(r'app/(?P<pk>[^/]+)/update/$', app.AppUpdate.as_view(), name='app-update'),
     url(r'app/(?P<pk>[^/]+)/delete/$', app.AppDelete.as_view(), name='app-delete'),
+    
+    # Telemetry
+    url(r'app/(?P<pk>[^/]+)/telemetry/$', telemetry.SignalListView.as_view(), name='telemetry-signal-list'),
 
     # Functionality
     url(r'app/(?P<pk>[^/]+)/add_functionality/$', functionality.FunctionalityCreate.as_view(), name='functionality-create'),
