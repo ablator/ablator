@@ -25,6 +25,7 @@ class ClientUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    nickname = models.CharField(max_length=255)
 
     def __repr__(self):
         return self.name
@@ -34,7 +35,7 @@ class ClientUser(models.Model):
 
     @property
     def short_name(self):
-        return self.name[:8]
+        return self.name[:8] + ' ' + self.nickname
 
     @classmethod
     def user_from_object(cls, user_object, organization: Organization = None, organization_id: str = None):
