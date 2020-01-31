@@ -35,6 +35,8 @@ class ClientUser(models.Model):
 
     @property
     def short_name(self):
+        if self.nickname is None:
+            return self.name[:8]
         return self.name[:8] + ' ' + self.nickname
 
     @classmethod
