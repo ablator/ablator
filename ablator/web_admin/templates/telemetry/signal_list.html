@@ -22,18 +22,18 @@
             <thead>
             <tr>
                 <th>Received At</th>
+                <th>User</th>
                 <th>Type</th>
                 <th>Parameters</th>
-                <th>User</th>
             </tr>
             </thead>
             <tbody>
             {% for obj in object_list %}
                 <tr>
                     <td>{{ obj.received_at }}</td>
+                    <td>{{ obj.user.short_name }}</td>
                     <td>{{ obj.type }}</td>
                     <td>{{ obj.parameters }}</td>
-                    <td>{{ obj.user }}</td>
                 </tr>
             {% empty %}
                 <tr>

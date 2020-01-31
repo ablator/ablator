@@ -213,7 +213,6 @@ class PostSignalViewV4(APIView):
         user = ClientUser.user_from_object(client_user_string, organization_id=app.organization_id)
         signal_type = SignalType.objects.get_or_create(name=slugify(signal_name), app=app)[0]
 
-        print(request.data)
         new_signal = Signal(parameters=request.data)
         new_signal.user = user
         new_signal.type = signal_type

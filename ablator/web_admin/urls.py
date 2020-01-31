@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'app/(?P<pk>[^/]+)/delete/$', app.AppDelete.as_view(), name='app-delete'),
     
     # Telemetry
-    url(r'app/(?P<pk>[^/]+)/telemetry/$', telemetry.SignalListView.as_view(), name='telemetry-signal-list'),
+    url(r'app/(?P<app_id>[^/]+)/telemetry/$', telemetry.SignalListView.as_view(), name='telemetry-signal-list'),
 
     # Functionality
     url(r'app/(?P<pk>[^/]+)/add_functionality/$', functionality.FunctionalityCreate.as_view(), name='functionality-create'),

@@ -32,6 +32,10 @@ class ClientUser(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def short_name(self):
+        return self.name[:8]
+
     @classmethod
     def user_from_object(cls, user_object, organization: Organization = None, organization_id: str = None):
         if organization:

@@ -3,6 +3,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from telemetry.models import Signal
+from core.models import ClientUser, App
 
 
 @method_decorator(login_required, name='dispatch')
@@ -11,4 +12,4 @@ class SignalListView(ListView):
 
     def get_queryset(self):
         app = App.objects.filter(organization=self.request.user.ablatoruser.organization).get(id=self.kwargs['app_id'])
-        return Signal.objects.filter(app=app)
+        return Signal.objects.filter(type__app=app).order_by("-received_at")[:200]
