@@ -19,11 +19,19 @@ class SignalListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        app = App.objects.filter(organization=self.request.user.ablatoruser.organization).get(id=self.kwargs['app_id'])
-        one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
-        context['active_users_last_week'] = Signal.objects.filter(type__app=app, received_at__gte=one_week_ago).count()
-
         one_month_ago = datetime.date.today() - datetime.timedelta(days=30)
-        context['active_users_last_month'] = Signal.objects.filter(type__app=app, received_at__gte=one_month_ago).count()
+        one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
+
+        app = App.objects.filter(organization=self.request.user.ablatoruser.organization).get(id=self.kwargs['app_id'])
+        app_signals = Signal.objects.filter(type__app=app)
+
+        last_month_signals = app_signals.filter(received_at__gte=one_month_ago)
+        last_week_signals = app_signals.filter(received_at__gte=one_week_ago)
+
+        last_month_users = ClientUser.objects.filter(signal_set__in=last_month_signals)
+        last_week_users = ClientUser.objects.filter(signal_set__in=last_week_signals)
+
+        context['active_users_last_month'] = last_month_users.count()
+        context['active_users_last_week'] = last_week_users.count()
 
         return context
