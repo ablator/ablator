@@ -28,8 +28,8 @@ class SignalListView(ListView):
         last_month_signals = app_signals.filter(received_at__gte=one_month_ago)
         last_week_signals = app_signals.filter(received_at__gte=one_week_ago)
 
-        last_month_users = ClientUser.objects.filter(signal_set__in=last_month_signals)
-        last_week_users = ClientUser.objects.filter(signal_set__in=last_week_signals)
+        last_month_users = ClientUser.objects.filter(signal__in=last_month_signals).distinct()
+        last_week_users = ClientUser.objects.filter(signal__in=last_week_signals).distinct()
 
         context['active_users_last_month'] = last_month_users.count()
         context['active_users_last_week'] = last_week_users.count()
