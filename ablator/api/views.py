@@ -1,3 +1,5 @@
+import json
+
 from django.utils.text import slugify
 from rest_framework.generics import get_object_or_404, ListAPIView, DestroyAPIView
 from rest_framework.permissions import AllowAny
@@ -196,24 +198,12 @@ class TagRemoveViewV3(DestroyAPIView):
 
 
 class PostSignalViewV4(APIView):
-    def get(self, request, client_user_string, app_id, signal_name):
-        app = get_object_or_404(App, id=app_id)
-        client_user = ClientUser.user_from_object(client_user_string, organization=app.organization)
-        signal_type = SignalType.objects.get_or_create(name=slugify(signal_name), app=app)[0]
-
-        signals = Signal.objects.all() # .filter(user__id=client_user.id).filter(type__name=signal_type.name)
-
-        return Response({
-            "signal_type": SignalTypeSerializer(signal_type).data,
-            "signals": [SignalSerializer(signal).data for signal in signals]
-        })
-
     def post(self, request, client_user_string, app_id, signal_name):
         app = App.objects.get(id=app_id)
         user = ClientUser.user_from_object(client_user_string, organization_id=app.organization_id)
         signal_type = SignalType.objects.get_or_create(name=slugify(signal_name), app=app)[0]
 
-        new_signal = Signal(parameters=request.data)
+        new_signal = Signal(parameters=json.dumps(request.data))
         new_signal.user = user
         new_signal.type = signal_type
         new_signal.save()

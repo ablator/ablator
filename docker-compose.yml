@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  ablator:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    environment:
+      DEBUG: "true"
+    volumes:
+      - ./ablator:/ablator
+#    environment:
+#      DATABASE_URL: "postgres://postgres:postgres@db/postgres"
+  db:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres

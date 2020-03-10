@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'bootstrap4',
     'raven.contrib.django.raven_compat',
+    'graphos',
 
     # Functionality
     'core',

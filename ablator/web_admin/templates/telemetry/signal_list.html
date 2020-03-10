@@ -24,6 +24,26 @@
         </div>
     </section>
     <section>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+        {% for chart_list in charts %}
+            <hr>
+            <div class="row">
+                {% for chart in chart_list.items %}
+                    <div class="col">
+                    {{ chart.1.as_html }}
+                    <p class="font-weight-bold">{{ chart.0 }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+
+    </section>
+    <section>
         <table class="table table-striped table-hover">
             <thead>
             <tr>

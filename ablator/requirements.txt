@@ -12,3 +12,7 @@ gevent
 whitenoise
 psycopg2-binary
 raven
+
+# graphos
+six
+git+https://github.com/cpoetter/django-graphos.git@master#egg=django-graphos
