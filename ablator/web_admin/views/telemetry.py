@@ -3,12 +3,11 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView
-
-from telemetry.models import Signal
-from core.models import ClientUser, App
-
+from graphos.renderers.morris import DonutChart, LineChart
 from graphos.sources.simple import SimpleDataSource
-from graphos.renderers.morris import DonutChart
+
+from core.models import App
+from telemetry.models import Signal, ActiveUsersCount
 
 
 def accumulated_dictionary_data_source(signals: list, signal_parameter_key: str) -> SimpleDataSource:
@@ -72,36 +71,49 @@ class SignalListView(ListView):
         last_week_signals = app_signals.filter(received_at__gte=one_week_ago)
         last_day_signals = app_signals.filter(received_at__gte=one_day_ago)
 
-        distinct_last_month_signals = self.distinctivize(last_month_signals)
+        distinct_last_month_signals = Signal.distinctivize(last_month_signals)
 
         context['active_users_last_month'] = len(distinct_last_month_signals)
-        context['active_users_last_week'] = len(self.distinctivize(last_week_signals))
-        context['active_users_last_day'] = len(self.distinctivize(last_day_signals))
+        context['active_users_last_week'] = len(Signal.distinctivize(last_week_signals))
+        context['active_users_last_day'] = len(Signal.distinctivize(last_day_signals))
+
+        # Active User Count Graph
+        range_date_end = datetime.date.today() - datetime.timedelta(days=1)
+        range_date_beginning = range_date_end - datetime.timedelta(days=30)
+        active_users_counts_data = [["Date", "User Count last 30 Days", "User Count last 7 Days", "User Count last Day"]]
+        current_date = range_date_beginning
+        while current_date < range_date_end:
+            current_date += datetime.timedelta(days=1)
+            active_users_counts_data.append([
+                current_date.isoformat(),
+                ActiveUsersCount.get(ending_at=current_date, day_range=30, app=app).count,
+                ActiveUsersCount.get(ending_at=current_date, day_range=7, app=app).count,
+                ActiveUsersCount.get(ending_at=current_date, day_range=1, app=app).count
+            ])
+        active_users_counts_data_source = SimpleDataSource(data=active_users_counts_data)
+        context['active_monthly_users'] = LineChart(active_users_counts_data_source, width="100%")
 
         # Charts
         dim = 150
         context['charts'] = [
             {
-                "App Version": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "appVersion"), height=dim, width=dim),
-                "System Version": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "systemVersion"), height=dim, width=dim),
-                "Build Number": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "buildNumber"), height=dim, width=dim),
+                "App Version": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "appVersion"), height=dim,
+                                          width=dim),
+                "System Version": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "systemVersion"), height=dim,
+                                             width=dim),
+                "Build Number": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "buildNumber"), height=dim,
+                                           width=dim),
                 "Source Type": DonutChart(create_source_type_chart(distinct_last_month_signals), height=dim, width=dim),
             },
             {
-                "Libido Description Type": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "libidoDescriptionType"), height=dim, width=dim),
-                "Should Send Notifications": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "shouldSendExperienceSamplingNotifications"), height=dim, width=dim),
-                "Should Use HealthKit": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "shouldUseHealthKit"), height=dim, width=dim),
+                "Libido Description Type": DonutChart(
+                    accumulated_dictionary_data_source(distinct_last_month_signals, "libidoDescriptionType"), height=dim, width=dim),
+                "Should Send Notifications": DonutChart(
+                    accumulated_dictionary_data_source(distinct_last_month_signals, "shouldSendExperienceSamplingNotifications"),
+                    height=dim, width=dim),
+                "Should Use HealthKit": DonutChart(accumulated_dictionary_data_source(distinct_last_month_signals, "shouldUseHealthKit"),
+                                                   height=dim, width=dim),
 
             }
         ]
         return context
-
-    def distinctivize(self, signals):
-        distinct_user_signals = []
-        known_users = []
-        for signal in signals:
-            if signal.user_id in known_users:
-                continue
-            known_users.append(signal.user_id)
-            distinct_user_signals.append(signal)
-        return distinct_user_signals

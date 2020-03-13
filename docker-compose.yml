@@ -2,6 +2,7 @@ version: '3.7'
 services:
   ablator:
     build: .
+    restart: always
     depends_on:
       - db
     ports:
