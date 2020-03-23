@@ -26,7 +26,7 @@ class Signal(models.Model):
         except json.JSONDecodeError:
             # A previous version saved python dict strings instead of JSON, try to convert on the fly
             try:
-                parameters = self.parameters.replace("'", "\"").replace("True", "true").replace("False", "false")
+                parameters = self.parameters.replace("'", '"').replace("True", "true").replace("False", "false")
                 return json.loads(parameters)
             except json.JSONDecodeError:
                 return {}
@@ -44,11 +44,7 @@ class Signal(models.Model):
 
 
 class ActiveUsersCount(models.Model):
-    DAY_RANGE_CHOICES = (
-        (1, "24 hours"),
-        (7, "Week"),
-        (30, "Month")
-    )
+    DAY_RANGE_CHOICES = ((1, "24 hours"), (7, "Week"), (30, "Month"))
 
     app = models.ForeignKey(App, on_delete=models.CASCADE)
     ending_at = models.DateField()
@@ -56,7 +52,7 @@ class ActiveUsersCount(models.Model):
     count = models.IntegerField()
 
     @staticmethod
-    def get(ending_at: datetime.date, day_range: int, app: App) -> 'ActiveUsersCount':
+    def get(ending_at: datetime.date, day_range: int, app: App) -> "ActiveUsersCount":
         """Retrieve or create an ActiveUsersCount instance for the specified date and range"""
 
         active_users_count = None

@@ -7,19 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0008_clientuser_nickname'),
-        ('telemetry', '0002_signal_received_at'),
+        ("core", "0008_clientuser_nickname"),
+        ("telemetry", "0002_signal_received_at"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ActiveUsersCount',
+            name="ActiveUsersCount",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('ending_at', models.DateField()),
-                ('day_range', models.IntegerField(choices=[(1, '24 hours'), (7, 'Week'), (30, 'Month')])),
-                ('count', models.IntegerField()),
-                ('app', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.App')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("ending_at", models.DateField()),
+                ("day_range", models.IntegerField(choices=[(1, "24 hours"), (7, "Week"), (30, "Month")])),
+                ("count", models.IntegerField()),
+                ("app", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.App")),
             ],
         ),
     ]

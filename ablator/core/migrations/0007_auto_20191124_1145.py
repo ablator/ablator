@@ -7,13 +7,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0006_rolloutstrategy_priority'),
+        ("core", "0006_rolloutstrategy_priority"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='rolloutstrategy',
-            name='tag',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='tagging.Tag'),
+            model_name="rolloutstrategy",
+            name="tag",
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="tagging.Tag"),
         ),
     ]

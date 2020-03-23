@@ -9,77 +9,81 @@ from django.contrib import messages
 from core.models import Functionality, App, Flavor, RolloutStrategy
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityDetail(TemplateView):
-    template_name = 'core/functionality_detail.html'
+    template_name = "core/functionality_detail.html"
 
     def get_context_data(self, pk, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['functionality'] = Functionality.objects.filter(
-            app__organization=self.request.user.ablatoruser.organization).get(id=pk)
-        context_data['app'] = context_data['functionality'].app
+        context_data["functionality"] = Functionality.objects.filter(app__organization=self.request.user.ablatoruser.organization).get(
+            id=pk
+        )
+        context_data["app"] = context_data["functionality"].app
         return context_data
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityFlavors(FunctionalityDetail):
-    template_name = 'core/functionality_flavors.html'
+    template_name = "core/functionality_flavors.html"
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityRollouts(FunctionalityDetail):
-    template_name = 'core/functionality_rollouts.html'
+    template_name = "core/functionality_rollouts.html"
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityLogs(FunctionalityDetail):
-    template_name = 'core/functionality_logs.html'
+    template_name = "core/functionality_logs.html"
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityPartEnabledUsers(FunctionalityDetail):
-    template_name = 'core/functionality/_enabled_users.html'
+    template_name = "core/functionality/_enabled_users.html"
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityPartProgress(FunctionalityDetail):
-    template_name = 'core/functionality/_progress.html'
+    template_name = "core/functionality/_progress.html"
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityPartFlavors(FunctionalityDetail):
-    template_name = 'core/functionality/_flavors.html'
+    template_name = "core/functionality/_flavors.html"
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityCreate(CreateView):
     model = Functionality
-    fields = ['name']
+    fields = ["name"]
 
     def form_valid(self, form):
-        app_id = self.kwargs.get('pk')
+        app_id = self.kwargs.get("pk")
         app = App.objects.get(id=app_id)
         form.instance.app = app
         form.instance.slug = slugify(form.instance.name)
         form.instance.save()
 
         # Create Example Flavor and Release
-        on_flavor = Flavor.objects.create(name='On', slug='on', functionality=form.instance)
+        on_flavor = Flavor.objects.create(name="On", slug="on", functionality=form.instance)
         RolloutStrategy.objects.create(functionality=form.instance)
-        messages.info(self.request, "Along with your Functionality, a Flavor named {} was automatically "
-                                    "created for you. To start enabling client requests, edit "
-                                    "a release below.".format(on_flavor.name))
+        messages.info(
+            self.request,
+            "Along with your Functionality, a Flavor named {} was automatically "
+            "created for you. To start enabling client requests, edit "
+            "a release below.".format(on_flavor.name),
+        )
 
         return super(FunctionalityCreate, self).form_valid(form)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityUpdate(UpdateView):
     model = Functionality
-    fields = ['name', 'slug']
+    fields = ["name", "slug"]
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FunctionalityDelete(DeleteView):
     model = Functionality
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy("home")

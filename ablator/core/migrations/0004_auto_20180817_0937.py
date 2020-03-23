@@ -7,19 +7,15 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tagging', '0003_auto_20180809_1305'),
-        ('core', '0003_auto_20180816_1225'),
+        ("tagging", "0003_auto_20180809_1305"),
+        ("core", "0003_auto_20180816_1225"),
     ]
 
     operations = [
+        migrations.AddField(model_name="rolloutstrategy", name="possible_flavors", field=models.ManyToManyField(to="core.Flavor"),),
         migrations.AddField(
-            model_name='rolloutstrategy',
-            name='possible_flavors',
-            field=models.ManyToManyField(to='core.Flavor'),
-        ),
-        migrations.AddField(
-            model_name='rolloutstrategy',
-            name='tag',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='tagging.Tag'),
+            model_name="rolloutstrategy",
+            name="tag",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to="tagging.Tag"),
         ),
     ]

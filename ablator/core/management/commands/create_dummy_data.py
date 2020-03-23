@@ -11,68 +11,67 @@ from tagging.models import Tag
 from user_management.models import Organization, AblatorUser
 
 app_names = [
-    'Rover',
-    'Ascent Vehicle',
-    'Long Distance Ship',
+    "Rover",
+    "Ascent Vehicle",
+    "Long Distance Ship",
 ]
 
 functionality_descriptions = {
-    'Atmospheric Regulator': ['enabled', 'disabled', 'power save mode'],
-    'Dehumidifier': ['dry as bone', 'pleasant', 'humid'],
-    'Water Reclaimer': ['overdrive', 'drinking water only', 'fizzy'],
-    'Space Heater': ['loud', 'power save mode', 'off'],
+    "Atmospheric Regulator": ["enabled", "disabled", "power save mode"],
+    "Dehumidifier": ["dry as bone", "pleasant", "humid"],
+    "Water Reclaimer": ["overdrive", "drinking water only", "fizzy"],
+    "Space Heater": ["loud", "power save mode", "off"],
 }
 
 
 def random_user_name():
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+    return "".join(random.choices(string.ascii_uppercase + string.digits, k=8))
 
 
 class Command(BaseCommand):
-    help = 'Creates dummy Applications, Functionalities and so on'
+    help = "Creates dummy Applications, Functionalities and so on"
 
     def handle(self, *args, **options):
-        organization = Organization(name='Masa', slug='masa')
+        organization = Organization(name="Masa", slug="masa")
         organization.save()
-        self.stdout.write(self.style.SUCCESS('### Created Organization {} ###'.format(organization.name)))
+        self.stdout.write(self.style.SUCCESS("### Created Organization {} ###".format(organization.name)))
 
         available_tags = ["opensource", "paid", "unpaid", "betarelease"]
         for tag_name in available_tags:
             tag = Tag(name=tag_name, organization=organization)
             tag.save()
-            self.stdout.write(self.style.SUCCESS('Created Tag {}'.format(tag.name)))
+            self.stdout.write(self.style.SUCCESS("Created Tag {}".format(tag.name)))
 
         try:
             first_user = User.objects.all()[0]
             ablator_user = AblatorUser(user=first_user, organization=organization)
             ablator_user.save()
-            self.stdout.write(self.style.SUCCESS('### Created User {} ###'.format(ablator_user)))
+            self.stdout.write(self.style.SUCCESS("### Created User {} ###".format(ablator_user)))
         except IndexError:
-            self.stdout.write('No users yet, skipping user creation')
+            self.stdout.write("No users yet, skipping user creation")
 
         for app_name in app_names:
             app = App(name=app_name, slug=slugify(app_name), organization=organization)
             app.save()
-            self.stdout.write(self.style.SUCCESS('### Created App {} ###'.format(app.name)))
+            self.stdout.write(self.style.SUCCESS("### Created App {} ###".format(app.name)))
 
             for f_name in functionality_descriptions.keys():
                 functionality = Functionality(app=app, name=f_name, slug=slugify(f_name))
                 functionality.save()
-                self.stdout.write(self.style.SUCCESS('Created Functionality {}'.format(functionality.name)))
+                self.stdout.write(self.style.SUCCESS("Created Functionality {}".format(functionality.name)))
                 release = RolloutStrategy(functionality=functionality, max_enabled_users=6)
                 release.save()
-                self.stdout.write(self.style.SUCCESS(' + Release {}'.format(release.id)))
+                self.stdout.write(self.style.SUCCESS(" + Release {}".format(release.id)))
                 for flavor_name in functionality_descriptions[f_name]:
                     flavor = Flavor(name=flavor_name, slug=slugify(flavor_name))
                     flavor.functionality = functionality
                     flavor.save()
-                    self.stdout.write(self.style.SUCCESS(' + Flavor {}'.format(flavor.name)))
+                    self.stdout.write(self.style.SUCCESS(" + Flavor {}".format(flavor.name)))
                 num_availabilities = random.randrange(13, 15)
                 for _ in range(num_availabilities):
                     which(
-                        client_user=ClientUser.user_from_object(random_user_name(),
-                                                                organization=functionality.app.organization),
-                        functionality=functionality
+                        client_user=ClientUser.user_from_object(random_user_name(), organization=functionality.app.organization),
+                        functionality=functionality,
                     )
-                self.stdout.write(self.style.SUCCESS(' + {} availabilities'.format(num_availabilities)))
-        self.stdout.write(self.style.SUCCESS('Done :)'))
+                self.stdout.write(self.style.SUCCESS(" + {} availabilities".format(num_availabilities)))
+        self.stdout.write(self.style.SUCCESS("Done :)"))

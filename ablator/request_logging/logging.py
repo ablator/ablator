@@ -6,8 +6,8 @@ from request_logging.base import append_to_list, retrieve
 from request_logging.models import RequestLog
 import logging
 
-logger = logging.getLogger('ablator.functionality')
-LOK_KEY = 'list-of-timestamp-keys'
+logger = logging.getLogger("ablator.functionality")
+LOK_KEY = "list-of-timestamp-keys"
 
 
 def save_new_timestamp_key(new_key):
@@ -28,23 +28,23 @@ def generate_key_for_id_hourly(func_id: str, timestamp=None):
     :return: A string to be used as key. Contains the year, month, day, and hour of the timestamp
     """
     time_stamp_for_key = timestamp if timestamp else timezone.now()
-    current_key = '{}-{}'.format(func_id, time_stamp_for_key.strftime("%Y-%m-%d-%H"))
+    current_key = "{}-{}".format(func_id, time_stamp_for_key.strftime("%Y-%m-%d-%H"))
     save_new_timestamp_key(current_key)
     return current_key
 
 
-def save_request_log_entry(functionality_id: str, flavor_id: Optional[str],
-                           action: str, client_user_id: str = None,
-                           elapsed_time: float = None):
+def save_request_log_entry(
+    functionality_id: str, flavor_id: Optional[str], action: str, client_user_id: str = None, elapsed_time: float = None
+):
     current_key = generate_key_for_id_hourly(functionality_id)
     timestamp = timezone.now()
     f_action = {
-        'functionality_id': functionality_id,
-        'flavor_id': flavor_id,
-        'timestamp': timestamp,
-        'action': action,
-        'client_user_id': client_user_id,
-        'elapsed_time': elapsed_time
+        "functionality_id": functionality_id,
+        "flavor_id": flavor_id,
+        "timestamp": timestamp,
+        "action": action,
+        "client_user_id": client_user_id,
+        "elapsed_time": elapsed_time,
     }
     append_to_list(current_key, f_action)
     logger.info(action, extra=f_action)
@@ -53,15 +53,7 @@ def save_request_log_entry(functionality_id: str, flavor_id: Optional[str],
 def get_request_logs(timestamp_key):
     request_log_dicts = retrieve(timestamp_key)
     request_logs = [
-        RequestLog(
-            d['functionality_id'],
-            d['flavor_id'],
-            d['timestamp'],
-            d['action'],
-            d['client_user_id'],
-            d['elapsed_time']
-        )
-
+        RequestLog(d["functionality_id"], d["flavor_id"], d["timestamp"], d["action"], d["client_user_id"], d["elapsed_time"])
         for d in request_log_dicts
     ]
     return request_logs

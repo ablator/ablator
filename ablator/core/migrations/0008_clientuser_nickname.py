@@ -6,13 +6,9 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0007_auto_20191124_1145'),
+        ("core", "0007_auto_20191124_1145"),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='clientuser',
-            name='nickname',
-            field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        migrations.AddField(model_name="clientuser", name="nickname", field=models.CharField(blank=True, max_length=255, null=True),),
     ]

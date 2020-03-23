@@ -9,32 +9,30 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('core', '0007_auto_20191124_1145'),
+        ("core", "0007_auto_20191124_1145"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Signal',
+            name="Signal",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('parameters', models.TextField()),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("parameters", models.TextField()),
             ],
         ),
         migrations.CreateModel(
-            name='SignalType',
+            name="SignalType",
             fields=[
-                ('name', models.CharField(max_length=255, primary_key=True, serialize=False)),
-                ('app', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.App')),
+                ("name", models.CharField(max_length=255, primary_key=True, serialize=False)),
+                ("app", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.App")),
             ],
         ),
         migrations.AddField(
-            model_name='signal',
-            name='type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='telemetry.SignalType'),
+            model_name="signal",
+            name="type",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="telemetry.SignalType"),
         ),
         migrations.AddField(
-            model_name='signal',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.ClientUser'),
+            model_name="signal", name="user", field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.ClientUser"),
         ),
     ]

@@ -5,22 +5,19 @@ from core.models import RolloutStrategy
 from request_logging.logging import save_request_log_entry
 from .availability import (
     check_for_existing_enabled_availability,
-    get_availability, assert_existence_of_flavors,
+    get_availability,
+    assert_existence_of_flavors,
     get_enabled_count,
     create_new_availability_with_random_flavor,
     enable_availability_by_user_count,
 )
-from .rollout_strategies import (
-    get_rollout_strategy,
-    check_roll_out_enable_globally,
-    assert_roll_out_is_not_paused,
-    check_roll_out_recall
-)
+from .rollout_strategies import get_rollout_strategy, check_roll_out_enable_globally, assert_roll_out_is_not_paused, check_roll_out_recall
 from ..models import Flavor, Functionality, ClientUser, Availability
 
 
 class WhichContext:
     """Context class to pass around metadata during execution of the 'which' pipeline"""
+
     client_user: ClientUser
     functionality: Functionality
     rollout_strategy: RolloutStrategy
@@ -68,10 +65,8 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
         get_rollout_strategy,
         check_roll_out_recall,
         check_roll_out_enable_globally,
-
         # retrieve availability
         get_availability,
-
         # check availability and switch on based on rollout strategy
         check_for_existing_enabled_availability,
         assert_roll_out_is_not_paused,
@@ -92,20 +87,10 @@ def which(client_user: ClientUser, functionality: Functionality) -> Optional[Ava
             av = func(context)
             if av:
                 save_request_log_entry(
-                    str(context.functionality.id),
-                    str(av.flavor_id),
-                    func.__name__,
-                    client_user.id,
-                    time.process_time() - start_time
+                    str(context.functionality.id), str(av.flavor_id), func.__name__, client_user.id, time.process_time() - start_time
                 )
                 return av
         except NoAvailability:
-            save_request_log_entry(
-                str(context.functionality.id),
-                None,
-                func.__name__,
-                client_user.id,
-                time.process_time() - start_time
-            )
+            save_request_log_entry(str(context.functionality.id), None, func.__name__, client_user.id, time.process_time() - start_time)
             return None
     return None

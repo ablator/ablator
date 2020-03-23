@@ -6,13 +6,9 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0005_auto_20180817_0939'),
+        ("core", "0005_auto_20180817_0939"),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='rolloutstrategy',
-            name='priority',
-            field=models.PositiveSmallIntegerField(default=0),
-        ),
+        migrations.AddField(model_name="rolloutstrategy", name="priority", field=models.PositiveSmallIntegerField(default=0),),
     ]

@@ -8,9 +8,15 @@ class RequestLog:
     _functionality: Optional[Functionality] = None
     _flavor: Optional[Flavor] = None
 
-    def __init__(self, functionality_id: str, flavor_id: Optional[str],
-                 timestamp: datetime, action: str, client_user_id: str = None,
-                 elapsed_time: float = None):
+    def __init__(
+        self,
+        functionality_id: str,
+        flavor_id: Optional[str],
+        timestamp: datetime,
+        action: str,
+        client_user_id: str = None,
+        elapsed_time: float = None,
+    ):
         self.functionality_id = functionality_id
         self.flavor_id = flavor_id
         self.timestamp = timestamp

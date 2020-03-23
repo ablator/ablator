@@ -14,89 +14,95 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('user_management', '0001_initial'),
+        ("user_management", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='App',
+            name="App",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=140)),
-                ('slug', models.SlugField(max_length=100)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user_management.Organization')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=140)),
+                ("slug", models.SlugField(max_length=100)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("organization", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="user_management.Organization")),
             ],
         ),
         migrations.CreateModel(
-            name='Availability',
+            name="Availability",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('is_enabled', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("is_enabled", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
-            options={
-                'verbose_name_plural': 'Availabilities',
-            },
+            options={"verbose_name_plural": "Availabilities",},
         ),
         migrations.CreateModel(
-            name='ClientUser',
+            name="ClientUser",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Flavor',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=140)),
-                ('slug', models.SlugField(max_length=100)),
-                ('color', models.CharField(default=core.colors.random_color, max_length=6)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('client_users', models.ManyToManyField(through='core.Availability', to='core.ClientUser')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=255)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Functionality',
+            name="Flavor",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=140)),
-                ('slug', models.SlugField(max_length=100)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('rollout_strategy', models.CharField(choices=[('recall', 'Recall'), ('pause_rollout', 'Roll Out Paused'), ('defined_by_releases', 'Release-Driven'), ('enable_globally', 'Enabled Globally')], default='defined_by_releases', max_length=50)),
-                ('app', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.App')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=140)),
+                ("slug", models.SlugField(max_length=100)),
+                ("color", models.CharField(default=core.colors.random_color, max_length=6)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("client_users", models.ManyToManyField(through="core.Availability", to="core.ClientUser")),
             ],
-            options={
-                'verbose_name_plural': 'Functionalities',
-            },
         ),
         migrations.CreateModel(
-            name='Release',
+            name="Functionality",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('start_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('max_enabled_users', models.IntegerField(default=0)),
-                ('functionality', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.Functionality')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=140)),
+                ("slug", models.SlugField(max_length=100)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "rollout_strategy",
+                    models.CharField(
+                        choices=[
+                            ("recall", "Recall"),
+                            ("pause_rollout", "Roll Out Paused"),
+                            ("defined_by_releases", "Release-Driven"),
+                            ("enable_globally", "Enabled Globally"),
+                        ],
+                        default="defined_by_releases",
+                        max_length=50,
+                    ),
+                ),
+                ("app", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.App")),
             ],
-            options={
-                'ordering': ['start_at'],
-            },
+            options={"verbose_name_plural": "Functionalities",},
+        ),
+        migrations.CreateModel(
+            name="Release",
+            fields=[
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ("start_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("max_enabled_users", models.IntegerField(default=0)),
+                ("functionality", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.Functionality")),
+            ],
+            options={"ordering": ["start_at"],},
         ),
         migrations.AddField(
-            model_name='flavor',
-            name='functionality',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.Functionality'),
+            model_name="flavor",
+            name="functionality",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.Functionality"),
         ),
         migrations.AddField(
-            model_name='availability',
-            name='flavor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.Flavor'),
+            model_name="availability",
+            name="flavor",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.Flavor"),
         ),
         migrations.AddField(
-            model_name='availability',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.ClientUser'),
+            model_name="availability",
+            name="user",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="core.ClientUser"),
         ),
     ]

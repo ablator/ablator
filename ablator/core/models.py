@@ -22,6 +22,7 @@ class ClientUser(models.Model):
     make sure that the __repr__ method outputs a value that is unique to
     the user and unchanging.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -37,7 +38,7 @@ class ClientUser(models.Model):
     def short_name(self):
         if self.nickname is None:
             return self.name[:8]
-        return self.name[:8] + ' ' + self.nickname
+        return self.name[:8] + " " + self.nickname
 
     @classmethod
     def user_from_object(cls, user_object, organization: Organization = None, organization_id: str = None):
@@ -60,6 +61,7 @@ class App(models.Model):
     """
     A collection of FunctionalityGroups.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
@@ -67,10 +69,10 @@ class App(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '{}.{}'.format(self.organization, self.slug)
+        return "{}.{}".format(self.organization, self.slug)
 
     def get_absolute_url(self):
-        return reverse_lazy('app-detail', kwargs={'app_id': self.id})
+        return reverse_lazy("app-detail", kwargs={"app_id": self.id})
 
 
 class Functionality(models.Model):
@@ -81,6 +83,7 @@ class Functionality(models.Model):
     variations of one functionality. This is helpful when you want to A/B test multiple
     incarnations of a functionality.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
@@ -88,37 +91,30 @@ class Functionality(models.Model):
     app = models.ForeignKey(App, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '{}.{}'.format(self.app, self.slug)
+        return "{}.{}".format(self.app, self.slug)
 
     class Meta:
         verbose_name_plural = "Functionalities"
 
     @property
     def slug_as_scorecase(self):
-        return self.slug.replace('-', '_')
+        return self.slug.replace("-", "_")
 
     @property
     def number_of_users(self):
-        return Availability.objects.filter(
-            flavor__functionality=self
-        ).count()
+        return Availability.objects.filter(flavor__functionality=self).count()
 
     @property
     def number_of_enabled_users(self):
-        return Availability.objects.filter(
-            flavor__functionality=self,
-            is_enabled=True
-        ).count()
+        return Availability.objects.filter(flavor__functionality=self, is_enabled=True).count()
 
     def get_absolute_url(self):
-        return reverse_lazy('functionality-detail', kwargs={'pk': self.id})
+        return reverse_lazy("functionality-detail", kwargs={"pk": self.id})
 
     def get_default_tag(self):
         from tagging.models import Tag
-        return Tag.objects.get_or_create(
-            name='Default',
-            organization=self.app.organization
-        )[0]
+
+        return Tag.objects.get_or_create(name="Default", organization=self.app.organization)[0]
 
 
 class Flavor(models.Model):
@@ -128,11 +124,12 @@ class Flavor(models.Model):
     Add more then one Flavor to a Functionality to A/B test. One will be randomly
     activated depending on its enable_probability.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=100)
     functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
-    client_users = models.ManyToManyField(ClientUser, through='Availability')
+    client_users = models.ManyToManyField(ClientUser, through="Availability")
     color = models.CharField(max_length=6, default=random_color)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -166,44 +163,41 @@ class Flavor(models.Model):
             return 1 * 100
 
     def get_absolute_url(self):
-        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
+        return reverse_lazy("functionality-detail", kwargs={"pk": self.functionality.id})
 
 
 class RolloutStrategy(models.Model):
     """
     A description of how a feature should be rolled out, depending on a tag.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE)
     possible_flavors = models.ManyToManyField(Flavor, blank=False)
-    tag = models.ForeignKey('tagging.Tag', on_delete=models.CASCADE, null=True, blank=True)
+    tag = models.ForeignKey("tagging.Tag", on_delete=models.CASCADE, null=True, blank=True)
 
     start_at = models.DateTimeField(default=timezone.now)
     max_enabled_users = models.IntegerField(default=0)
     priority = models.PositiveSmallIntegerField(default=0)
 
-    RECALL_FUNCTIONALITY = 'recall'
-    PAUSE_ROLLOUT = 'pause_rollout'
-    DEFINED_BY_RELEASES = 'defined_by_releases'
-    ENABLE_GLOBALLY = 'enable_globally'
+    RECALL_FUNCTIONALITY = "recall"
+    PAUSE_ROLLOUT = "pause_rollout"
+    DEFINED_BY_RELEASES = "defined_by_releases"
+    ENABLE_GLOBALLY = "enable_globally"
     STRATEGY_CHOICES = (
-        (RECALL_FUNCTIONALITY, 'Recall'),
-        (PAUSE_ROLLOUT, 'Roll Out Paused'),
-        (DEFINED_BY_RELEASES, 'Release-Driven'),
-        (ENABLE_GLOBALLY, 'Enabled Globally')
+        (RECALL_FUNCTIONALITY, "Recall"),
+        (PAUSE_ROLLOUT, "Roll Out Paused"),
+        (DEFINED_BY_RELEASES, "Release-Driven"),
+        (ENABLE_GLOBALLY, "Enabled Globally"),
     )
-    strategy = models.CharField(
-        max_length=50,
-        choices=STRATEGY_CHOICES,
-        default=DEFINED_BY_RELEASES
-    )
+    strategy = models.CharField(max_length=50, choices=STRATEGY_CHOICES, default=DEFINED_BY_RELEASES)
 
     class Meta:
-        ordering = ['start_at']
-        unique_together = ('tag', 'functionality')
+        ordering = ["start_at"]
+        unique_together = ("tag", "functionality")
 
     def get_absolute_url(self):
-        return reverse_lazy('functionality-detail', kwargs={'pk': self.functionality.id})
+        return reverse_lazy("functionality-detail", kwargs={"pk": self.functionality.id})
 
     def clean(self):
         super().clean()
@@ -211,17 +205,18 @@ class RolloutStrategy(models.Model):
         # make sure only the functionality's flavors are selected
         for flavor in self.possible_flavors.all():
             if flavor.functionality != self.functionality:
-                raise ValidationError({'possible_flavors': "Only Related Flavors can be selected"})
+                raise ValidationError({"possible_flavors": "Only Related Flavors can be selected"})
 
         # make sure only the organization's tags are selected
         if self.tag and self.functionality and self.tag.organization != self.functionality.app.organization:
-            raise ValidationError({'tag': "Only your organization's tags can be selected"})
+            raise ValidationError({"tag": "Only your organization's tags can be selected"})
 
 
 class Availability(models.Model):
     """
     A Flavor that is enabled for a specific user.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(ClientUser, on_delete=models.CASCADE)
     flavor = models.ForeignKey(Flavor, on_delete=models.CASCADE)

@@ -9,18 +9,18 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('core', '0001_initial'),
-        ('user_management', '0001_initial'),
+        ("core", "0001_initial"),
+        ("user_management", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.SlugField()),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user_management.Organization')),
-                ('user', models.ManyToManyField(to='core.ClientUser')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.SlugField()),
+                ("organization", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="user_management.Organization")),
+                ("user", models.ManyToManyField(to="core.ClientUser")),
             ],
         ),
     ]

@@ -4,7 +4,7 @@ from request_logging.logging import list_timestamp_keys, get_request_logs
 
 
 class LogList(TemplateView):
-    template_name = 'availability_logging/log.html'
+    template_name = "availability_logging/log.html"
 
     def get_context_data(self, pk, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -15,5 +15,5 @@ class LogList(TemplateView):
         logs = {}
         newest_timestamp_key = max(filter(lambda x: pk in x, timestamp_keys))
         logs = reversed(get_request_logs(newest_timestamp_key))
-        context['logs'] = logs
+        context["logs"] = logs
         return context

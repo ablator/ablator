@@ -7,18 +7,12 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tagging', '0001_initial'),
+        ("tagging", "0001_initial"),
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='tag',
-            old_name='user',
-            new_name='users',
-        ),
+        migrations.RenameField(model_name="tag", old_name="user", new_name="users",),
         migrations.AlterField(
-            model_name='tag',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="tag", name="id", field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
         ),
     ]

@@ -11,9 +11,11 @@ class OrganizationField(forms.CharField):
         super().validate(value)
         try:
             Organization.objects.get(slug=slugify(value))
-            raise ValidationError('An organization with this name already exists. If you are a '
-                                  'member of this organization, ask your administrator to '
-                                  'invite you.')
+            raise ValidationError(
+                "An organization with this name already exists. If you are a "
+                "member of this organization, ask your administrator to "
+                "invite you."
+            )
         except Organization.DoesNotExist:
             pass
 
@@ -23,9 +25,11 @@ class UsernameField(forms.CharField):
         super().validate(value)
         try:
             User.objects.get(username=value)
-            raise ValidationError('A user with that name already exists. Please choose a different '
-                                  'user name. If you are trying to log in, go to the home page and '
-                                  'select "Login".')
+            raise ValidationError(
+                "A user with that name already exists. Please choose a different "
+                "user name. If you are trying to log in, go to the home page and "
+                'select "Login".'
+            )
         except User.DoesNotExist:
             pass
 
@@ -38,21 +42,14 @@ class OrganizationRegisterForm(forms.Form):
 
     def create_organization(self):
         new_organization = Organization.objects.create(
-            name=self.cleaned_data['organization_name'],
-            slug=slugify(self.cleaned_data['organization_name']),
-
+            name=self.cleaned_data["organization_name"], slug=slugify(self.cleaned_data["organization_name"]),
         )
         new_user = User.objects.create_user(
-            self.cleaned_data['user_name'],
-            self.cleaned_data['user_email'],
-            self.cleaned_data['user_password']
+            self.cleaned_data["user_name"], self.cleaned_data["user_email"], self.cleaned_data["user_password"]
         )
         new_user.is_staff = True
         new_user.save()
 
-        new_ablator_user = AblatorUser.objects.create(
-            user=new_user,
-            organization=new_organization
-        )
+        new_ablator_user = AblatorUser.objects.create(user=new_user, organization=new_organization)
 
         return new_ablator_user

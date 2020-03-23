@@ -27,10 +27,11 @@ class CanIUseSingleViewV1(APIView):
     See also the `which` endpoint to see if a user has a specific functionality group within a
     functionality
     """
+
     def get(self, request, client_user_string, functionality_id):
         functionality = get_object_or_404(Functionality, id=functionality_id)
         client_user = ClientUser.user_from_object(client_user_string, organization=functionality.app.organization)
-        return Response({'enabled': can_i_use(client_user, functionality)})
+        return Response({"enabled": can_i_use(client_user, functionality)})
 
 
 class WhichSingleViewV1(APIView):
@@ -44,13 +45,12 @@ class WhichSingleViewV1(APIView):
     If the Functionality does not exist, this endpoint returns a 404 error.
 
     """
+
     def get(self, request, client_user_string, functionality_id):
         functionality = get_object_or_404(Functionality, id=functionality_id)
         client_user = ClientUser.user_from_object(client_user_string, organization=functionality.app.organization)
         availability = which(client_user, functionality)
-        return Response({
-            'functionality': availability.flavor.__str__() if availability else None,
-        })
+        return Response({"functionality": availability.flavor.__str__() if availability else None,})
 
 
 class WhichViewV2(APIView):
@@ -68,18 +68,12 @@ class WhichViewV2(APIView):
             "masa.rover.dehumidifier.dry-as-bone"
         ]
     """
+
     def get(self, request, organization_id, client_user_string, app_id):
         app = get_object_or_404(App, id=app_id)
         client_user = ClientUser.user_from_object(client_user_string, app.organization)
-        availabilities = [
-            which(client_user, functionality)
-            for functionality in app.functionality_set.all()
-        ]
-        return Response([
-            availability.flavor.__str__()
-            for availability in availabilities
-            if availability
-        ])
+        availabilities = [which(client_user, functionality) for functionality in app.functionality_set.all()]
+        return Response([availability.flavor.__str__() for availability in availabilities if availability])
 
 
 class CanIUseViewV2(APIView):
@@ -99,18 +93,12 @@ class CanIUseViewV2(APIView):
             "masa.rover.space-heater"
         ]
     """
+
     def get(self, request, organization_id, client_user_string, app_id):
         app = get_object_or_404(App, id=app_id)
         client_user = ClientUser.user_from_object(client_user_string, organization=app.organization)
-        functionalities = [
-            functionality
-            for functionality in app.functionality_set.all()
-            if can_i_use(client_user, functionality)
-        ]
-        return Response([
-            functionality.__str__()
-            for functionality in functionalities
-        ])
+        functionalities = [functionality for functionality in app.functionality_set.all() if can_i_use(client_user, functionality)]
+        return Response([functionality.__str__() for functionality in functionalities])
 
 
 class CanIUseViewV4(APIView):
@@ -130,18 +118,12 @@ class CanIUseViewV4(APIView):
             "masa.rover.space-heater"
         ]
     """
+
     def get(self, request, client_user_string, app_id):
         app = get_object_or_404(App, id=app_id)
         client_user = ClientUser.user_from_object(client_user_string, organization=app.organization)
-        functionalities = [
-            functionality
-            for functionality in app.functionality_set.all()
-            if can_i_use(client_user, functionality)
-        ]
-        return Response([
-            functionality.__str__()
-            for functionality in functionalities
-        ])
+        functionalities = [functionality for functionality in app.functionality_set.all() if can_i_use(client_user, functionality)]
+        return Response([functionality.__str__() for functionality in functionalities])
 
 
 class TagListViewV3(ListAPIView):
@@ -157,21 +139,21 @@ class TagListViewV3(ListAPIView):
 
     To remove a User's associated Tag, use `/api/v3/<user>/<organization_id>/tag/<tag_name>/remove`
     """
+
     serializer_class = TagSerializer
-    permission_classes = [AllowAny, ]
+    permission_classes = [
+        AllowAny,
+    ]
 
     def get_queryset(self):
-        client_user_string = self.kwargs['client_user_string']
-        user = ClientUser.user_from_object(client_user_string, organization=self.kwargs['organization_id'])
+        client_user_string = self.kwargs["client_user_string"]
+        user = ClientUser.user_from_object(client_user_string, organization=self.kwargs["organization_id"])
         return user.tag_set.all()
 
     def post(self, request, organization_id, client_user_string, app_id):
         app = App.objects.get(id=app_id)
         user = ClientUser.user_from_object(client_user_string, organization_id=organization_id)
-        newTag = Tag.objects.get_or_create(
-            name=slugify(request.data['name']),
-            organization=app.organization
-        )[0]
+        newTag = Tag.objects.get_or_create(name=slugify(request.data["name"]), organization=app.organization)[0]
         newTag.users.add(user)
         newTag.save()
 
@@ -188,10 +170,13 @@ class TagRemoveViewV3(DestroyAPIView):
     same Organization will also lose the association between User and Tag. If you'd like App-specific
     Tags, you can prefix them with the app's name or something similar.
     """
-    permission_classes = [AllowAny, ]
+
+    permission_classes = [
+        AllowAny,
+    ]
 
     def delete(self, request, organization_id, client_user_string, app_id, tag_name):
-        client_user_string = self.kwargs['client_user_string']
+        client_user_string = self.kwargs["client_user_string"]
         user = ClientUser.user_from_object(client_user_string, organization_id=organization_id)
         tag = get_object_or_404(user.tag_set.all(), name=tag_name)
         user.tag_set.remove(tag)

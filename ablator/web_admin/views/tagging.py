@@ -6,7 +6,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from tagging.models import Tag
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class TagsListView(ListView):
     template_name = "tagging/list.html"
 
@@ -14,10 +14,12 @@ class TagsListView(ListView):
         return self.request.user.ablatoruser.organization.tag_set.all()
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class TagCreateView(CreateView):
     model = Tag
-    fields = ['name', ]
+    fields = [
+        "name",
+    ]
 
     def form_valid(self, form):
         form.instance.name = form.instance.name.lower()
@@ -25,7 +27,7 @@ class TagCreateView(CreateView):
         return super().form_valid(form)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class TagDetailView(DetailView):
     model = Tag
 
@@ -33,19 +35,21 @@ class TagDetailView(DetailView):
         return self.request.user.ablatoruser.organization.tag_set.all()
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class TagUpdateView(UpdateView):
     model = Tag
-    fields = ['name', ]
+    fields = [
+        "name",
+    ]
 
     def get_queryset(self):
         return self.request.user.ablatoruser.organization.tag_set.all()
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class TagDeleteView(DeleteView):
     model = Tag
-    success_url = reverse_lazy('tags-list')
+    success_url = reverse_lazy("tags-list")
 
     def get_queryset(self):
         return self.request.user.ablatoruser.organization.tag_set.all()

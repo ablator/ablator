@@ -7,20 +7,20 @@ from core.models import RolloutStrategy, Functionality
 from web_admin.forms.RolloutStrategyForm import RolloutStrategyForm
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class RolloutStrategyCreate(CreateView):
-    template_name = 'core/rolloutstrategy_form.html'
+    template_name = "core/rolloutstrategy_form.html"
 
     def get_initial(self):
         initial = super(RolloutStrategyCreate, self).get_initial()
 
-        functionality_id = self.kwargs.get('pk')
+        functionality_id = self.kwargs.get("pk")
         functionality = Functionality.objects.get(id=functionality_id)
-        initial['functionality'] = functionality
+        initial["functionality"] = functionality
         return initial
 
     def get_form(self, form_class=None):
-        functionality_id = self.kwargs.get('pk')
+        functionality_id = self.kwargs.get("pk")
         functionality = Functionality.objects.get(id=functionality_id)
 
         if form_class is None:
@@ -29,20 +29,20 @@ class RolloutStrategyCreate(CreateView):
 
     def form_valid(self, form):
         # Always set the functionality from the URL
-        functionality_id = self.kwargs.get('pk')
+        functionality_id = self.kwargs.get("pk")
         functionality = Functionality.objects.get(id=functionality_id)
         form.instance.functionality = functionality
 
         return super(RolloutStrategyCreate, self).form_valid(form)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class RolloutStrategyUpdate(UpdateView):
     form_class = RolloutStrategyForm
-    template_name = 'core/rolloutstrategy_form.html'
+    template_name = "core/rolloutstrategy_form.html"
 
     def get_form(self, form_class=None):
-        rollout_strategy_id = self.kwargs.get('pk')
+        rollout_strategy_id = self.kwargs.get("pk")
         rollout_strategy = RolloutStrategy.objects.get(id=rollout_strategy_id)
         functionality = rollout_strategy.functionality
 
@@ -54,7 +54,7 @@ class RolloutStrategyUpdate(UpdateView):
         return RolloutStrategy.objects.all()
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class RolloutStrategyDelete(DeleteView):
     model = RolloutStrategy
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy("home")

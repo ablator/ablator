@@ -8,64 +8,63 @@ from core.models import Availability, ClientUser
 from web_admin.forms.AvailabilitySearchForm import SearchForm
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class AvailabilitySearch(FormView):
-    template_name = 'core/availability/search.html'
+    template_name = "core/availability/search.html"
     form_class = SearchForm
 
     def form_valid(self, form):
         user_key = form.cleaned_data["user_identity_string"]
-        return HttpResponseRedirect(reverse_lazy('availability-list', kwargs={'user': user_key}))
+        return HttpResponseRedirect(reverse_lazy("availability-list", kwargs={"user": user_key}))
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class AvailabilityList(ListView):
     template_name = "core/availability/list.html"
 
     def get_queryset(self):
-        client_user = ClientUser.user_from_object(self.kwargs['user'],
-                                                  organization=self.request.user.ablatoruser.organization)
-        return Availability.objects.filter(
-            flavor__functionality__app__organization=self.request.user.ablatoruser.organization).filter(
+        client_user = ClientUser.user_from_object(self.kwargs["user"], organization=self.request.user.ablatoruser.organization)
+        return Availability.objects.filter(flavor__functionality__app__organization=self.request.user.ablatoruser.organization).filter(
             user=client_user
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_identifier'] = self.kwargs['user']
+        context["user_identifier"] = self.kwargs["user"]
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class AvailabilityUpdate(UpdateView):
-    template_name = 'core/availability/update.html'
-    fields = ['flavor', 'is_enabled', ]
+    template_name = "core/availability/update.html"
+    fields = [
+        "flavor",
+        "is_enabled",
+    ]
 
     def get_success_url(self):
-        return reverse_lazy('availability-list', kwargs={'user': self.kwargs['user']})
+        return reverse_lazy("availability-list", kwargs={"user": self.kwargs["user"]})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_identifier'] = self.kwargs['user']
+        context["user_identifier"] = self.kwargs["user"]
         return context
 
     def get_queryset(self):
-        return Availability.objects.filter(
-            flavor__functionality__app__organization=self.request.user.ablatoruser.organization)
+        return Availability.objects.filter(flavor__functionality__app__organization=self.request.user.ablatoruser.organization)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class AvailabilityDelete(DeleteView):
-    template_name = 'core/availability/confirm_delete.html'
+    template_name = "core/availability/confirm_delete.html"
 
     def get_success_url(self):
-        return reverse_lazy('availability-list', kwargs={'user': self.kwargs['user']})
+        return reverse_lazy("availability-list", kwargs={"user": self.kwargs["user"]})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_identifier'] = self.kwargs['user']
+        context["user_identifier"] = self.kwargs["user"]
         return context
 
     def get_queryset(self):
-        return Availability.objects.filter(
-            flavor__functionality__app__organization=self.request.user.ablatoruser.organization)
+        return Availability.objects.filter(flavor__functionality__app__organization=self.request.user.ablatoruser.organization)
