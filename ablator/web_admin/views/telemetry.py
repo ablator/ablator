@@ -45,6 +45,25 @@ def create_source_type_chart(signals):
     return SimpleDataSource(data=data)
 
 
+def active_users_count(app):
+    range_date_end = datetime.date.today() - datetime.timedelta(days=1)
+    range_date_beginning = range_date_end - datetime.timedelta(days=30)
+    active_users_counts_data = [["Date", "User Count last 30 Days", "User Count last 7 Days", "User Count last Day"]]
+    current_date = range_date_beginning
+    while current_date < range_date_end:
+        current_date += datetime.timedelta(days=1)
+        active_users_counts_data.append(
+            [
+                current_date.isoformat(),
+                ActiveUsersCount.get(ending_at=current_date, day_range=30, app=app).count,
+                ActiveUsersCount.get(ending_at=current_date, day_range=7, app=app).count,
+                ActiveUsersCount.get(ending_at=current_date, day_range=1, app=app).count,
+            ]
+        )
+    active_users_counts_data_source = SimpleDataSource(data=active_users_counts_data)
+    return active_users_counts_data_source
+
+
 @method_decorator(login_required, name="dispatch")
 class SignalListView(ListView):
     template_name = "telemetry/signal_list.html"
@@ -74,21 +93,7 @@ class SignalListView(ListView):
         context["active_users_last_day"] = len(Signal.distinctivize(last_day_signals))
 
         # Active User Count Graph
-        range_date_end = datetime.date.today() - datetime.timedelta(days=1)
-        range_date_beginning = range_date_end - datetime.timedelta(days=30)
-        active_users_counts_data = [["Date", "User Count last 30 Days", "User Count last 7 Days", "User Count last Day"]]
-        current_date = range_date_beginning
-        while current_date < range_date_end:
-            current_date += datetime.timedelta(days=1)
-            active_users_counts_data.append(
-                [
-                    current_date.isoformat(),
-                    ActiveUsersCount.get(ending_at=current_date, day_range=30, app=app).count,
-                    ActiveUsersCount.get(ending_at=current_date, day_range=7, app=app).count,
-                    ActiveUsersCount.get(ending_at=current_date, day_range=1, app=app).count,
-                ]
-            )
-        active_users_counts_data_source = SimpleDataSource(data=active_users_counts_data)
+        active_users_counts_data_source = active_users_count(app)
         context["active_monthly_users"] = LineChart(active_users_counts_data_source, width="100%")
 
         # Charts
@@ -120,4 +125,10 @@ class SignalListView(ListView):
                 ),
             },
         ]
+
+        # Long Term Users
+        number_list = list(map(lambda signal: (signal.parameters_dict.get("numberOfCreateDialogs", 0)), distinct_last_month_signals))
+        filtered_number_list = list(filter(lambda number: (number != 0), number_list))
+        context["active_users_last_month_long_term"] = len(filtered_number_list)
+
         return context
